@@ -295,9 +295,13 @@ const RULES: Record<string, (page: Page) => void> = {
   },
 
   /* Item 16: the two checks the client struck off, and both subscription
-     ladders. The XL fortnightly rung reads "104" in the client's document,
-     which breaks the £12 step the other three sizes keep; 124 is used here
-     and is flagged back to the client. */
+     ladders.
+
+     The XL fortnightly rung on the exterior detail is £104, which is what the
+     client wrote and what they confirmed when asked. It is worth knowing it is
+     deliberate rather than a typo, because it reads like one: the column steps
+     £12 at a time (88, 100, 112) so the pattern points at 124, and at 104 the
+     XL pays less than the Large above it. Their price, their call. */
   "car-lovers-club": (page) => {
     dropListItems(
       page,
@@ -311,7 +315,7 @@ const RULES: Record<string, (page: Page) => void> = {
     ]);
     repriceSubscription(page, /^the exterior maintenance detail$/i, [
       [47, 53, 59, 65],
-      [88, 100, 112, 124],
+      [88, 100, 112, 104],
       [164, 188, 212, 236],
     ]);
   },
