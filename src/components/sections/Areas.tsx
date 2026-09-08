@@ -1,3 +1,4 @@
+import MapEmbed from "@/components/MapEmbed";
 import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
 import { AREAS, AREAS_INTRO } from "@/lib/site";
@@ -48,12 +49,9 @@ export default function Areas() {
             delay={2}
             className="overflow-hidden rounded-[14px] shadow-[0_20px_44px_-26px_rgba(0,0,0,0.5)] ring-1 ring-ink/25 lg:col-span-7"
           >
-            <iframe
+            <MapEmbed
               src={AREAS_INTRO.map}
               title="Map of the areas we cover across London and Hertfordshire"
-              className="h-full min-h-[420px] w-full border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
             />
           </Reveal>
         </div>

@@ -91,9 +91,14 @@ export default function CarWash() {
                     <a href={BOOK_URL} className="btn btn-gold px-5 py-2.5 text-[12px]">
                       Book Now
                     </a>
+                    {/* The visible label stays the source's own two words;
+                        the accessible name says what it leads to, which is
+                        what a screen reader's link list and Lighthouse's
+                        link-text audit both read. */}
                     <a
                       href={w.href}
                       className="link-inline"
+                      aria-label={`Read more about ${w.title}`}
                     >
                       Read more
                       <Icon name="arrow" size={15} />

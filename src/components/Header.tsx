@@ -79,6 +79,9 @@ export default function Header() {
             alt="Mobile Car Detailing &amp; Valeting"
             width={618}
             height={400}
+            /* Painted at h-[50px], so 77px wide - without this next/image
+               has no way to know and preloads the 1920px candidate. */
+            sizes="80px"
             priority
             className={`w-auto transition-[height] duration-300 ${
               scrolled ? "h-[40px]" : "h-[50px]"

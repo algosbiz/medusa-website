@@ -44,7 +44,11 @@ export default function ExtraServices() {
                   <a href={BOOK_URL} className="btn btn-gold rounded-full px-5 py-2.5 text-[12px]">
                     Book Now
                   </a>
-                  <a href={s.href} className="link-inline">
+                  <a
+                    href={s.href}
+                    className="link-inline"
+                    aria-label={`Read more about ${s.title}`}
+                  >
                     Read more
                     <Icon name="arrow" size={15} />
                   </a>

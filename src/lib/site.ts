@@ -77,7 +77,6 @@ export const NAV: NavItem[] = [  { label: "Home", href: "/" },
           { label: "Exterior Wash", href: "/mobile-car-wash/exterior-wash/" },
           { label: "Exterior Plus Wash", href: "/mobile-car-wash/exterior-plus-wash/" },
           { label: "Alloy Wheel Cleaning", href: "/mobile-car-wash/alloy-wheel-cleaning/" },
-          { label: "Car Wax Service", href: "/mobile-car-wash/car-wax-service/" },
         ],
       },
       {
@@ -97,6 +96,11 @@ export const NAV: NavItem[] = [  { label: "Home", href: "/" },
           { label: "Premium Full Valet", href: "/car-valeting/premium-full-valet/" },
           { label: "Summer Glow Valet", href: "/car-valeting/summer-glow-valet/" },
           { label: "Pre-Sale / End of Lease Valet", href: "/car-valeting/pre-sale-valet/" },
+          /* Moved out of the Car Wash column at the client's request
+             (2026-09-08). The URL stays under /mobile-car-wash/ — they asked
+             for the menu entry to move, not the page, and changing the path
+             would break every existing link to it. */
+          { label: "Car Wax Service", href: "/mobile-car-wash/car-wax-service/" },
         ],
       },
       {
@@ -211,7 +215,11 @@ export const HERO = {
     { label: "DETAILING PACKAGES", href: "/car-detailing/" },
     { label: "COMPARE OUR PACKAGES", href: "#services" },
   ],
-  video: "/assets/2024/04/Medusa-Detailing-Promotional-Video.mov",
+  /* Transcoded from the source .mov (12.4 MB, H.264 1.4 Mbps + an MP3 track
+     nothing can hear behind `muted`) to a 5.3 MB audio-free MP4. Same 63
+     seconds at the same 1280x720; the bitrate loss is spent under a 62%
+     black scrim. The .mov is kept beside it as the master. */
+  video: "/assets/2024/04/Medusa-Detailing-Promotional-Video.mp4",
   poster: "/assets/2020/10/pexels-jae-park-37156701.webp",
   youtube:
     "https://www.youtube.com/watch?v=aLaoqoHtoCE&ab_channel=MedusaAutoDetailingLtd",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Icon, { type IconName } from "@/components/Icon";
 import { HERO } from "@/lib/site";
 
@@ -15,19 +15,56 @@ import { HERO } from "@/lib/site";
 export default function Hero() {
   const [lightbox, setLightbox] = useState(false);
 
+  /*
+    The footage is decoration behind a 62% scrim, and it is 5.3 MB of it. Left
+    on the element it downloads alongside the fonts, the stylesheet and the
+    hydration bundle, and on a throttled connection it wins that race:
+    Lighthouse measured the hero's own intro paragraph — the LCP element —
+    painting at 3.9 s, 88% of which was render delay.
+
+    So the source is attached only once the page has loaded and the main
+    thread has gone quiet. Nothing on screen changes at first paint: the
+    poster is the footage's own frame and was already what a visitor saw. The
+    film simply starts a beat later.
+  */
+  const [src, setSrc] = useState<string>();
+
+  useEffect(() => {
+    let idle = 0;
+    let timer = 0;
+
+    const start = () => {
+      const run = () => setSrc(HERO.video);
+      if (typeof window.requestIdleCallback === "function") {
+        idle = window.requestIdleCallback(run, { timeout: 2000 });
+      } else {
+        timer = window.setTimeout(run, 200);
+      }
+    };
+
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+
+    return () => {
+      window.removeEventListener("load", start);
+      if (idle) window.cancelIdleCallback(idle);
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
+
   return (
     <section className="cut-bottom relative flex min-h-[760px] w-full items-end overflow-hidden pb-[calc(var(--cut)+3rem)] lg:min-h-[900px]">
       <video
         className="absolute inset-0 h-full w-full object-cover"
         poster={HERO.poster}
+        src={src}
         autoPlay
         loop
         muted
         playsInline
-        preload="auto"
-      >
-        <source src={HERO.video} type="video/mp4" />
-      </video>
+        preload="none"
+        aria-hidden
+      />
 
       {/* Retracting scrim. Starts at 0.62 so a no-JS render is still legible. */}
       <div className="hero-scrim absolute inset-0 bg-black opacity-[0.62]" />

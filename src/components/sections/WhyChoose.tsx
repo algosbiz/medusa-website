@@ -42,6 +42,7 @@ export default function WhyChoose() {
               alt="Booking a mobile car valet on a phone"
               width={420}
               height={840}
+              sizes="(min-width: 1024px) 270px, 230px"
               className="relative mx-auto h-auto w-[230px] max-w-full pt-10 lg:w-[270px]"
             />
           </Reveal>

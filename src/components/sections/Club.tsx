@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Icon from "@/components/Icon";
 import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
@@ -19,10 +20,18 @@ export default function Club() {
     <section className="w-full bg-black py-16 lg:py-[104px]">
       <div className="shell">
         <div className="relative isolate overflow-hidden rounded-[14px]">
-          <div
+          {/* A CSS background is fetched at full size the moment the rule is
+              parsed, wherever the element sits: this one is 356 KB of
+              2560px-wide photograph a whole page below the fold. Through
+              next/image it is resized to the band it actually fills and
+              deferred until it is near the viewport. */}
+          <Image
+            src={CLUB.bg}
+            alt=""
             aria-hidden
-            className="absolute inset-0 -z-10 bg-cover bg-center"
-            style={{ backgroundImage: `url(${CLUB.bg})` }}
+            fill
+            sizes="(min-width: 1024px) 1200px, 100vw"
+            className="-z-10 object-cover object-center"
           />
           <div
             aria-hidden
