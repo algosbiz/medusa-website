@@ -5,13 +5,12 @@ import SectionHead from "@/components/SectionHead";
 import { BOOK_URL, CARWASH, CARWASH_INTRO } from "@/lib/site";
 
 /**
- * Seven washes in a flat four-column grid left an orphaned last row and gave
- * every tier identical weight. They now run across a six-column field in three
- * differently-paced rows — 3 up, then 2 wide, then 2 wide — which keeps the
- * Bronze → Platinum ladder in source order while varying density down the
- * scroll.
+ * Washes in a flat four-column grid left an orphaned last row and gave every
+ * tier identical weight. They now run across a six-column field in rows of
+ * differing pace — 3 up, then 2 wide — which keeps the Silver → Platinum
+ * ladder in source order while varying density down the scroll.
  */
-const SPAN = [2, 2, 2, 3, 3, 3, 3];
+const SPAN = [2, 2, 2, 3, 3];
 
 export default function CarWash() {
   return (

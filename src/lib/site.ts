@@ -388,6 +388,7 @@ export const INCLUDED: Record<string, Included> = {
           "Basic interior wipe down",
           "Minor stain removal from seats",
           "Leather interior cleaned",
+          "Upholstery seats & mats shampoo + extract",
           "Rubber mats cleaned, dried & protected",
           "Air vents cleaned with glue gum gel & treated",
           "Interior plastics & facias dressed",
@@ -498,6 +499,7 @@ export const INCLUDED: Record<string, Included> = {
           "Steam clean surfaces",
           "Minor stain removal from seats",
           "Leather interior cleaned",
+          "Upholstery seats & mats shampoo + extract",
           "Rubber mats cleaned, dried & protected",
           "Air vents cleaned with glue gum gel & treated",
           "Interior plastics & facias dressed",
@@ -713,14 +715,14 @@ export const VALETING: Package[] = [
   {
     title: "MINI VALET",
     subtitle: "Mobile Valet",
-    prices: [55, 60, 65, 70],
+    prices: [59, 65, 69, 73],
     style: "gold",
     included: "pandora",
   },
   {
     title: "TRITON",
     subtitle: "Superior Interior Valet",
-    prices: [115, 125, 135, 145],
+    prices: [135, 145, 155, 165],
     style: "gold",
     included: "triton",
   },
@@ -840,18 +842,9 @@ export const CARWASH_INTRO = {
 
 export const CARWASH = [
   {
-    title: "BRONZE WASH",
-    time: "(40-60 Mins)",
-    price: "£37-£48",
-    image:
-      "/assets/2025/02/young-man-washing-car-on-carwash-station-outdoor-2023-11-27-05-27-22-utc-1-1.webp",
-    href: "/mobile-car-wash/bronze-wash/",
-    features: ["Wash", "Buff", "In/Out Glass Shine", "Light Vacuum", "Dashboard"],
-  },
-  {
     title: "SILVER WASH",
     time: "(60-90 Mins)",
-    price: "£48-£60",
+    price: "£59-£73",
     image:
       "/assets/2025/02/car-cleaning-with-high-pressure-in-exterior-carwas-2023-11-27-05-35-22-utc-1.webp",
     href: "/mobile-car-wash/silver-wash/",
@@ -913,7 +906,7 @@ export const CARWASH = [
   {
     title: "PREMIUM INTERIOR WASH",
     time: "(60-120 Mins)",
-    price: "£90-£120",
+    price: "£115-£145",
     image:
       "/assets/2025/02/professional-car-cleaning-cleaning-the-steering-w-2023-11-27-05-30-02-utc-e1720860904413.webp",
     href: "/car-interior-cleaning/premium-interior-wash/",
@@ -928,23 +921,15 @@ export const CARWASH = [
     ],
   },
   {
-    title: "EXTERIOR WASH",
-    time: "(30-50 Mins)",
-    price: "£35-£42",
-    image: "/assets/2025/02/car-wash-2023-11-27-05-28-52-utc-e1720860749845.webp",
-    href: "/mobile-car-wash/exterior-wash/",
-    features: ["Wash", "Buff & Dry", "Wheels", "Tyres", "Exterior Glass"],
-  },
-  {
     title: "EXTERIOR PLUS WASH",
     time: "(45-75 Mins)",
-    price: "£41-£52",
+    price: "£49-£65",
     image: "/assets/2025/02/water-2023-11-27-05-35-50-utc-1-e1720862985495-1.webp",
     href: "/mobile-car-wash/exterior-plus-wash/",
     features: [
       "Thorough Exterior Wash",
       "Buff & Dry",
-      "Paste Wax",
+      "Liquid Wax",
       "Tyre Dressing",
       "Plastic Dressing",
       "Wheels & Arches",

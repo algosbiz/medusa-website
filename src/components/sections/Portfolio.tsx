@@ -11,22 +11,26 @@ import { CONTACT, PORTFOLIO } from "@/lib/site";
  * The work runs edge to edge, breaking the container. This is the one place on
  * the page where the photographs deserve the whole screen rather than a column
  * of it.
+ *
+ * On the gold band, at the client's request — it is the section either side of
+ * which the page was previously three dark rows deep, and the photographs are
+ * the one thing here that does not need a dark ground to read against.
  */
 export default function Portfolio() {
   const [expanded, setExpanded] = useState(false);
   const items = expanded ? PORTFOLIO : PORTFOLIO.slice(0, 8);
 
   return (
-    <section className="w-full bg-black py-16 lg:py-[104px]">
+    <section className="bg-gold-wash w-full py-16 lg:py-[104px]">
       <div className="shell">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <SectionHead title="Portfolio" />
+          <SectionHead title="Portfolio" tone="gold" />
           <Reveal delay={2}>
             <a
               href={CONTACT.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="link-inline"
+              className="link-inline on-gold"
             >
               See more on Instagram
               <Icon name="arrow" size={16} />
@@ -62,7 +66,7 @@ export default function Portfolio() {
                 sizes="(min-width: 1024px) 18vw, (min-width: 640px) 30vw, 46vw"
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.07]"
               />
-              <span className="absolute inset-0 bg-gold/0 transition-colors duration-300 group-hover:bg-gold/20" />
+              <span className="absolute inset-0 bg-ink/0 transition-colors duration-300 group-hover:bg-ink/25" />
             </a>
           </Reveal>
         ))}
@@ -73,7 +77,7 @@ export default function Portfolio() {
           <button
             type="button"
             onClick={() => setExpanded(true)}
-            className="btn btn-outline rounded-full"
+            className="btn btn-dark rounded-full"
           >
             Show all {PORTFOLIO.length}
             <Icon name="plus" size={17} className="ml-2.5" />

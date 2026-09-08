@@ -6,8 +6,15 @@ import Icon from "@/components/Icon";
 /** The inner-page accordion. Same card treatment as the homepage FAQ. */
 export default function FaqAccordion({
   items,
+  onGold = false,
 }: {
   items: { q: string; a: string[] }[];
+  /**
+   * Sitting on a gold band. The card is a white film over whatever is behind
+   * it, which on gold left white-on-gold question text at 2.83:1 — so on gold
+   * it goes solid ink instead and the copy inside stays as it is.
+   */
+  onGold?: boolean;
 }) {
   const [open, setOpen] = useState<number | null>(null);
 
@@ -19,9 +26,11 @@ export default function FaqAccordion({
           <li
             key={item.q + i}
             className={`overflow-hidden rounded-[12px] transition-colors duration-300 ${
-              isOpen
-                ? "bg-white/[0.06] ring-1 ring-gold/30"
-                : "bg-white/[0.03] ring-1 ring-white/[0.07]"
+              onGold
+                ? `surface-on-gold ${isOpen ? "ring-1 ring-gold/45" : ""}`
+                : isOpen
+                  ? "bg-white/[0.06] ring-1 ring-gold/30"
+                  : "bg-white/[0.03] ring-1 ring-white/[0.07]"
             }`}
           >
             <h3>

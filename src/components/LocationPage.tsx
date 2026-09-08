@@ -59,12 +59,13 @@ export default function LocationPage({ page }: { page: Page }) {
           h1Taken
           opensPage={false}
           /*
-            No gold bands. The block renderer marks any row holding add-on
+            Black, gold, black, at the client's request. This used to be
+            "none" because the content rule bands any row holding add-on
             cards, which on these pages is the valeting and detailing price
-            row — and the source renders those dark. The bands are a service-
-            page device; a location page never had one.
+            row that the source renders dark. Alternating does not consult
+            the content, so that misfire cannot happen.
           */
-          bands="none"
+          bands="alternate"
         />
       )}
 
@@ -208,7 +209,7 @@ function Chips({
   items: { href?: string; label: string }[];
 }) {
   return (
-    <section className="w-full border-b border-white/[0.07] py-12 lg:py-16">
+    <section className="w-full border-b border-white/[0.07] py-16 lg:py-[104px]">
       <div className="shell grid gap-6 lg:grid-cols-12 lg:gap-14">
         <div className="lg:col-span-4">
           <Reveal>
@@ -459,7 +460,7 @@ function Map({
   place: string;
 }) {
   return (
-    <section className="w-full border-t border-white/[0.07] py-14 lg:py-[88px]">
+    <section className="w-full border-t border-white/[0.07] py-16 lg:py-[104px]">
       <div className="shell grid gap-8 lg:grid-cols-12 lg:gap-14">
         <div className="lg:col-span-4">
           <SectionHead title={map.heading} />
@@ -555,7 +556,7 @@ function Faq({ section }: { section: Section }) {
 
 function Others({ others }: { others: { slug: string; name: string }[] }) {
   return (
-    <section className="w-full border-t border-white/[0.07] py-14 lg:py-[88px]">
+    <section className="w-full border-t border-white/[0.07] py-16 lg:py-[104px]">
       <div className="shell grid gap-6 lg:grid-cols-12 lg:gap-14">
         <div className="lg:col-span-4">
           <Reveal>

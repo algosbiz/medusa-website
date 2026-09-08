@@ -180,14 +180,22 @@
     transform: translateY(-2px);
   }
 
+  /* The call to action on a gold band. `.btn-gold` cannot serve there — gold
+     on gold is one flat shape — so the ink pill is the gold band's primary
+     button, not a secondary one. Every use of it is on gold. */
   .btn-dark {
     background-color: var(--color-ink-soft);
     color: #ffffff;
   }
 
+  /* Hovering used to fill it with gold, which on the band it always sits on
+     dissolved the button into its own background. The pill stays; the label
+     is what lights up. */
   .btn-dark:hover {
-    background-color: var(--color-gold);
+    background-color: var(--color-ink);
+    color: var(--color-gold-bright);
     transform: translateY(-2px);
+    box-shadow: 0 8px 22px -6px rgb(0 0 0 / 0.5);
   }
 
   /* Section shell — the live grid, measured off medusaautodetailing.co.uk:
@@ -253,6 +261,17 @@
     color: var(--color-gold-bright);
   }
 
+  /* The same link on a gold band. White at 72% measures 2.2:1 there; ink at
+     72% measures 5.4:1, and the hover goes to full ink rather than to a
+     brighter gold that would disappear into the band. */
+  .link-inline.on-gold {
+    color: rgb(0 0 0 / 0.72);
+  }
+
+  .link-inline.on-gold:hover {
+    color: var(--color-ink);
+  }
+
   /* ── Surfaces ─────────────────────────────────────────────────────────
      The page reads by elevation rather than by slabs of colour: a radius, a
      hairline drawn as an inset shadow, and a real offset shadow beneath. */
@@ -262,6 +281,24 @@
     box-shadow:
       inset 0 0 0 1px rgb(255 255 255 / 0.08),
       0 18px 44px -28px rgb(0 0 0 / 0.95);
+  }
+
+  /* ── Closing statement ────────────────────────────────────────────────
+     A heading, one short paragraph and the call to action they lead to. The
+     source gives that its own row; set in the narrow article column it read
+     as an unfinished paragraph rather than as the page signing off. Centred,
+     across the page's full width — the copy keeps its measure, so the lines
+     stay readable while the block itself spans the page. */
+  .statement {
+    text-align: center;
+  }
+
+  /* The heading's own gold rule is a 52px block, and the paragraph carries a
+     max-width; both need centring for the column to read as centred at all.
+     Inline spans are unaffected by an inline margin, so this is safe to cast
+     wide rather than enumerate. */
+  .statement :is(h2, h3, p, span, ul, ol) {
+    margin-inline: auto;
   }
 
   /* Same panel, for use on the gold bands — the tile goes dark so its own

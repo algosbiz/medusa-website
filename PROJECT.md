@@ -119,6 +119,25 @@ Useful exports:
 - `getForms(slug)` / `getForm(slug, i)` — the CF7 forms, re-read server-side so
   a tampered submission cannot bypass required fields.
 
+### Client corrections
+
+`PAGES` is not `pages.json` verbatim. `src/content/overrides.ts` is applied
+over it at import time and holds every change the **client** has asked for that
+the live site has not made yet — new prices, two retired wash tiers, a renamed
+add-on. It has to sit outside `pages.json` because `npm run content` rewrites
+that file wholesale from the mirror.
+
+Each rule is written against the *shape* of the content — "the four price
+headings after the TRITON heading" — never against array indices, so a
+regeneration cannot silently mis-target one. A rule that finds nothing throws
+at build rather than passing quietly.
+
+When the live site catches up, **delete** the rule instead of editing it; the
+next `npm run content` brings the same value in from the mirror.
+
+Prices also live in `lib/site.ts`, which the homepage sections read. A price
+change usually has to be made in both places.
+
 ---
 
 ## 5. How a page gets rendered
@@ -144,6 +163,37 @@ Three tiers, cheapest first:
 
 Prefer tier 1, then 2. Tier 3 is a maintenance cost — each one is a second
 place the content lives.
+
+### Rows into sections
+
+A WordPress row is a unit of editing, not of design, and `Sections` re-partitions
+them before rendering (`regroup` in `Blocks.tsx`). Nothing is added, dropped or
+reordered — the cuts are made on `group()`'s own boundaries, so a price ladder,
+an add-on run, a gallery or a flattened tab set is never split through.
+
+1. **One row per topic** — a quarter of the site ships as a single row per page;
+   `/mobile-car-wash` is one row carrying eight h2s. Only under
+   `bands="alternate"`: a blog post is one argument and stays whole.
+2. **Two statements in one row become two rows** (4 site-wide).
+3. **A heading — or a heading and its lede — joins the row below it.** 211 of
+   the first kind, `FAQs` among them, and 148 of the second: the source puts
+   "Want added protection?…" and its sentence in one row and the four price
+   cards it introduces in the next. A lede only joins a row that does not open
+   with a heading of its own, which is what keeps two closing statements apart.
+4. **A button-only row joins the row above it.**
+
+3 and 4 only where the two rows already share a surface: a heading joining a row
+that carries its own photograph would be moved onto that photograph, which is a
+design decision rather than a regrouping.
+
+Under `bands="alternate"` the renderer then **owns every row's background**: the
+source's own colours do not alternate, so honouring them left long stretches of
+one colour. A row with a photograph keeps it and sits outside the rhythm; so does
+the page's own header.
+
+A closing statement — a heading, one short paragraph and the call to action they
+lead to — is set centred across the full width (`.statement`) instead of in the
+narrow article column. Four sections qualify.
 
 `components/blocks-groups.tsx` is what makes tier 1 look designed: it detects
 runs of blocks that mean something together (`PriceGrid`, `AddonCards`,
@@ -172,6 +222,29 @@ Defined in `src/app/globals.css` under `@theme` and `@layer components`.
 - Diagonals: `.cut-top` / `.cut-bottom`, driven by `--cut` (3rem, 5rem at lg).
 - Buttons: `.btn` plus `.btn-gold` / `.btn-outline` / `.btn-dark`.
 - Motion: `.reveal` via `components/Reveal.tsx`.
+
+### The section standard
+
+Set after an Impeccable audit found five vertical rhythms, a non-monotonic type
+scale, and the site's most valuable content rendering through an unstyled
+fallback. Every section, whoever renders it, now follows this:
+
+- **Rhythm** — one value: `py-16 lg:py-[104px]`. The exceptions are the page
+  header and a continuing surface (`py-9 lg:py-12`). The 64 / 72 / 88px variants
+  are gone.
+- **Heading ranks** — three, and only three. Section title 40px with the gold
+  rule (`Sections` grants it to `leadHeading` alone); item title 27px, no rule —
+  a second h2 inside a section is an item, not a section; card title 21px. The
+  level scale is monotonic: h3 (21px) is now larger than h4 (17px), which it was
+  not.
+- **Cards** — a `columns` cell that opens with a photograph and carries a
+  heading is a card, not a column: `CardRow` in `blocks-groups.tsx` gives it a
+  `surface`, a fixed 3:2 photograph, equal height, and `mt-auto` on its actions
+  so peers share a baseline. Consecutive rows with the same cell shape merge
+  into one grid — otherwise each row sizes off its own cell count and the same
+  package is 337px wide in one row and 525px in the next.
+- **Prices** — one treatment. A lone price is a badge whether the source wrote
+  it as a heading or, on nine pages, as a paragraph.
 
 **Vertical rhythm** — the agreed spec: **100–110 px** between sections on
 desktop/laptop, **50–75 px** on small screens. In practice that is

@@ -1,0 +1,343 @@
+import type { Block, Page, Section } from "@/lib/blocks";
+
+/**
+ * Client corrections applied on top of `pages.json`.
+ *
+ * `pages.json` is a mirror of the live WordPress site: `npm run content`
+ * rewrites it wholesale from `.cache/html`, so anything typed into it by hand
+ * is lost on the next regeneration. Everything in this file is a change the
+ * client asked for that the live site has not made yet — new prices, two
+ * retired wash packages, a renamed add-on — so it has to survive that.
+ *
+ * Rules are therefore written against the *shape* of the content ("the four
+ * price headings after the TRITON heading"), never against array indices,
+ * which a regeneration would shift.
+ *
+ * Source: "Website changes.docx", 2026-09-06. The item number in each rule's
+ * comment is that document's numbering.
+ *
+ * When the live site catches up, delete the rule rather than editing it: the
+ * next `npm run content` will bring the same value in from the mirror.
+ */
+
+/* ── Walking the block tree ───────────────────────────────────────────── */
+
+/** Every block on a page, columns recursed into, in document order. */
+function flatten(blocks: Block[], into: Block[] = []): Block[] {
+  for (const b of blocks) {
+    if (b.type === "columns") b.cols.forEach((c) => flatten(c, into));
+    else into.push(b);
+  }
+  return into;
+}
+
+const allBlocks = (page: Page) =>
+  page.sections.reduce<Block[]>((acc, s) => flatten(s.blocks, acc), []);
+
+/** Visit every `columns` block, its own children included. */
+function eachColumns(blocks: Block[], fn: (b: Extract<Block, { type: "columns" }>) => void) {
+  for (const b of blocks) {
+    if (b.type !== "columns") continue;
+    fn(b);
+    b.cols.forEach((c) => eachColumns(c, fn));
+  }
+}
+
+const isPrice = (b: Block | undefined): b is Extract<Block, { type: "heading" }> =>
+  b?.type === "heading" && /^\s*£\s?[\d,]/.test(b.text);
+
+/** The text a block carries, entities and markup stripped. */
+const plain = (b: Block): string => {
+  const html =
+    b.type === "heading" ? b.text : b.type === "paragraph" ? b.html : "";
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+};
+
+/* ── Editing primitives ───────────────────────────────────────────────── */
+
+/** Rewrite every string a block carries. */
+function mapStrings(block: Block, fn: (s: string) => string) {
+  switch (block.type) {
+    case "heading":
+      block.text = fn(block.text);
+      break;
+    case "paragraph":
+      block.html = fn(block.html);
+      break;
+    case "list":
+      block.items = block.items.map(fn);
+      break;
+    case "table":
+      block.rows = block.rows.map((row) => row.map(fn));
+      break;
+    case "faq":
+      block.items = block.items.map((i) => ({ q: fn(i.q), a: i.a.map(fn) }));
+      break;
+  }
+}
+
+/** A literal swap across every block below `blocks`. Asserts it landed. */
+function swap(blocks: Block[], from: string, to: string, atLeast = 1) {
+  let hits = 0;
+  const run = (bs: Block[]) => {
+    for (const b of bs) {
+      if (b.type === "columns") {
+        b.cols.forEach(run);
+        continue;
+      }
+      mapStrings(b, (s) => {
+        if (!s.includes(from)) return s;
+        hits += s.split(from).length - 1;
+        return s.split(from).join(to);
+      });
+    }
+  };
+  run(blocks);
+  if (hits < atLeast) {
+    throw new Error(`content override: "${from}" not found (expected ${atLeast})`);
+  }
+}
+
+/**
+ * Drop whole columns from every `columns` block on the page, and any column
+ * the source already left empty. Spans are left alone: `Blocks.tsx` spreads a
+ * row whose spans no longer reach 12 across the full width.
+ */
+function dropColumns(page: Page, unwanted: (col: Block[]) => boolean) {
+  for (const section of page.sections) {
+    eachColumns(section.blocks, (block) => {
+      const keep = block.cols
+        .map((col, i) => ({ col, span: block.spans[i] ?? 12 }))
+        .filter(({ col }) => col.length > 0 && !unwanted(col));
+      block.cols = keep.map((k) => k.col);
+      block.spans = keep.map((k) => k.span);
+    });
+  }
+}
+
+/** The column whose leading heading is exactly `name`. */
+const headed = (name: string) => (col: Block[]) =>
+  col.some((b) => b.type === "heading" && plain(b).toUpperCase() === name);
+
+/**
+ * Replace the four vehicle-class prices that follow a package's heading.
+ *
+ * Anchored on the heading rather than a position because the same ladder is
+ * repeated on 21 pages, and because a regeneration reorders nothing but can
+ * add a block anywhere.
+ */
+function repriceLadder(page: Page, label: RegExp, prices: readonly number[]) {
+  const blocks = allBlocks(page);
+  let hits = 0;
+  for (let i = 0; i < blocks.length; i++) {
+    const b = blocks[i];
+    if (b.type !== "heading" || !label.test(plain(b))) continue;
+    let rung = 0;
+    for (let j = i + 1; j < blocks.length && rung < prices.length; j++) {
+      const price = blocks[j];
+      if (!isPrice(price)) continue;
+      // "£70" and "£70 p/m" both occur; keep whatever trails the number.
+      price.text = price.text.replace(/£\s?[\d,]+/, `£${prices[rung]}`);
+      rung++;
+    }
+    if (rung === prices.length) hits++;
+  }
+  if (!hits) throw new Error(`content override: no ladder under ${label}`);
+}
+
+/** Remove list items from the lists under a given heading. */
+function dropListItems(page: Page, under: RegExp, unwanted: RegExp) {
+  let hits = 0;
+  const run = (bs: Block[]) => {
+    let armed = false;
+    for (const b of bs) {
+      if (b.type === "columns") {
+        b.cols.forEach(run);
+        continue;
+      }
+      if (b.type === "heading") armed = under.test(plain(b));
+      if (b.type === "list" && armed) {
+        const kept = b.items.filter((i) => !unwanted.test(i));
+        hits += b.items.length - kept.length;
+        b.items = kept;
+      }
+    }
+  };
+  page.sections.forEach((s) => run(s.blocks));
+  if (!hits) throw new Error(`content override: nothing to drop under ${under}`);
+}
+
+/**
+ * Reprice one subscription product on the Car Lovers Club page.
+ *
+ * A product is a section whose first heading names it and whose second is
+ * "Subscription Packages"; its `columns` block holds one cadence per column,
+ * each a "from £x" line followed by the four-rung vehicle-class ladder.
+ */
+function repriceSubscription(
+  page: Page,
+  product: RegExp,
+  cadences: readonly (readonly number[])[],
+) {
+  const section = page.sections.find((s: Section) => {
+    const [first, second] = s.blocks;
+    return (
+      first?.type === "heading" &&
+      product.test(plain(first)) &&
+      second?.type === "heading" &&
+      /subscription/i.test(plain(second))
+    );
+  });
+  if (!section) throw new Error(`content override: no plans for ${product}`);
+
+  const cols = section.blocks.find((b) => b.type === "columns");
+  if (cols?.type !== "columns" || cols.cols.length !== cadences.length) {
+    throw new Error(`content override: ${product} has no cadence columns`);
+  }
+
+  cols.cols.forEach((col, i) => {
+    const prices = cadences[i];
+    const blocks = flatten(col);
+    // The lead-in reads "from £54 / month". It is the cheapest rung, so it
+    // follows the small-car price rather than being quoted separately.
+    const lead = blocks.find(
+      (b) => b.type === "paragraph" && /from\s*£/i.test(plain(b)),
+    );
+    if (lead?.type === "paragraph") {
+      lead.html = lead.html.replace(/£\s?[\d.,]+/, `£${prices[0]}`);
+    }
+    let rung = 0;
+    for (const b of blocks) {
+      if (!isPrice(b) || rung >= prices.length) continue;
+      b.text = b.text.replace(/£\s?[\d,]+/, `£${prices[rung]}`);
+      rung++;
+    }
+    if (rung !== prices.length) {
+      throw new Error(`content override: ${product} cadence ${i} has ${rung} rungs`);
+    }
+  });
+}
+
+/* ── The corrections themselves ───────────────────────────────────────── */
+
+/** The retired wash tiers, item 2. Exact names — "EXTERIOR PLUS WASH" stays. */
+const RETIRED_WASHES = ["BRONZE WASH", "EXTERIOR WASH"];
+
+const PASTE_WAX =
+  "<strong>Paste Wax</strong>: Protect and extend your car’s paintwork with a wax sealant that shields against the elements while delivering a brilliant shine.";
+const LIQUID_WAX =
+  "<strong>Liquid Wax</strong>: Protection for long-lasting gloss.";
+
+const RULES: Record<string, (page: Page) => void> = {
+  /* The mobile car wash hub: two tiers retired, three repriced, one add-on
+     renamed. Items 2, 3, 4 and 5. */
+  "mobile-car-wash": (page) => {
+    for (const name of RETIRED_WASHES) {
+      dropColumns(page, headed(name));
+    }
+    swap(page.sections.flatMap((s) => s.blocks), "£48-£60", "£59-£73");
+    swap(page.sections.flatMap((s) => s.blocks), "£90-£120", "£115-£145");
+    swap(page.sections.flatMap((s) => s.blocks), "£41-£52", "£49-£65");
+    // Gold Wash keeps its paste wax; only Exterior Plus changes.
+    for (const section of page.sections) {
+      eachColumns(section.blocks, (block) => {
+        for (const col of block.cols) {
+          if (!headed("EXTERIOR PLUS WASH")(col)) continue;
+          swap(col, "✔ Paste Wax", "✔ Liquid Wax");
+        }
+      });
+    }
+  },
+
+  /* Item 3. */
+  "mobile-car-wash/silver-wash": (page) => {
+    swap(page.sections.flatMap((s) => s.blocks), "£48-£60", "£59-£73");
+  },
+
+  /* Item 5. */
+  "car-interior-cleaning/premium-interior-wash": (page) => {
+    swap(page.sections.flatMap((s) => s.blocks), "£90-£120", "£115-£145");
+  },
+
+  /* Item 4: the price band, and the wax the package now uses. */
+  "mobile-car-wash/exterior-plus-wash": (page) => {
+    const blocks = page.sections.flatMap((s) => s.blocks);
+    swap(blocks, "£41-£52", "£49-£65");
+    swap(blocks, "✔ Paste Wax", "✔ Liquid Wax");
+    swap(blocks, PASTE_WAX, LIQUID_WAX);
+  },
+
+  /* Item 11. The page quotes its ladder under "OUR PRICING". */
+  "car-valeting/mini-valet": (page) => {
+    repriceLadder(page, /^our pricing$/i, [59, 65, 69, 73]);
+  },
+
+  /* Item 10, in the package comparison table. The trailing rung tells Triton
+     from Neptune, which is otherwise priced identically and is unchanged. */
+  "car-valeting": (page) => {
+    swap(
+      page.sections.flatMap((s) => s.blocks),
+      "yaris£115Medium",
+      "yaris£135Medium",
+    );
+    swap(page.sections.flatMap((s) => s.blocks), "Boxter/ BMW 1 Series£125Large", "Boxter/ BMW 1 Series£145Large");
+    swap(page.sections.flatMap((s) => s.blocks), "Porsche Macan£135XL Careg. BMW X5/ Volvo XC90/ Porsche Cayenne£145", "Porsche Macan£155XL Careg. BMW X5/ Volvo XC90/ Porsche Cayenne£165");
+  },
+
+  /* Item 16: the two checks the client struck off, and both subscription
+     ladders. The XL fortnightly rung reads "104" in the client's document,
+     which breaks the £12 step the other three sizes keep; 124 is used here
+     and is flagged back to the client. */
+  "car-lovers-club": (page) => {
+    dropListItems(
+      page,
+      /vehicle health check/i,
+      /Oil\s*(&amp;|&)\s*coolant check|Tyre Tread Safety Check/i,
+    );
+    repriceSubscription(page, /^the full maintenance detail$/i, [
+      [60, 65, 70, 75],
+      [110, 120, 130, 140],
+      [200, 220, 240, 260],
+    ]);
+    repriceSubscription(page, /^the exterior maintenance detail$/i, [
+      [47, 53, 59, 65],
+      [88, 100, 112, 124],
+      [164, 188, 212, 236],
+    ]);
+  },
+};
+
+/* Item 10 again: the same Triton ladder is quoted on every location hub. */
+const TRITON_LADDER = [135, 145, 155, 165] as const;
+
+/* ── Application ──────────────────────────────────────────────────────── */
+
+export function applyOverrides(
+  pages: Record<string, Page>,
+): Record<string, Page> {
+  const out = { ...pages };
+
+  const patch = (slug: string, fn: (page: Page) => void) => {
+    const page = out[slug];
+    if (!page) return;
+    const copy = structuredClone(page);
+    fn(copy);
+    out[slug] = copy;
+  };
+
+  for (const [slug, fn] of Object.entries(RULES)) patch(slug, fn);
+
+  for (const slug of Object.keys(out)) {
+    const carriesTriton = allBlocks(out[slug]).some(
+      (b) => b.type === "heading" && /^triton$/i.test(plain(b)),
+    );
+    if (carriesTriton) patch(slug, (p) => repriceLadder(p, /^triton$/i, TRITON_LADDER));
+  }
+
+  return out;
+}

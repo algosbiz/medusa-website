@@ -85,6 +85,14 @@ export default async function CatchAllPage({ params }: PageProps<"/[...slug]">) 
           pageH1={page.h1}
           // The post header has already set this page's one <h1>.
           h1Taken={Boolean(page.post)}
+          /*
+            Black, gold, black — the client asked for the alternation on every
+            page, so that every section reads as its own section. A blog post
+            is the exception: it is one continuous argument, not a stack of
+            offers, and banding every other row of it would cut sentences
+            apart. Those keep the content-led rhythm.
+          */
+          bands={page.post ? "content" : "alternate"}
         />
       </main>
       <Footer />

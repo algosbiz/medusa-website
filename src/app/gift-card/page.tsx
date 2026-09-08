@@ -75,7 +75,7 @@ export default function GiftCardPage() {
       <main className="flex-1">
         <PageHero title={page.h1} image={heroImageFor(page)} />
 
-        <section className="w-full border-b border-white/[0.07] py-14 lg:py-[88px]">
+        <section className="w-full border-b border-white/[0.07] py-16 lg:py-[104px]">
           <ul className="shell grid gap-5 lg:grid-cols-3">
             {COLUMNS.map((body, i) => (
               <Reveal as="li" key={i} delay={i} className="surface h-full p-7">

@@ -4,9 +4,15 @@ import Icon from "@/components/Icon";
 import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
 
+/**
+ * Padded top and bottom. It carried bottom padding only, running straight
+ * on from the portfolio row above because both were the same black. The
+ * portfolio is a gold band now — the client asked for the alternation — so
+ * the seam is real and the card needs air above it.
+ */
 export default function Gift() {
   return (
-    <section className="w-full bg-black pb-20 lg:pb-24">
+    <section className="w-full bg-black py-16 lg:py-[104px]">
       <div className="shell">
         <div className="surface grid items-center gap-10 overflow-hidden p-8 lg:grid-cols-12 lg:p-12">
           <Reveal className="lg:col-span-7">

@@ -531,7 +531,7 @@ function Eligibility({
   rules: { title: string; lead?: string; items: string[] };
 }) {
   return (
-    <section className="bg-gold-wash w-full py-14 lg:py-[88px]">
+    <section className="bg-gold-wash w-full py-16 lg:py-[104px]">
       <div className="shell grid gap-10 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-5">
           <SectionHead title={rules.title} lede={rules.lead} tone="gold" />

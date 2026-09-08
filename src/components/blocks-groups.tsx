@@ -84,12 +84,19 @@ export type PriceItem = {
 
 export type TabPanel = { label: string; blocks: Block[] };
 
-export type Grouped =
+/**
+ * `at` is where the group starts in the block list it was read from. It is
+ * what lets a caller cut a row into sections without cutting through a group
+ * — see `regroup` in `Blocks.tsx`.
+ */
+export type Grouped = { at: number } & (
   | { kind: "block"; block: Block }
   | { kind: "priceGrid"; items: PriceItem[] }
   | { kind: "gallery"; images: Extract<Block, { type: "image" }>[] }
   | { kind: "addonCards"; cards: AddonCard[] }
-  | { kind: "tabs"; panels: TabPanel[] };
+  | { kind: "tabs"; panels: TabPanel[] }
+  | { kind: "cardRow"; cells: Block[][] }
+);
 
 /* ── A tab set the extractor flattened ────────────────────────────────────
    `/car-valeting` ends its "Our Packages" row with a WPBakery tab set: a nav
@@ -187,7 +194,7 @@ export function group(blocks: Block[]): Grouped[] {
     // run, so it is tried before the shapes that would eat into its panels.
     const tabs = asTabs(blocks, i);
     if (tabs) {
-      out.push({ kind: "tabs", panels: tabs.panels });
+      out.push({ at: i, kind: "tabs", panels: tabs.panels });
       i = tabs.end;
       continue;
     }
@@ -216,7 +223,7 @@ export function group(blocks: Block[]): Grouped[] {
     }
 
     if (items.length >= 2) {
-      out.push({ kind: "priceGrid", items });
+      out.push({ at: i, kind: "priceGrid", items });
       i = j;
       continue;
     }
@@ -245,7 +252,7 @@ export function group(blocks: Block[]): Grouped[] {
       a = end;
     }
     if (cards.length) {
-      out.push({ kind: "addonCards", cards });
+      out.push({ at: i, kind: "addonCards", cards });
       i = a;
       continue;
     }
@@ -259,6 +266,7 @@ export function group(blocks: Block[]): Grouped[] {
     while (blocks[k]?.type === "image" && !(blocks[k] as { icon?: boolean }).icon) k++;
     if (k - i >= 2) {
       out.push({
+        at: i,
         kind: "gallery",
         images: blocks.slice(i, k) as Extract<Block, { type: "image" }>[],
       });
@@ -266,11 +274,76 @@ export function group(blocks: Block[]): Grouped[] {
       continue;
     }
 
-    out.push({ kind: "block", block: blocks[i] });
+    const cardRow = asCardRow(blocks, i);
+    if (cardRow) {
+      out.push({ at: i, kind: "cardRow", cells: cardRow.cells });
+      i = cardRow.end;
+      continue;
+    }
+
+    out.push({ at: i, kind: "block", block: blocks[i] });
     i += 1;
   }
 
   return out;
+}
+
+/**
+ * The shape of a cell, as a string, so sibling cells can be compared.
+ * Headings keep their level: an image over an h4 is a different card from an
+ * image over an h2.
+ */
+const shapeOf = (col: Block[]) =>
+  col.map((b) => (b.type === "heading" ? `h${b.level}` : b.type)).join("|");
+
+/**
+ * A row of cards the source wrote as a free-form `columns` row.
+ *
+ * A cell that opens with a photograph and carries a heading is a card,
+ * whatever the page builder called it. Rendered as a bare column it had no
+ * surface, no shared height and no shared baseline: on /mobile-car-wash the
+ * five wash packages came out as five naked stacks, two of them with a third
+ * of their height empty and their "Book Now" buttons 401px apart.
+ */
+const isCardCell = (col: Block[]) =>
+  col.length >= 3 &&
+  col[0]?.type === "image" &&
+  !col[0].icon &&
+  col.some((b) => b.type === "heading");
+
+/**
+ * The cells of every consecutive `columns` row that shares one cell shape.
+ *
+ * Consecutive rows matter as much as the cards themselves. The source splits
+ * seven wash packages over two rows of four; two of them were later retired,
+ * leaving a row of three and a row of two — and `Blocks.tsx` sizes each row
+ * off its own cell count, so the same package was 337px wide with a 224px
+ * photograph in one row and 525px wide with a 350px photograph in the next.
+ * Read as one set, they are one grid.
+ */
+export function asCardRow(
+  blocks: Block[],
+  start: number,
+): { cells: Block[][]; end: number } | null {
+  const first = blocks[start];
+  if (first?.type !== "columns") return null;
+  const lead = first.cols.filter((c) => c.length);
+  if (lead.length < 2 || !lead.every(isCardCell)) return null;
+
+  const shape = shapeOf(lead[0]);
+  if (!lead.every((c) => shapeOf(c) === shape)) return null;
+
+  const cells = [...lead];
+  let end = start + 1;
+  while (end < blocks.length) {
+    const next = blocks[end];
+    if (next?.type !== "columns") break;
+    const more = next.cols.filter((c) => c.length);
+    if (!more.length || !more.every((c) => shapeOf(c) === shape)) break;
+    cells.push(...more);
+    end += 1;
+  }
+  return { cells, end };
 }
 
 export type AddonCard = {
@@ -712,6 +785,69 @@ export function PriceGrid({ items }: { items: PriceItem[] }) {
   );
 }
 
+/**
+ * One card per cell: a fixed-ratio photograph, then the cell's own blocks, then
+ * whatever actions it ended with pinned to the foot.
+ *
+ * Equal height and a shared action baseline are the whole point. Left as bare
+ * columns these cards ran 688px, 756px and 1089px tall in one row, so two of
+ * three had a third of their height as void and no two calls to action sat on
+ * the same line.
+ */
+export function CardRow({
+  cells,
+  onGold,
+  renderBlocks,
+}: {
+  cells: Block[][];
+  onGold?: boolean;
+  renderBlocks: (blocks: Block[]) => React.ReactNode;
+}) {
+  return (
+    <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {cells.map((cell, i) => {
+        const photo = cell[0] as Extract<Block, { type: "image" }>;
+        // The run of actions the cell ends on, lifted so it can sit on the
+        // card's foot rather than wherever the copy happens to stop.
+        let cut = cell.length;
+        while (cut > 1 && cell[cut - 1].type === "button") cut -= 1;
+        const body = cell.slice(1, cut);
+        const actions = cell.slice(cut);
+        return (
+          <li
+            key={i}
+            className={`flex flex-col overflow-hidden ${onGold ? "surface-on-gold" : "surface"}`}
+          >
+            <div className="relative aspect-3/2 w-full">
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+            {/*
+              A card's title is a card's title whatever heading level the page
+              builder reached for — the wash packages are h4s, the detailing
+              ones h3s. The level keeps its meaning in the outline; the size
+              comes from the role.
+            */}
+            <div className="flex flex-1 flex-col p-6 [&>*:first-child]:mt-0 [&>h2]:text-[19px] [&>h2]:lg:text-[21px] [&>h3]:text-[19px] [&>h3]:lg:text-[21px] [&>h4]:text-[19px] [&>h4]:lg:text-[21px] [&>h4]:text-white [&>h5]:text-[17px]">
+              {renderBlocks(body)}
+              {actions.length > 0 && (
+                <div className="mt-auto flex flex-wrap gap-2 pt-7">
+                  {renderBlocks(actions)}
+                </div>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 export function AddonCards({
   cards,
   renderBlocks,
@@ -731,8 +867,13 @@ export function AddonCards({
       uneven — "Congestion Zone Surcharge" is one sentence, "Excessive Soiled
       Interior" is six. Stretched, the long one set the height for all four and
       the other three carried several hundred pixels of nothing underneath.
+
+      220px, not 250: /car-detailing carries five of these cards over five
+      columns of description, and at 250 the fifth card dropped to a row of
+      its own while its blurb stayed in column five. The five now sit on one
+      row, over the blurbs that explain them.
     */
-    <ul className="mt-7 grid items-start gap-4 sm:grid-cols-2 lg:[grid-template-columns:repeat(auto-fit,minmax(250px,1fr))]">
+    <ul className="mt-7 grid items-start gap-4 sm:grid-cols-2 lg:[grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
       {cards.map((c, i) => (
         <li
           key={i}

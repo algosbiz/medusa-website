@@ -117,7 +117,13 @@ export default function TablePrices({
                 {ladder.cta && (
                   <a
                     href={BOOK_URL}
-                    className="btn btn-gold px-3 py-1.5 text-[10.5px] leading-[14px] tracking-[0.06em]"
+                    /*
+                      26px tall is the right size for this chip and the wrong
+                      size for a thumb. The `after` block extends the hit area
+                      to 44px without moving the type — the same trick
+                      `.link-inline` uses, for the same reason.
+                    */
+                    className="btn btn-gold relative px-3 py-1.5 text-[10.5px] leading-[14px] tracking-[0.06em] after:absolute after:inset-x-0 after:-inset-y-[9px] after:content-['']"
                   >
                     {ladder.cta}
                     <span className="sr-only">

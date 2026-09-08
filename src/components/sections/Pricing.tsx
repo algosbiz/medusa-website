@@ -20,6 +20,12 @@ import { BOOK_URL, type Included } from "@/lib/site";
  *
  * The bar under each row encodes its price as length, scaled per tab so the
  * detailing ladder isn't flattened by its own £1,200 top end.
+ *
+ * The band is gold, the list inside it is not. The page alternates its
+ * sections black and gold so each one reads as its own, but 22 rows of prices
+ * need a dark ground: gold prices on a gold wash measure 1:1. `surface-on-gold`
+ * is the design system's answer to exactly that — the band changes, the panel
+ * on it stays dark, and nothing inside has to be restyled.
  */
 const TABS: ServiceKind[] = ["wash", "valeting", "detailing"];
 
@@ -35,26 +41,28 @@ export default function Pricing() {
   );
 
   return (
-    <section id="services" className="w-full bg-black py-16 lg:py-[104px]">
+    <section id="services" className="bg-gold-wash w-full py-16 lg:py-[104px]">
       <div className="shell">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
           <SectionHead
             title="Services & Prices"
             lede="Every wash, valet and detail we offer. Pick a service type, set your vehicle size, and the whole list reprices."
+            tone="gold"
             className="lg:max-w-[58%]"
           />
           <Reveal delay={3} className="lg:pb-2">
-            <VehicleClassPicker label="Prices shown for" />
+            <VehicleClassPicker tone="gold" label="Prices shown for" />
           </Reveal>
         </div>
 
+        <div className="surface-on-gold mt-12 p-4 sm:p-8 lg:p-10">
         <Reveal delay={2}>
           <div
             role="tablist"
             aria-label="Service type"
             /* Same 2px gold edge the vehicle-class picker carries, so the two
                controls in this row read as a matching pair. */
-            className="mt-14 grid grid-cols-3 gap-1 overflow-hidden rounded-[12px] bg-ink p-1 ring-2 ring-gold/45 sm:inline-grid sm:auto-cols-max sm:grid-flow-col"
+            className="grid grid-cols-3 gap-1 overflow-hidden rounded-[12px] bg-ink-panel p-1 ring-2 ring-gold/45 sm:inline-grid sm:auto-cols-max sm:grid-flow-col"
           >
             {TABS.map((k) => {
               const active = k === tab;
@@ -66,7 +74,10 @@ export default function Pricing() {
                   aria-selected={active}
                   aria-controls={`panel-${k}`}
                   onClick={() => setTab(k)}
-                  className={`flex items-center justify-center gap-2 rounded-[8px] px-4 py-3.5 font-[family-name:var(--font-sub)] text-[13px] tracking-[0.06em] uppercase transition-colors duration-200 sm:px-8 sm:text-[14px] ${
+                  /* px-2 on a phone: the cell is the button, so the text
+                     is centred in it either way, and 16px a side was what
+                     pushed "Car Wash" onto a second line inside the panel. */
+                  className={`flex items-center justify-center gap-1.5 rounded-[8px] px-2 py-3.5 font-[family-name:var(--font-sub)] text-[13px] tracking-[0.06em] uppercase transition-colors duration-200 sm:gap-2 sm:px-8 sm:text-[14px] ${
                     active ? "bg-gold text-ink" : "text-white/80 hover:bg-white/[0.08]"
                   }`}
                 >
@@ -115,6 +126,7 @@ export default function Pricing() {
             condition of the vehicle.
           </p>
         )}
+        </div>
       </div>
 
       {dialog && <IncludedDialog data={dialog} onClose={() => setDialog(null)} />}

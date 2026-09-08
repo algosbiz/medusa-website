@@ -6,6 +6,7 @@ import {
   asInlineTicks,
   asLinkChips,
   asTicks,
+  CardRow,
   clean,
   FeatureCards,
   Gallery,
@@ -149,6 +150,18 @@ function LeadIn({
 const PROSE =
   "break-words [&_a]:text-gold [&_a:hover]:underline [&_strong]:text-white";
 
+/*
+  The same, for copy set on a gold band. Gold links measured 1:1 against the
+  band they sat on — a phone number on /car-van-stickers-removal was invisible
+  — and bold runs went white at 2.8:1. Ink for both: the link keeps its
+  underline on hover to stay tellable from the sentence around it.
+*/
+const PROSE_ON_GOLD =
+  "break-words [&_a]:text-ink [&_a]:underline [&_a]:decoration-ink/40 [&_a:hover]:decoration-ink [&_strong]:text-ink";
+
+/** Whichever of the two the surface calls for. */
+const prose = (light?: boolean) => (light ? PROSE_ON_GOLD : PROSE);
+
 /**
  * Forms need to know which page and which form-on-that-page they are, so the
  * server action can re-read their schema. `forms` holds the page's form blocks
@@ -229,6 +242,187 @@ function leadHeading(blocks: Block[]): Block | undefined {
 const surfaceOf = (bg: Section["bg"]) =>
   bg?.image ?? bg?.gradient ?? bg?.color ?? "none";
 
+/* ── Rows into sections ───────────────────────────────────────────────────
+   A WordPress row is a unit of editing, not a unit of design, and the
+   difference only started to show once every other row took a gold band: on
+   /car-valeting the band fell between "FAQs" and the questions under it, and
+   again between "Book a Mobile Car Cleaning Today" and its own Book Now
+   button. Three shapes account for all of it, and all three are re-partitions
+   — no block is added, dropped or reordered. */
+
+const onlyHeadings = (s: Section) =>
+  s.blocks.length > 0 && s.blocks.every((b) => b.type === "heading");
+
+const onlyButtons = (s: Section) =>
+  s.blocks.length > 0 && s.blocks.every((b) => b.type === "button");
+
+/**
+ * A row that is a heading and, at most, the lede under it — a title with no
+ * content of its own. `/car-detailing/mini-detail` puts "Want added
+ * protection?…" and its sentence in one row and the four price cards it
+ * introduces in the next; the band fell between them.
+ */
+const isLede = (s: Section) =>
+  s.blocks[0]?.type === "heading" &&
+  s.blocks[0].level === 2 &&
+  s.blocks.slice(1).every((b) => b.type === "paragraph");
+
+/** A row that opens with a heading is announcing itself, not continuing. */
+const opensItself = (s: Section) => s.blocks[0]?.type === "heading";
+
+const sameSurface = (a: Section, b: Section) => surfaceOf(a.bg) === surfaceOf(b.bg);
+
+const plainLength = (html: string) => html.replace(/<[^>]+>/g, "").trim().length;
+
+/**
+ * A row holding two complete statements — heading, copy, heading, copy — with
+ * nothing else in it. Four of these exist; every other multi-h2 row is a blog
+ * post's body, which is one argument and must not be cut up.
+ */
+function isTwoStatements(s: Section): boolean {
+  if (s.blocks.length > 8) return false;
+  const heads = s.blocks.filter((b) => b.type === "heading" && b.level === 2).length;
+  if (heads < 2) return false;
+  return s.blocks.every(
+    (b) => (b.type === "heading" && b.level === 2) || b.type === "paragraph",
+  );
+}
+
+/**
+ * A row that holds several whole topics is several rows.
+ *
+ * A quarter of the site ships as one row per page — /mobile-car-wash is a
+ * single row carrying eight h2s, an entire page of pricing, add-ons, a
+ * gallery and the FAQ. One row is one band, so the alternation had nothing to
+ * alternate over and the whole page came out gold.
+ *
+ * The cut is made on `group()`'s boundaries, not on raw block indices, so a
+ * price ladder, an add-on run, a gallery or a flattened tab set is never cut
+ * through: each piece re-groups to exactly what the whole row grouped to. A
+ * heading that is only a price is not a topic — those are `£115` set as an h2
+ * inside a ladder, and they open nothing.
+ */
+function splitTopics(s: Section): Section[] {
+  const breaks: number[] = [];
+  for (const g of group(s.blocks)) {
+    if (g.at === 0 || g.kind !== "block") continue;
+    const b = g.block;
+    if (b.type !== "heading" || b.level !== 2) continue;
+    if (/^\s*(from\s*)?£\s*[\d,]/i.test(b.text)) continue;
+    breaks.push(g.at);
+  }
+  if (!breaks.length) return [s];
+
+  const out: Section[] = [];
+  const edges = [0, ...breaks, s.blocks.length];
+  for (let i = 0; i < edges.length - 1; i++) {
+    const blocks = s.blocks.slice(edges[i], edges[i + 1]);
+    if (blocks.length) out.push({ bg: s.bg, blocks });
+  }
+  return out;
+}
+
+/** A section as rendered, and the source rows it came from. */
+type Regrouped = { section: Section; sources: Section[] };
+
+function regroup(sections: Section[], topics: boolean): Regrouped[] {
+  /*
+    1. One row per topic. Only where the bands alternate: that is what the cut
+       is for, and a blog post — which renders with the content-led rhythm —
+       is one argument that must stay in one piece however many h2s it carries.
+  */
+  const byTopic: Regrouped[] = sections.flatMap((source) =>
+    (topics ? splitTopics(source) : [source]).map((section) => ({ section, sources: [source] })),
+  );
+
+  // 2. Two statements in one row are two rows.
+  const split: Regrouped[] = [];
+  for (const { section: s, sources } of byTopic) {
+    if (!isTwoStatements(s)) {
+      split.push({ section: s, sources });
+      continue;
+    }
+    let blocks: Block[] = [];
+    const flush = () => {
+      if (blocks.length) split.push({ section: { bg: s.bg, blocks }, sources });
+      blocks = [];
+    };
+    for (const b of s.blocks) {
+      if (b.type === "heading" && blocks.length) flush();
+      blocks.push(b);
+    }
+    flush();
+  }
+
+  /*
+    3. A row that is only a heading — or a heading and its lede — is the title
+       of the row under it. 211 of the first kind, "FAQs" among them, and 148
+       of the second.
+    4. A row that is only a button is the call to action of the row above it.
+
+    A lede only joins a row that does not open with a heading of its own: a
+    row that announces itself is its own topic, which is what keeps two
+    closing statements apart on /car-valeting.
+
+    Both only when the two rows already sit on the same surface: a heading
+    joining a row that carries its own photograph would be moved onto that
+    photograph, which is a design decision rather than a regrouping.
+  */
+  const out: Regrouped[] = [];
+  for (let i = 0; i < split.length; i++) {
+    const cur = split[i];
+    const next = split[i + 1];
+    const title =
+      onlyHeadings(cur.section) || (isLede(cur.section) && next && !opensItself(next.section));
+    if (title && next && sameSurface(cur.section, next.section)) {
+      split[i + 1] = {
+        section: { bg: next.section.bg, blocks: [...cur.section.blocks, ...next.section.blocks] },
+        sources: [...cur.sources, ...next.sources],
+      };
+      continue;
+    }
+    const prev = out[out.length - 1];
+    if (onlyButtons(cur.section) && prev && sameSurface(cur.section, prev.section)) {
+      out[out.length - 1] = {
+        section: { bg: prev.section.bg, blocks: [...prev.section.blocks, ...cur.section.blocks] },
+        sources: [...prev.sources, ...cur.sources],
+      };
+      continue;
+    }
+    out.push(cur);
+  }
+  return out;
+}
+
+/** A heading, one short paragraph, and any buttons that follow it. */
+function isStatement(s: Section): boolean {
+  const [head, body, ...rest] = s.blocks;
+  if (head?.type !== "heading" || head.level !== 2) return false;
+  if (body?.type !== "paragraph") return false;
+  if (!rest.every((b) => b.type === "button")) return false;
+  return plainLength(body.html) < 420;
+}
+
+const hasButton = (s: Section) => s.blocks.some((b) => b.type === "button");
+
+/**
+ * The page signing off: a closing statement that carries the call to action,
+ * or the one immediately above it that sets it up.
+ *
+ * Set centred across the full width instead of in the narrow article column.
+ * A statement anywhere else on the page is left alone — mid-page these are
+ * product blurbs, and /ceramic-coating alone has several. The pairing with a
+ * button is what tells the two apart, and it holds for four sections in the
+ * whole site.
+ */
+function closingStatements(sections: Section[]): boolean[] {
+  return sections.map((s, i) => {
+    if (!isStatement(s)) return false;
+    const next = sections[i + 1];
+    return hasButton(s) || Boolean(next && isStatement(next) && hasButton(next));
+  });
+}
+
 /**
  * Which sections carry the brand gold.
  *
@@ -257,6 +451,44 @@ function goldBands(sections: Section[]): boolean[] {
     );
     return hasAddons || hasChips;
   });
+}
+
+/**
+ * Black, gold, black.
+ *
+ * In this mode the renderer owns the background of every row: a row's own
+ * colour is dropped, because the source's colours do not alternate. The
+ * location pages ship their own run of gold rows and /mobile-car-wash ships
+ * none at all, and honouring either left the page in long stretches of one
+ * colour — which is the thing the alternation exists to prevent.
+ *
+ * Two rows are exempt. A row carrying a photograph keeps it, and does not
+ * move the rhythm on. And the page's own header is left as the source painted
+ * it — it is the one row on the page that is already a designed surface.
+ */
+function alternating(sections: Section[], opensPage: boolean): boolean[] {
+  let wantGold = true;
+  return sections.map((s, i) => {
+    if (opensPage && i === 0) {
+      // A light header hands the dark half of the first pair to the row below.
+      if (isLightBackground(s.bg)) wantGold = false;
+      return false;
+    }
+    if (s.bg?.image) return false;
+    const gold = wantGold;
+    wantGold = !wantGold;
+    return gold;
+  });
+}
+
+/** The rows whose background the alternation paints, dark ones included. */
+function paintedRows(
+  sections: Section[],
+  bands: string,
+  opensPage: boolean,
+): boolean[] {
+  if (bands !== "alternate") return sections.map(() => false);
+  return sections.map((s, i) => !(opensPage && i === 0) && !s.bg?.image);
 }
 
 /** Every block on the page in document order, columns flattened into place. */
@@ -319,9 +551,22 @@ export function Sections({
     are section headings that were tagged wrong, and treating them as such is
     both the better outline and the better page.
   */
+  /*
+    The source's rows, re-partitioned into what the eye reads as a section —
+    see `regroup`. Nothing is added or dropped, so everything below can be
+    written against the result as though the content file had shipped it.
+  */
+  const grouped = regroup(sections, bands === "alternate");
+  const rows = grouped.map((g) => g.section);
+  // `panel` is keyed on the caller's own section objects; a regrouped row
+  // inherits the flag from whichever source rows it was built from.
+  const panelled = panel
+    ? new Set(grouped.filter((g) => g.sources.some((x) => panel.has(x))).map((g) => g.section))
+    : undefined;
+
   const drop = new Set<Block>();
   const demote = new Set<Block>();
-  const ordered = sections.reduce<Block[]>((acc, s) => inOrder(s.blocks, acc), []);
+  const ordered = rows.reduce<Block[]>((acc, s) => inOrder(s.blocks, acc), []);
   const headings = ordered.filter((b) => b.type === "heading");
 
   // The post header has already printed the title; a copy of it opening the
@@ -369,25 +614,30 @@ export function Sections({
   const ctx: Ctx = { slug, forms: getForms(slug), drop, demote, leadIn };
   const gold =
     bands === "none"
-      ? sections.map(() => false)
+      ? rows.map(() => false)
       : bands === "alternate"
-        ? sections.map((s, i) => i > 0 && i % 2 === 0 && !s.bg?.image && !isLightBackground(s.bg))
-        : goldBands(sections);
+        ? alternating(rows, opensPage)
+        : goldBands(rows);
+  const painted = paintedRows(rows, bands, opensPage);
   // A gold band is its own surface, so the seam either side keeps full padding.
-  const surface = (i: number) => (gold[i] ? "gold" : surfaceOf(sections[i].bg));
+  const surface = (i: number) =>
+    gold[i] ? "gold" : painted[i] ? "ink" : surfaceOf(rows[i].bg);
+  const centred = closingStatements(rows);
 
   return (
     <>
-      {sections.map((s, i) => (
+      {rows.map((s, i) => (
         <SectionBlock
           key={i}
           section={s}
           first={opensPage && i === 0}
-          panel={panel?.has(s)}
+          panel={panelled?.has(s)}
           gold={gold[i]}
+          painted={painted[i]}
+          statement={centred[i]}
           // Generous padding only where the surface actually changes.
           openSurface={i > 0 && surface(i - 1) === surface(i)}
-          closeSurface={i < sections.length - 1 && surface(i + 1) === surface(i)}
+          closeSurface={i < rows.length - 1 && surface(i + 1) === surface(i)}
           ctx={ctx}
         />
       ))}
@@ -399,13 +649,23 @@ function SectionBlock({
   section,
   first,
   gold,
+  painted,
   openSurface,
   closeSurface,
   panel,
+  statement,
   ctx,
 }: {
   section: Section;
   first: boolean;
+  /**
+   * The alternation owns this row's background. Its own colour is dropped —
+   * see `alternating` — so a row the source painted gold can take the dark
+   * half of a pair and still read as dark.
+   */
+  painted?: boolean;
+  /** The page signing off — centred across the full width. */
+  statement?: boolean;
   /** Set the row inside a bordered panel with a gold edge along its top. */
   panel?: boolean;
   /** Render this section as a gold band. */
@@ -438,14 +698,14 @@ function SectionBlock({
     : first
       ? "pt-[150px] lg:pt-[190px]"
       : openSurface
-        ? "pt-7 lg:pt-9"
-        : "pt-12 lg:pt-16";
+        ? "pt-9 lg:pt-12"
+        : "pt-16 lg:pt-[104px]";
 
   const padBottom = closeSurface
-    ? "pb-7 lg:pb-9"
+    ? "pb-9 lg:pb-12"
     : isHero
       ? "pb-14 lg:pb-20"
-      : "pb-12 lg:pb-16";
+      : "pb-16 lg:pb-[104px]";
 
   if (panel) {
     /*
@@ -454,7 +714,7 @@ function SectionBlock({
       along its top do the work of marking it instead.
     */
     return (
-      <section className="w-full py-12 lg:py-[72px]">
+      <section className="w-full py-16 lg:py-[104px]">
         <div className="shell">
           <div className="surface overflow-hidden border-t-[3px] border-gold px-6 py-10 lg:px-12 lg:py-14">
             <BlockList
@@ -469,8 +729,10 @@ function SectionBlock({
 
   return (
     <section
-      className={`relative w-full ${padTop} ${padBottom} ${gold ? "bg-gold-wash" : ""}`}
-      style={gold ? undefined : style}
+      className={`relative w-full ${padTop} ${padBottom} ${
+        gold ? "bg-gold-wash" : painted ? "bg-black" : ""
+      }`}
+      style={gold || painted ? undefined : style}
     >
       {hasImage && (
         <>
@@ -496,7 +758,14 @@ function SectionBlock({
           )}
         </>
       )}
-      {!hasImage && bg?.overlay && (
+      {/*
+        Not on a gold band. The scrim is there to hold text off a photograph,
+        and where the mirror lost the photograph it is a black film over
+        nothing. Left on, it took the band to 20% gold and printed the ink
+        type the band asks for onto near-black — /car-valeting/pre-sale-valet
+        was unreadable. `style` is skipped for the same reason a line above.
+      */}
+      {!hasImage && !gold && !painted && bg?.overlay && (
         <div
           className="absolute inset-0"
           style={{ backgroundColor: bg.overlay, opacity: bg.overlayOpacity ?? 1 }}
@@ -517,14 +786,16 @@ function SectionBlock({
         />
       )}
 
-      <Reveal className="shell-article relative">
+      <Reveal className={`relative ${statement ? "shell statement" : "shell-article"}`}>
         <BlockList
           blocks={section.blocks}
           ctx={{
             ...ctx,
             ruleOn: leadHeading(section.blocks),
-            light: gold || isLightBackground(bg),
-            onGold: gold || isLightBackground(bg),
+            // A row the alternation painted dark is dark, whatever colour
+            // the source gave it.
+            light: gold || (!painted && isLightBackground(bg)),
+            onGold: gold || (!painted && isLightBackground(bg)),
           }}
         />
       </Reveal>
@@ -561,6 +832,22 @@ export function BlockList({ blocks, ctx }: { blocks: Block[]; ctx: Ctx }) {
                 // TIER_ACCENT's keys without another shortLabel() pass.
                 accent: TIER_ACCENT[panel.label],
               }))}
+            />
+          );
+        }
+        if (g.kind === "cardRow") {
+          return (
+            <CardRow
+              key={i}
+              cells={g.cells}
+              onGold={ctx.onGold}
+              renderBlocks={(cell) => (
+                <BlockList
+                  blocks={cell}
+                  // The card is a dark surface even on a gold band.
+                  ctx={{ ...ctx, light: false, onGold: false }}
+                />
+              )}
             />
           );
         }
@@ -614,6 +901,19 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
       const flat = block.html.replace(/<[^>]+>/g, "");
       if (isBadge(flat)) return <Badge text={flat} onGold={ctx.onGold} />;
 
+      /*
+        A price is a price whichever tag it arrived in. 21 of them across nine
+        pages are paragraphs rather than headings — the wash bands, "£59-£73"
+        — and set as prose they came out at body size and body colour, one
+        line under the duration and indistinguishable from it. The heading
+        branch already gives a lone price the badge; this sends the paragraphs
+        to the same place rather than keeping two treatments for one fact.
+      */
+      const price = flat.replace(/&nbsp;/gi, " ").trim();
+      if (/^(from\s*)?£\s?[\d,]+(\s*[-–—]\s*£?\s?[\d,]+)?\.?$/i.test(price)) {
+        return <PriceBadge text={price.replace(/\.$/, "")} light={ctx.light} />;
+      }
+
       // A paragraph that is only links and commas is a list, not prose.
       const chips = asLinkChips(block.html);
       if (chips) return <LinkChips chips={chips} onGold={ctx.onGold} />;
@@ -628,13 +928,13 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
       const inline = asInlineTicks(block.html);
       if (inline) {
         return (
-          <ul className="mt-6 grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+          <ul className="mt-6 grid gap-x-8 gap-y-2.5">
             {inline.map((t, i) => (
               <li
                 key={i}
                 className={`flex gap-3 text-[16px] leading-[25px] font-normal ${
                   ctx.light ? "text-ink/85" : "text-body"
-                } ${PROSE}`}
+                } ${prose(ctx.light)}`}
               >
                 <Icon
                   name="check"
@@ -653,7 +953,7 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
         <p
           className={`mt-4 max-w-[76ch] text-[16.5px] leading-[28px] font-normal ${
             ctx.light ? "text-ink/80" : "text-body"
-          } ${PROSE}`}
+          } ${prose(ctx.light)}`}
           dangerouslySetInnerHTML={{ __html: clean(block.html) }}
         />
       );
@@ -690,7 +990,7 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
                 key={i}
                 className={`flex items-center gap-2.5 text-[15.5px] leading-[24px] font-semibold ${
                   ctx.light ? "text-ink" : "text-white"
-                } ${PROSE}`}
+                } ${prose(ctx.light)}`}
               >
                 <Icon
                   name="check"
@@ -710,17 +1010,18 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
       const panel = list.items.length >= 6;
       return (
         /*
-          The second column is asked for against the panel's own width, not the
-          window's. `sm:grid-cols-2` split the list in two whenever the browser
-          was wider than 640px — including inside the four package columns on
-          /standard-car-wash, where it left 97px cells with "Hybrid Ceramic Wax
-          – SiO2 Paint Protection" running out of them.
+          One column, always. These lists are ordered — a wash runs pre-wash,
+          then wash, then dry — and two columns broke that: the eye reads
+          across the row while the content runs down the column, so item 2 sat
+          where item 7 was expected. The client asked for the single column by
+          name, and it is also the only layout in which the sequence is
+          readable.
         */
         <div className={`@container ${panel ? "mt-6" : ""}`}>
         <Tag
           className={`${panel ? "" : "mt-6"} ${
             panel
-              ? `grid gap-x-8 gap-y-3.5 p-6 @min-[520px]:grid-cols-2 @min-[520px]:p-7 ${
+              ? `grid gap-x-8 gap-y-3.5 p-6 @min-[520px]:p-7 ${
                   ctx.onGold ? "surface-on-gold" : "surface"
                 }`
               : "max-w-[76ch] space-y-2.5"
@@ -733,7 +1034,7 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
                 // A checklist sits inside its own dark panel, so its copy stays
                 // light even where the section around it is gold.
                 ctx.light && list.items.length < 6 ? "text-ink/85" : "text-body"
-              } ${PROSE}`}
+              } ${prose(ctx.light)}`}
             >
               {list.ordered ? (
                 <span
@@ -821,7 +1122,15 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
       return (
         <a
           href={href}
-          className="btn btn-gold mt-7 mr-3 w-full rounded-full sm:w-auto"
+          /* Gold on a gold band is one flat shape — "Read More" and "Book Now"
+             beside each other were two ghosts. The ink pill is what the band
+             uses instead, the same one `WhyChoose` and the portfolio carry. */
+          /* `mx-1.5`, not `mr-3`: the gap between two of these is the same
+             12px either way, and a symmetric margin keeps a lone button on
+             the centre line of a closing statement. */
+          className={`btn mt-7 mx-1.5 w-full rounded-full sm:w-auto ${
+            ctx.light ? "btn-dark" : "btn-gold"
+          }`}
           {...(/^https?:/.test(href)
             ? { target: "_blank", rel: "noopener noreferrer" }
             : {})}
@@ -878,9 +1187,24 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
             <div className="min-w-[520px]">
               {segmented && (
                 <div
-                  className="grid gap-1.5 p-4 pb-3"
-                  style={{ gridTemplateColumns: `repeat(${model.valueCount}, minmax(0, 1fr))` }}
+                  className="grid pt-4 pb-3"
+                  /*
+                    The chips have to sit over the columns they name. Spread
+                    across the whole width they did not: the table leads with a
+                    200px feature column and a 240px description before the
+                    first verdict column, so every chip was two columns to the
+                    left of its own ticks.
+
+                    Same ratio as the `colgroup` below, in `fr` rather than
+                    pixels because both this row and the table are fluid, plus
+                    a leading cell that spans the label columns and holds
+                    nothing.
+                  */
+                  style={{
+                    gridTemplateColumns: `${model.hasDesc ? "440fr" : "200fr"} repeat(${model.valueCount}, 110fr)`,
+                  }}
                 >
+                  <div aria-hidden />
                   {model.headers[0].map((full, idx) => {
                     const accent = TIER_ACCENT[shortLabel(full)] ?? DEFAULT_ACCENT;
                     const sub = model.headers[1]?.[idx];
@@ -896,7 +1220,7 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
                           chip and a tall one both read as one block sized to
                           its own text, not as a box with room left over.
                         */
-                        className="flex flex-col justify-center rounded-[9px] px-3.5 py-3.5 text-center"
+                        className="mx-[3px] flex flex-col justify-center rounded-[9px] px-3 py-3.5 text-center"
                       >
                         <p className="font-[family-name:var(--font-sub)] text-[13.5px] leading-[17px] tracking-[0.01em] text-ink uppercase">
                           {full}
@@ -945,7 +1269,15 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
                       {row.map((cell, j) => (
                         <td
                           key={j}
-                          className="px-5 py-3.5 text-[15px] font-normal first:font-semibold"
+                          /*
+                            A verdict column is a column of ✓ and –, and a tick
+                            pushed to the left edge of a 110px column sits
+                            nowhere near the package chip that heads it. Only
+                            the label and its description are prose.
+                          */
+                          className={`px-5 py-3.5 text-[15px] font-normal first:font-semibold ${
+                            model && j >= (model.hasDesc ? 2 : 1) ? "text-center" : ""
+                          }`}
                         >
                           {cell}
                         </td>
@@ -966,7 +1298,7 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
     }
 
     case "faq":
-      return <FaqAccordion items={block.items} />;
+      return <FaqAccordion items={block.items} onGold={ctx.onGold} />;
 
     case "form":
       return (
@@ -1037,16 +1369,28 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
       );
       const split = block.cols.length === 2 && imageCol !== -1;
 
+      /*
+        The spans are a ratio, not a measurement. Fifteen rows in the content
+        file carry `[1,1,1,1,1]` — every LEVEL 1–5 row on the detailing pages
+        — and read literally that packs five columns into 5/12 of the width,
+        which is where "Enhancement" came out one word per line. A row that
+        does not reach 12 is spread evenly instead. A row that overshoots (one
+        does, at 24) is left alone: it means two rows of two, and the 12-column
+        grid already wraps it that way.
+      */
+      const filled = block.spans.reduce((a, b) => a + b, 0) >= 12;
+      const even = filled ? undefined : EVEN[block.cols.length];
+
       return (
         <div
-          className={`mt-8 grid gap-x-10 gap-y-8 lg:grid-cols-12 ${
+          className={`mt-8 grid gap-x-10 gap-y-8 ${even ?? "lg:grid-cols-12"} ${
             split ? "lg:items-center" : ""
           }`}
         >
           {block.cols.map((col, i) => (
             <div
               key={i}
-              className={`${SPAN[block.spans[i]] ?? "lg:col-span-12"} ${
+              className={`${even ? "" : (SPAN[block.spans[i]] ?? "lg:col-span-12")} ${
                 split && i === imageCol ? "lg:sticky lg:top-[120px] [&_img]:ring-1 [&_img]:ring-white/[0.08]" : ""
               }`}
             >
@@ -1061,6 +1405,15 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
       return null;
   }
 }
+
+/* Equal columns, for a row whose spans do not add up to the 12-column grid. */
+const EVEN: Record<number, string> = {
+  2: "lg:grid-cols-2",
+  3: "lg:grid-cols-3",
+  4: "lg:grid-cols-4",
+  5: "lg:grid-cols-5",
+  6: "lg:grid-cols-6",
+};
 
 /* Tailwind needs these spelled out to generate the classes. */
 const SPAN: Record<number, string> = {
@@ -1077,6 +1430,24 @@ const SPAN: Record<number, string> = {
   11: "lg:col-span-11",
   12: "lg:col-span-12",
 };
+
+/**
+ * A lone price, wherever it came from. One treatment for one fact — the
+ * heading branch and the paragraph branch both land here.
+ */
+function PriceBadge({ text, light }: { text: string; light?: boolean }) {
+  return (
+    <p className="mt-6 first:mt-0">
+      <span
+        className={`inline-flex items-baseline rounded-full px-4 py-2 font-[family-name:var(--font-display)] text-[22px] leading-none ${
+          light ? "bg-ink text-white" : "bg-gold/12 text-gold ring-1 ring-gold/35"
+        }`}
+      >
+        {text.replace(/\s+/g, " ").trim()}
+      </span>
+    </p>
+  );
+}
 
 function Heading({
   level,
@@ -1131,17 +1502,7 @@ function Heading({
     // The figure verbatim. Whether it is a fixed price or a starting one is
     // the source's to say — several of these pages quote an exact price, and
     // captioning them all "from" would be inventing a commercial claim.
-    return (
-      <p className="mt-6 first:mt-0">
-        <span
-          className={`inline-flex items-baseline rounded-full px-4 py-2 font-[family-name:var(--font-display)] text-[22px] leading-none ${
-            light ? "bg-ink text-white" : "bg-gold/12 text-gold ring-1 ring-gold/35"
-          }`}
-        >
-          {text.replace(/\s+/g, " ").trim()}
-        </span>
-      </p>
-    );
+    return <PriceBadge text={text} light={light} />;
   }
 
   switch (level) {
@@ -1154,8 +1515,15 @@ function Heading({
     case 2:
       // Only the section's lead h2 gets the rule. Some pages carry seventy of
       // these headings; marking every one would turn the motif into wallpaper.
+      /*
+        Two ranks, not one. The source marks a section title and an item title
+        with the same h2 — /car-valeting opens "OUR PACKAGES" and then names
+        five packages, all five at the section's own 40px — so the page had no
+        third rank at all and everything shouted equally. The rule already
+        tells the section's lead heading from the rest; the size now follows it.
+      */
       return (
-        <div className="mt-12 first:mt-0">
+        <div className={rule ? "mt-16 first:mt-0" : "mt-12 first:mt-0"}>
           {rule && (
             <span
               aria-hidden
@@ -1163,22 +1531,29 @@ function Heading({
             />
           )}
           <h2
-            className={`text-[26px] leading-[1.04] sm:text-[32px] lg:text-[40px] ${head} ${
-              rule ? "mt-6" : ""
+            className={`leading-[1.04] ${head} ${
+              rule
+                ? "mt-6 text-[26px] sm:text-[32px] lg:text-[40px]"
+                : "text-[21px] sm:text-[24px] lg:text-[27px]"
             }`}
           >
             {label}
           </h2>
         </div>
       );
+    /*
+      h4 used to be 20/22px gold against h3's 18/20px white, so going down a
+      level made the type bigger and louder. Monotonic now: h3 leads a group,
+      h4 labels something inside it.
+    */
     case 3:
       return (
-        <h3 className={`mt-8 text-[18px] font-semibold lg:text-[20px] ${head}`}>
+        <h3 className={`mt-8 text-[19px] font-semibold lg:text-[21px] ${head}`}>
           {label}
         </h3>
       );
     case 4:
-      return <h4 className={`mt-5 ${prose ? body : `text-[20px] lg:text-[22px] ${accent}`}`}>{label}</h4>;
+      return <h4 className={`mt-5 ${prose ? body : `text-[16px] font-semibold lg:text-[17px] ${accent}`}`}>{label}</h4>;
     case 5:
       return <h5 className={`mt-4 ${prose ? body : `text-[17px] font-semibold ${head}`}`}>{label}</h5>;
     default:

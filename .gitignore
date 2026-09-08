@@ -49,3 +49,7 @@ next-env.d.ts
 # derived from pages.json by the classifier, and nothing renders from it yet.
 # Recreate with: npm run content:classify -- --write
 /src/content/pages.v2.json
+
+# No excel data
+*.xlsx
+~$*.xlsx

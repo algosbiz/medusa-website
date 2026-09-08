@@ -43,17 +43,19 @@ export default function ServicePage({ page }: { page: Page }) {
           h1Taken
           opensPage={false}
           /*
-            No gold bands. The only row that qualified was the add-ons one,
-            and it now carries the gold price table inside it — the panel
-            treatment marks it instead.
+            Black, gold, black, at the client's request: every section on
+            every page is now told from the one below it by its background.
+            This used to be "none" — the only row that qualified under the
+            content rule was the add-ons one, which already carries the gold
+            price table inside it.
           */
-          bands="none"
+          bands="alternate"
           panel={model.priced}
         />
       )}
 
       {model.areas && (
-        <section className="w-full border-t border-white/[0.07] py-12 lg:py-[72px]">
+        <section className="w-full border-t border-white/[0.07] py-16 lg:py-[104px]">
           <div className="shell grid gap-6 lg:grid-cols-12 lg:gap-14">
             <div className="lg:col-span-4">
               <Reveal>

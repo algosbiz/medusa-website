@@ -198,7 +198,7 @@ function Hero({ page }: { page: NonNullable<ReturnType<typeof getPage>> }) {
 
 function Brief() {
   return (
-    <section className="w-full py-14 lg:py-[88px]">
+    <section className="w-full py-16 lg:py-[104px]">
       <div className="shell">
         <Reveal>
           <span aria-hidden className="speed-rule speed-rule-sm" />

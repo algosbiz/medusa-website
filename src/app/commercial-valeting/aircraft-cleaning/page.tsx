@@ -298,7 +298,7 @@ function Categories() {
 
 function Work({ work, flip }: { work: (typeof WORK)[number]; flip?: boolean }) {
   return (
-    <section className="w-full py-14 lg:py-[88px]">
+    <section className="w-full py-16 lg:py-[104px]">
       <div className="shell grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
         <Reveal className={`lg:col-span-5 ${flip ? "lg:order-2" : ""}`}>
           <div className="overflow-hidden rounded-[14px] ring-1 ring-white/[0.08]">

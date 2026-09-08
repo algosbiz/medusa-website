@@ -153,7 +153,7 @@ export default function BlogIndex() {
 
 function Lead({ post }: { post: Post }) {
   return (
-    <section className="w-full py-12 lg:py-[72px]">
+    <section className="w-full py-16 lg:py-[104px]">
       <div className="shell">
         <Reveal>
           <Link

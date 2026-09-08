@@ -248,7 +248,14 @@ function Packages() {
                 as="li"
                 key={p.name}
                 delay={i}
-                className={`relative flex h-full flex-col overflow-hidden rounded-[14px] ${
+                /*
+                  `min-h-full`, not `h-full`: the featured card is lifted by
+                  `-mt-4`, so a box of exactly the row's height ends 16px short
+                  of the row's foot — and `overflow-hidden` then ate the last
+                  line of its feature list. A minimum lets it keep the lift and
+                  still grow to its content.
+                */
+                className={`relative flex min-h-full flex-col overflow-hidden rounded-[14px] ${
                   featured
                     ? // No `.livery` here: gold stripes on a gold band are
                       // invisible, and its background-image would win over the

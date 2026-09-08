@@ -105,7 +105,14 @@ export default function ContactPage() {
         */}
         <section className="w-full py-16 lg:py-[104px]">
           <div className="shell grid gap-12 lg:grid-cols-12 lg:gap-16">
-            <div className="lg:col-span-5">
+            {/*
+              `min-w-0`: a grid item's default `min-width: auto` refuses to
+              shrink below its content's own minimum, and the contact card's
+              icon-plus-address row needs 337px. At 320px that pushed the
+              track wider than the page and scrolled the whole document
+              sideways.
+            */}
+            <div className="min-w-0 lg:col-span-5">
               <Reveal>
                 <h2 className="font-[family-name:var(--font-sub)] text-[20px] leading-tight text-white uppercase lg:text-[23px]">
                   Contact Information

@@ -81,8 +81,15 @@ export type Page = {
 };
 
 import raw from "@/content/pages.json";
+import { applyOverrides } from "@/content/overrides";
 
-export const PAGES = raw as unknown as Record<string, Page>;
+/**
+ * The mirror, with the client's corrections laid over it.
+ *
+ * `pages.json` is regenerated wholesale from `.cache/html`, so a change the
+ * live site has not made yet cannot live in it — see `content/overrides.ts`.
+ */
+export const PAGES = applyOverrides(raw as unknown as Record<string, Page>);
 
 /**
  * Pages that have earned their own hand-built route under `app/`, the way the
