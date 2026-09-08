@@ -12,6 +12,29 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
 
   /*
+    Next's image optimiser is off, and this is a billing decision rather than a
+    technical one.
+
+    Vercel's Image Optimization quota ran out, so every /_next/image request
+    answered `402 OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED` - 99 bytes of plain
+    text where a photograph should be. Because every `next/image` on the site
+    routes through it, that emptied all 525 images on all 254 pages at once,
+    while the files themselves kept serving fine from /assets.
+
+    Unoptimised, `next/image` emits a plain <img> pointing at the file on disk.
+    What that costs is per-viewport resizing, not format: the assets are
+    mirrored from WordPress and are already .webp at a median of 54 KB, so a
+    phone now fetches the desktop-sized file. /mobile-car-wash is the heaviest
+    case at 21 images totalling 0.97 MB.
+
+    Delete this block the moment the plan is upgraded or the quota resets;
+    nothing else has to change.
+  */
+  images: {
+    unoptimized: true,
+  },
+
+  /*
     Everything under /assets is a file mirrored from the WordPress uploads
     directory: a dated path, written once by `npm run content` and then left
     alone. Vercel serves `public/` with `max-age=0, must-revalidate` by
