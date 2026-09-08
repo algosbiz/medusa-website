@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
 import AppSection from "@/components/sections/AppSection";
 import Areas from "@/components/sections/Areas";
-import Club from "@/components/sections/Club";
 import ExtraServices from "@/components/sections/ExtraServices";
 import Faq from "@/components/sections/Faq";
 import Gift from "@/components/sections/Gift";
@@ -37,7 +36,6 @@ export default function Home() {
           <Portfolio />
           <Gift />
           <Testimonials />
-          <Club />
           <Areas />
           <Faq />
         </main>

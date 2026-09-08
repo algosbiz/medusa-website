@@ -9,6 +9,14 @@
  * only redirects - drop a rule here and the page returns to both on its own.
  */
 export const REDIRECTS: ReadonlyArray<readonly [from: string, to: string]> = [
+  /*
+    Retired by the client on 2026-09-08. It carried traffic and ranked for
+    "car valet membership", so it 301s to the nearest surviving hub rather
+    than dying on a 404 — the subscription plans were valeting on a schedule.
+    Change the destination here if they would rather it landed elsewhere.
+  */
+  ["/car-lovers-club/", "/car-valeting/"],
+
   /* Nav parents the new structure retires. */
   ["/detailing/", "/car-detailing/"],
   ["/standard-car-wash/", "/mobile-car-wash/"],
