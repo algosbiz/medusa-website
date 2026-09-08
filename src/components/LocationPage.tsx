@@ -70,7 +70,7 @@ export default function LocationPage({ page }: { page: Page }) {
       )}
 
       {model.steps && <Steps section={model.steps} />}
-      {/* The Car Lovers Club was retired on 2026-09-08; its pitch goes with it. */}
+      {model.club && <Club section={model.club} />}
       {/* Source order on every one of these pages: questions, then the map. */}
       {model.faqSection && <Faq section={model.faqSection} />}
       {model.map && <Map map={model.map} place={place} />}

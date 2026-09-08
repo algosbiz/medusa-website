@@ -169,6 +169,7 @@ export const NAV: NavItem[] = [  { label: "Home", href: "/" },
       { label: "Vehicle Signage & Vinyl Removal", href: "/commercial-valeting/car-van-stickers-removal/" },
     ],
   },
+  { label: "Regular Car Cleaning", href: "/car-lovers-club/" },
   {
     label: "About",
     href: "/about-us/",

@@ -267,7 +267,7 @@ export default function LocationsPage() {
         {steps && <Steps section={steps} />}
         <Portfolio />
         <Testimonials />
-        {/* The Car Lovers Club was retired on 2026-09-08; its pitch goes with it. */}
+        {club && <Club section={club} />}
       </main>
       <Footer />
     </>
@@ -418,3 +418,62 @@ function Steps({ section }: { section: Section }) {
   );
 }
 
+/* ── The club ─────────────────────────────────────────────────────────────
+   The page's own subscription pitch. `components/sections/Club` renders the
+   homepage's wording for the same offer, which is not this page's, so this
+   row keeps its own words and borrows only the treatment. */
+
+function Club({ section }: { section: Section }) {
+  const title = section.blocks.find((b) => b.type === "heading" && b.level <= 2);
+  const kicker = section.blocks.find((b) => b.type === "heading" && b.level === 3);
+  const body = section.blocks.find((b) => b.type === "paragraph");
+  const cta = section.blocks.find((b) => b.type === "button");
+
+  return (
+    <section className="relative w-full overflow-hidden py-16 lg:py-[104px]">
+      {section.bg?.image && (
+        <Image src={section.bg.image} alt="" fill sizes="100vw" className="object-cover" />
+      )}
+      <div aria-hidden className="absolute inset-0 bg-black/[0.82]" />
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(60% 80% at 78% 50%, rgba(193,146,49,0.20) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="shell relative grid gap-10 lg:grid-cols-12 lg:gap-16">
+        <div className="lg:col-span-5">
+          {title?.type === "heading" && <SectionHead title={title.text} />}
+        </div>
+        <div className="lg:col-span-7">
+          {kicker?.type === "heading" && (
+            <Reveal>
+              <p className="font-[family-name:var(--font-sub)] text-[19px] leading-[1.3] text-gold uppercase lg:text-[21px]">
+                {kicker.text}
+              </p>
+            </Reveal>
+          )}
+          {body?.type === "paragraph" && (
+            <Reveal delay={1}>
+              <p
+                className="mt-6 max-w-[70ch] text-[16px] leading-[28px] font-normal text-body"
+                dangerouslySetInnerHTML={{ __html: body.html }}
+              />
+            </Reveal>
+          )}
+          {cta?.type === "button" && (
+            <Reveal delay={2}>
+              <Link href={cta.href} className="btn btn-gold mt-9 rounded-full text-[15px]">
+                {cta.label}
+                <Icon name="arrow" size={18} className="ml-2.5" />
+              </Link>
+            </Reveal>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}

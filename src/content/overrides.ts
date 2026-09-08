@@ -1,4 +1,4 @@
-import type { Block, Page } from "@/lib/blocks";
+import type { Block, Page, Section } from "@/lib/blocks";
 
 /**
  * Corrections applied on top of `pages.json`.
@@ -86,25 +86,6 @@ function mapStrings(block: Block, fn: (s: string) => string) {
   }
 }
 
-/** Repoint every link and button below `blocks` at a new path. */
-function relink(blocks: Block[], from: string, to: string) {
-  for (const b of blocks) {
-    if (b.type === "columns") {
-      b.cols.forEach((c) => relink(c, from, to));
-      continue;
-    }
-    if (b.type === "button" && b.href.includes(from)) {
-      b.href = b.href.split(from).join(to);
-      continue;
-    }
-    if (b.type === "heading" && b.href?.includes(from)) {
-      b.href = b.href.split(from).join(to);
-      continue;
-    }
-    mapStrings(b, (str) => (str.includes(from) ? str.split(from).join(to) : str));
-  }
-}
-
 /** A literal swap across every block below `blocks`. Asserts it landed. */
 function swap(blocks: Block[], from: string, to: string, atLeast = 1) {
   let hits = 0;
@@ -174,7 +155,78 @@ function repriceLadder(page: Page, label: RegExp, prices: readonly number[]) {
   if (!hits) throw new Error(`content override: no ladder under ${label}`);
 }
 
+/** Remove list items from the lists under a given heading. */
+function dropListItems(page: Page, under: RegExp, unwanted: RegExp) {
+  let hits = 0;
+  const run = (bs: Block[]) => {
+    let armed = false;
+    for (const b of bs) {
+      if (b.type === "columns") {
+        b.cols.forEach(run);
+        continue;
+      }
+      if (b.type === "heading") armed = under.test(plain(b));
+      if (b.type === "list" && armed) {
+        const kept = b.items.filter((i) => !unwanted.test(i));
+        hits += b.items.length - kept.length;
+        b.items = kept;
+      }
+    }
+  };
+  page.sections.forEach((s) => run(s.blocks));
+  if (!hits) throw new Error(`content override: nothing to drop under ${under}`);
+}
 
+/**
+ * Reprice one subscription product on the Car Lovers Club page.
+ *
+ * A product is a section whose first heading names it and whose second is
+ * "Subscription Packages"; its `columns` block holds one cadence per column,
+ * each a "from £x" line followed by the four-rung vehicle-class ladder.
+ */
+function repriceSubscription(
+  page: Page,
+  product: RegExp,
+  cadences: readonly (readonly number[])[],
+) {
+  const section = page.sections.find((s: Section) => {
+    const [first, second] = s.blocks;
+    return (
+      first?.type === "heading" &&
+      product.test(plain(first)) &&
+      second?.type === "heading" &&
+      /subscription/i.test(plain(second))
+    );
+  });
+  if (!section) throw new Error(`content override: no plans for ${product}`);
+
+  const cols = section.blocks.find((b) => b.type === "columns");
+  if (cols?.type !== "columns" || cols.cols.length !== cadences.length) {
+    throw new Error(`content override: ${product} has no cadence columns`);
+  }
+
+  cols.cols.forEach((col, i) => {
+    const prices = cadences[i];
+    const blocks = flatten(col);
+    // The lead-in reads "from £54 / month". It is the cheapest rung, so it
+    // follows the small-car price rather than being quoted separately.
+    const lead = blocks.find(
+      (b) => b.type === "paragraph" && /from\s*£/i.test(plain(b)),
+    );
+    if (lead?.type === "paragraph") {
+      lead.html = lead.html.replace(/£\s?[\d.,]+/, `£${prices[0]}`);
+    }
+    let rung = 0;
+    for (const b of blocks) {
+      if (!isPrice(b) || rung >= prices.length) continue;
+      b.text = b.text.replace(/£\s?[\d,]+/, `£${prices[rung]}`);
+      rung++;
+    }
+    if (rung !== prices.length) {
+      throw new Error(`content override: ${product} cadence ${i} has ${rung} rungs`);
+    }
+  });
+}
 
 /* ── The corrections themselves ───────────────────────────────────────── */
 
@@ -242,34 +294,27 @@ const RULES: Record<string, (page: Page) => void> = {
     swap(page.sections.flatMap((s) => s.blocks), "Porsche Macan£135XL Careg. BMW X5/ Volvo XC90/ Porsche Cayenne£145", "Porsche Macan£155XL Careg. BMW X5/ Volvo XC90/ Porsche Cayenne£165");
   },
 
-};
-
-/**
- * Pages the client has retired.
- *
- * Removing one here takes it out of `PAGES`, which is what `ALL_SLUGS`, the
- * catch-all's `generateStaticParams` and the sitemap all read — so the route
- * stops existing and nothing advertises it. `lib/redirects.ts` then carries
- * the 301 that keeps the old URL, and its ranking, from dying on a 404.
- *
- * /car-lovers-club was retired on the client's instruction of 2026-09-08
- * ("This page remove", repeated in writing when queried). Worth recording that
- * their own Menu update workbook says the opposite — Page index row 58 marks
- * it "Optimise", "Live - do not defer", 37 traffic, ranking for "car valet
- * membership" — and that the same change document asked for 24 new
- * subscription prices on it. They were shown both and chose removal.
- */
-const RETIRED = new Set(["car-lovers-club"]);
-
-/**
- * Where a link to a retired page should point instead.
- *
- * 25 pages in the mirror link to /car-lovers-club/. Left alone they would all
- * lean on the 301, which works but advertises a URL that only redirects; the
- * sitemap already refuses to do that and internal links should not either.
- */
-const RELINK: Record<string, string> = {
-  "/car-lovers-club/": "/car-valeting/",
+  /* Item 16: the two checks the client struck off, and both subscription
+     ladders. The XL fortnightly rung reads "104" in the client's document,
+     which breaks the £12 step the other three sizes keep; 124 is used here
+     and is flagged back to the client. */
+  "car-lovers-club": (page) => {
+    dropListItems(
+      page,
+      /vehicle health check/i,
+      /Oil\s*(&amp;|&)\s*coolant check|Tyre Tread Safety Check/i,
+    );
+    repriceSubscription(page, /^the full maintenance detail$/i, [
+      [60, 65, 70, 75],
+      [110, 120, 130, 140],
+      [200, 220, 240, 260],
+    ]);
+    repriceSubscription(page, /^the exterior maintenance detail$/i, [
+      [47, 53, 59, 65],
+      [88, 100, 112, 124],
+      [164, 188, 212, 236],
+    ]);
+  },
 };
 
 /* Item 10 again: the same Triton ladder is quoted on every location hub. */
@@ -318,8 +363,6 @@ export function applyOverrides(
 ): Record<string, Page> {
   const out = { ...pages };
 
-  for (const slug of RETIRED) delete out[slug];
-
   const patch = (slug: string, fn: (page: Page) => void) => {
     const page = out[slug];
     if (!page) return;
@@ -340,13 +383,6 @@ export function applyOverrides(
       (b) => b.type === "video" && b.src in TRANSCODED,
     );
     if (carriesSource) patch(slug, useTranscoded);
-
-    for (const [from, to] of Object.entries(RELINK)) {
-      if (!JSON.stringify(out[slug]).includes(from)) continue;
-      patch(slug, (p) => {
-        for (const section of p.sections) relink(section.blocks, from, to);
-      });
-    }
   }
 
   return out;

@@ -31,20 +31,14 @@ function byRegion(text: string) {
 
 export default function Areas() {
   return (
-    /*
-       Black, not gold. The Car Lovers Club row used to sit between the
-       testimonials and this one; with the club retired the two gold bands
-       became neighbours and the page lost its beat here. The area cards were
-       already dark tiles, so this is the cheaper half of the pair to flip.
-    */
-    <section className="w-full bg-black py-16 lg:py-[104px]">
+    <section className="bg-gold-wash w-full py-16 lg:py-[104px]">
       <div className="shell">
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-5">
-            <SectionHead title={AREAS_INTRO.heading} />
+            <SectionHead title={AREAS_INTRO.heading} tone="gold" />
             {AREAS_INTRO.body.map((b, i) => (
               <Reveal key={i} delay={i + 2}>
-                <p className="measure mt-5 text-[15px] leading-[25px] font-normal text-body">
+                <p className="measure mt-5 text-[15px] leading-[25px] font-normal text-ink/80">
                   {b}
                 </p>
               </Reveal>
@@ -53,7 +47,7 @@ export default function Areas() {
 
           <Reveal
             delay={2}
-            className="overflow-hidden rounded-[14px] shadow-[0_20px_44px_-26px_rgba(0,0,0,0.8)] ring-1 ring-white/12 lg:col-span-7"
+            className="overflow-hidden rounded-[14px] shadow-[0_20px_44px_-26px_rgba(0,0,0,0.5)] ring-1 ring-ink/25 lg:col-span-7"
           >
             <MapEmbed
               src={AREAS_INTRO.map}
@@ -67,7 +61,7 @@ export default function Areas() {
           {AREAS.map((a, i) => {
             const groups = byRegion(a.body);
             return (
-              <Reveal key={a.title} delay={i} className="surface p-7">
+              <Reveal key={a.title} delay={i} className="surface-on-gold p-7">
                 <h3 className="font-[family-name:var(--font-sub)] text-[19px] text-white uppercase">
                   {a.title}
                 </h3>

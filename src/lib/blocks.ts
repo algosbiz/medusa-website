@@ -109,6 +109,7 @@ export const CUSTOM_ROUTES = new Set([
   "terms-and-conditions",
   "gift-card",
   "about-us",
+  "car-lovers-club",
   "commercial-valeting/aircraft-cleaning",
 ]);
 
