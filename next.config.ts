@@ -30,9 +30,9 @@ const nextConfig: NextConfig = {
     Delete this block the moment the plan is upgraded or the quota resets;
     nothing else has to change.
   */
-  images: {
-    unoptimized: true,
-  },
+  // images: {
+  //   unoptimized: true,
+  // },
 
   /*
     Everything under /assets is a file mirrored from the WordPress uploads
