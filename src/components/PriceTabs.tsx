@@ -22,7 +22,7 @@ export type Tier = {
   price: string;
 };
 
-export default function PriceTabs({ items }: { items: Tier[] }) {
+export default function PriceTabs({ items, onGold }: { items: Tier[]; onGold?: boolean }) {
   const [index, setIndex] = useState(0);
   const id = useId();
   const active = items[index] ?? items[0];
@@ -77,17 +77,27 @@ export default function PriceTabs({ items }: { items: Tier[] }) {
         className="flex items-baseline justify-between gap-3 pt-4 pb-1"
       >
         <p className="min-w-0">
-          <span className="block font-[family-name:var(--font-sub)] text-[14px] tracking-[0.04em] text-ink uppercase">
+          <span
+            className={`block font-[family-name:var(--font-sub)] text-[14px] tracking-[0.04em] uppercase ${
+              onGold ? "text-white" : "text-ink"
+            }`}
+          >
             {active.label}
           </span>
           {active.note && (
             <span
-              className="mt-1 block text-[12px] leading-[17px] font-normal text-ink/75"
+              className={`mt-1 block text-[12px] leading-[17px] font-normal ${
+                onGold ? "text-white/70" : "text-ink/75"
+              }`}
               dangerouslySetInnerHTML={{ __html: active.note }}
             />
           )}
         </p>
-        <p className="shrink-0 font-[family-name:var(--font-display)] text-[28px] leading-none text-ink">
+        <p
+          className={`shrink-0 font-[family-name:var(--font-display)] text-[28px] leading-none ${
+            onGold ? "text-gold" : "text-ink"
+          }`}
+        >
           {active.price}
         </p>
       </div>

@@ -2,11 +2,13 @@
  * One list covering all 22 priced services, built from the three separate
  * sources in site.ts so a single section can present them together.
  *
- * The sources disagree on how price is stored, and that difference is real
- * rather than an inconsistency to paper over: valeting and detailing are
- * quoted per vehicle class, while the wash tiers are quoted as a range that
- * depends on condition. Each row keeps its own form and also exposes a
- * numeric `from` so the whole set can be ordered on one scale.
+ * All three are quoted per vehicle class (the site's own FAQ says as much
+ * for washes too: "prices vary depending on the size of the vehicle"), so
+ * every row carries a `prices` tuple read by the same `VehicleClassPicker` /
+ * `ClassPrice` control. `priceLabel` survives as the verbatim "£low-£high"
+ * range for surfaces that quote a wash without a class picker to hand.
+ * Each row also exposes a numeric `from` so the whole set can be ordered on
+ * one scale.
  */
 import {
   CARWASH,
@@ -43,17 +45,12 @@ export const KIND_LABEL: Record<ServiceKind, string> = {
   detailing: "Detailing",
 };
 
-/** "£37-£48" -> 37 */
-function lowestIn(label: string): number {
-  const n = label.match(/\d+/);
-  return n ? Number(n[0]) : 0;
-}
-
 const washes: Service[] = CARWASH.map((w) => ({
   kind: "wash",
   title: w.title,
   subtitle: "Mobile Car Wash",
-  from: lowestIn(w.price),
+  from: w.prices[0],
+  prices: w.prices,
   priceLabel: w.price,
   duration: w.time.replace(/[()]/g, ""),
   features: w.features,

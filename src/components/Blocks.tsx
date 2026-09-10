@@ -851,7 +851,9 @@ export function BlockList({ blocks, ctx }: { blocks: Block[]; ctx: Ctx }) {
             />
           );
         }
-        if (g.kind === "priceGrid") return <PriceGrid key={i} items={g.items} />;
+        if (g.kind === "priceGrid") {
+          return <PriceGrid key={i} items={g.items} onGold={ctx.onGold} />;
+        }
         if (g.kind === "gallery") return <Gallery key={i} images={g.images} />;
         if (g.kind === "addonCards") {
           return (

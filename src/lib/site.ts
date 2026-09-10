@@ -853,6 +853,7 @@ export const CARWASH = [
     title: "SILVER WASH",
     time: "(60-90 Mins)",
     price: "£59-£73",
+    prices: [59, 65, 69, 73] as const,
     image:
       "/assets/2025/02/car-cleaning-with-high-pressure-in-exterior-carwas-2023-11-27-05-35-22-utc-1.webp",
     href: "/mobile-car-wash/silver-wash/",
@@ -872,6 +873,7 @@ export const CARWASH = [
     title: "GOLD WASH",
     time: "(120-180 Mins)",
     price: "£110-£140",
+    prices: [110, 120, 130, 140] as const,
     image:
       "/assets/2025/02/professional-car-wash-with-high-pressure-washer-an-2023-11-27-05-33-04-utc-e1720860612612.webp",
     href: "/mobile-car-wash/gold-wash/",
@@ -893,6 +895,7 @@ export const CARWASH = [
     title: "PLATINUM WASH",
     time: "(150-210 Mins)",
     price: "£170-£225",
+    prices: [170, 190, 210, 225] as const,
     image:
       "/assets/2025/02/professional-cleaning-process-for-leather-car-seat-2023-11-27-05-05-14-utc-e1720861019858.webp",
     href: "/mobile-car-wash/platinum-wash/",
@@ -915,6 +918,7 @@ export const CARWASH = [
     title: "PREMIUM INTERIOR WASH",
     time: "(60-120 Mins)",
     price: "£115-£145",
+    prices: [115, 125, 135, 145] as const,
     image:
       "/assets/2025/02/professional-car-cleaning-cleaning-the-steering-w-2023-11-27-05-30-02-utc-e1720860904413.webp",
     href: "/car-interior-cleaning/premium-interior-wash/",
@@ -932,6 +936,7 @@ export const CARWASH = [
     title: "EXTERIOR PLUS WASH",
     time: "(45-75 Mins)",
     price: "£49-£65",
+    prices: [49, 55, 60, 65] as const,
     image: "/assets/2025/02/water-2023-11-27-05-35-50-utc-1-e1720862985495-1.webp",
     href: "/mobile-car-wash/exterior-plus-wash/",
     features: [

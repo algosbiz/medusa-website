@@ -120,12 +120,6 @@ export default function Pricing() {
           </div>
         ))}
 
-        {tab === "wash" && (
-          <p className="mt-6 text-[13px] font-normal text-white/55">
-            Wash tiers are quoted as a range because the price depends on the
-            condition of the vehicle.
-          </p>
-        )}
         </div>
       </div>
 

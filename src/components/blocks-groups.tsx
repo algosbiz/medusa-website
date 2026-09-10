@@ -715,8 +715,15 @@ export function Gallery({
  * otherwise black content it is the natural place for the brand gold. Type is
  * ink — white on this gold measures 2.83:1 — and the car icons are knocked to
  * ink to match.
+ *
+ * A row this lands on is sometimes gold itself (the site alternates black and
+ * gold section by section), and gold cards on a gold band measure close to
+ * 1:1 — the client's own screenshot of `/mobile-car-wash/silver-wash/` caught
+ * it. `onGold` swaps the card to `surface-on-gold` (the same dark-tile answer
+ * `CardRow`/`AddonCards` use on a gold band) with white copy and an inverted
+ * icon, instead of the gold-on-ink treatment.
  */
-export function PriceGrid({ items }: { items: PriceItem[] }) {
+export function PriceGrid({ items, onGold }: { items: PriceItem[]; onGold?: boolean }) {
   return (
     /*
       Sized off its own container, not the window.
@@ -735,8 +742,13 @@ export function PriceGrid({ items }: { items: PriceItem[] }) {
         because seeing all four prices at once is the point of a price table.
         Both are rendered and the container query chooses.
       */}
-      <div className="bg-gold-wash overflow-hidden rounded-[14px] @min-[560px]:hidden">
+      <div
+        className={`overflow-hidden rounded-[14px] @min-[560px]:hidden ${
+          onGold ? "surface-on-gold" : "bg-gold-wash"
+        }`}
+      >
         <PriceTabs
+          onGold={onGold}
           items={items.map((it) => ({
             icon: it.icon ? { src: it.icon.src, w: it.icon.w, h: it.icon.h } : undefined,
             label: it.label,
@@ -755,7 +767,9 @@ export function PriceGrid({ items }: { items: PriceItem[] }) {
         {items.map((it, i) => (
           <li
             key={i}
-            className="bg-gold-wash flex flex-col items-center rounded-[14px] px-4 py-6 text-center @min-[620px]:px-6 @min-[620px]:py-8"
+            className={`flex flex-col items-center rounded-[14px] px-4 py-6 text-center @min-[620px]:px-6 @min-[620px]:py-8 ${
+              onGold ? "surface-on-gold" : "bg-gold-wash"
+            }`}
           >
             {it.icon && (
               <Image
@@ -763,19 +777,31 @@ export function PriceGrid({ items }: { items: PriceItem[] }) {
                 alt=""
                 width={it.icon.w ?? 339}
                 height={it.icon.h ?? 339}
-                className="h-[42px] w-auto brightness-0 @min-[620px]:h-[56px]"
+                className={`h-[42px] w-auto @min-[620px]:h-[56px] ${
+                  onGold ? "brightness-0 invert" : "brightness-0"
+                }`}
               />
             )}
-            <h3 className="mt-3 font-[family-name:var(--font-sub)] text-[15px] tracking-[0.04em] text-ink uppercase @min-[620px]:mt-4 @min-[620px]:text-[17px]">
+            <h3
+              className={`mt-3 font-[family-name:var(--font-sub)] text-[15px] tracking-[0.04em] uppercase @min-[620px]:mt-4 @min-[620px]:text-[17px] ${
+                onGold ? "text-white" : "text-ink"
+              }`}
+            >
               {it.label}
             </h3>
             {it.note && (
               <p
-                className="mt-2 text-[12.5px] leading-[19px] font-normal text-ink/85 @min-[620px]:text-[13px] @min-[620px]:leading-[20px]"
+                className={`mt-2 text-[12.5px] leading-[19px] font-normal @min-[620px]:text-[13px] @min-[620px]:leading-[20px] ${
+                  onGold ? "text-white/70" : "text-ink/85"
+                }`}
                 dangerouslySetInnerHTML={{ __html: it.note }}
               />
             )}
-            <p className="mt-auto pt-4 font-[family-name:var(--font-display)] text-[26px] leading-none text-ink @min-[620px]:pt-5 @min-[620px]:text-[34px]">
+            <p
+              className={`mt-auto pt-4 font-[family-name:var(--font-display)] text-[26px] leading-none @min-[620px]:pt-5 @min-[620px]:text-[34px] ${
+                onGold ? "text-gold" : "text-ink"
+              }`}
+            >
               {it.price}
             </p>
           </li>

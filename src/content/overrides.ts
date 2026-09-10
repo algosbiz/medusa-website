@@ -129,6 +129,34 @@ function dropColumns(page: Page, unwanted: (col: Block[]) => boolean) {
 const headed = (name: string) => (col: Block[]) =>
   col.some((b) => b.type === "heading" && plain(b).toUpperCase() === name);
 
+/** The array and index a block was found at, so the caller can splice it. */
+function locate(blocks: Block[], pred: (b: Block) => boolean): [Block[], number] | null {
+  for (let i = 0; i < blocks.length; i++) {
+    if (pred(blocks[i])) return [blocks, i];
+    const b = blocks[i];
+    if (b.type === "columns") {
+      for (const col of b.cols) {
+        const found = locate(col, pred);
+        if (found) return found;
+      }
+    }
+  }
+  return null;
+}
+
+/** Splice new blocks in immediately before the first block matching `pred`. */
+function insertBefore(page: Page, pred: (b: Block) => boolean, newBlocks: Block[]) {
+  for (const section of page.sections) {
+    const found = locate(section.blocks, pred);
+    if (found) {
+      const [blocks, i] = found;
+      blocks.splice(i, 0, ...newBlocks);
+      return;
+    }
+  }
+  throw new Error("content override: insertBefore found nothing to insert before");
+}
+
 /**
  * Replace the four vehicle-class prices that follow a package's heading.
  *
@@ -228,6 +256,100 @@ function repriceSubscription(
   });
 }
 
+/**
+ * Mark one feature included for Zeus on `/car-valeting`. The page carries
+ * the same 52-feature list twice — once in the combined comparison matrix
+ * (a header row naming all five packages, a "-"/"✔" column per package) and
+ * once more in Zeus's own single-column table under "Our Packages"
+ * (`PackageTabs.tsx`) — so both copies need the flip or the two views
+ * disagree. The same row sits unmarked on Pandora's table too, which is why
+ * the second pass is anchored on the "Zeus" heading rather than just any
+ * single-package table carrying this label.
+ */
+function addToZeus(page: Page, featureLabel: string) {
+  const blocks = allBlocks(page);
+  let hits = 0;
+
+  for (const block of blocks) {
+    if (block.type !== "table") continue;
+    const header = block.rows.find((r) => !r[0] && r.slice(1).some(Boolean));
+    if (!header) continue; // a single-package table, not the matrix
+    const row = block.rows.find((r) => r[0]?.trim() === featureLabel);
+    if (!row) continue;
+    const col = header.findIndex((cell) => /^zeus\b/i.test(cell));
+    if (col < 1) throw new Error(`content override: no Zeus column for "${featureLabel}"`);
+    if (row[col] !== "-") {
+      throw new Error(`content override: matrix already has Zeus × "${featureLabel}"`);
+    }
+    row[col] = "✔";
+    hits++;
+  }
+
+  for (let i = 0; i < blocks.length; i++) {
+    const b = blocks[i];
+    if (b.type !== "heading" || !/^zeus\b/i.test(plain(b))) continue;
+    const table = blocks.slice(i + 1).find((x) => x.type === "table");
+    if (table?.type !== "table") continue;
+    const row = table.rows.find((r) => r[0]?.trim() === featureLabel);
+    if (!row) continue;
+    if (row[row.length - 1] !== "-") {
+      throw new Error(`content override: Zeus's own table already has "${featureLabel}"`);
+    }
+    row[row.length - 1] = "✔";
+    hits++;
+  }
+
+  if (hits !== 2) {
+    throw new Error(
+      `content override: expected to patch 2 tables for Zeus × "${featureLabel}", patched ${hits}`,
+    );
+  }
+}
+
+/**
+ * The site's own per-vehicle-class price ladder — the same four icons and
+ * "eg. <cars>" lines `car-valeting/mini-valet` already carries verbatim, not
+ * new copy. `blocks-groups.tsx`'s `group()` collapses an
+ * `icon → h3 → paragraph → £heading` run of two or more into a `PriceGrid`
+ * on its own, so this only has to hand it the raw blocks in that shape.
+ *
+ * Item 6's "full price list" turned out to be per size, the same as every
+ * other service, not per condition as `services.ts` assumed — confirmed
+ * against this page's own FAQ ("prices vary depending on the size of the
+ * vehicle") and against Mini Valet quoting the identical Silver Wash figures
+ * for its own Small/Medium/Large/XL ladder.
+ */
+function pricingLadder(prices: readonly [number, number, number, number]): Block[] {
+  const CLASSES = [
+    { label: "Small Car", eg: "eg. Cooper/ Fiat 500/ Ford Ka/ Toyota yaris", icon: "24-01" },
+    { label: "Medium Car", eg: "eg. VW Golf/ Audi A3/ Porsche Boxter/ BMW 1 Series", icon: "24-02" },
+    { label: "Large Car", eg: "eg. Tesla Model S/ BMW 5 Series/ Porsche Macan", icon: "24-03" },
+    { label: "XL Car", eg: "eg. BMW X5/ Volvo XC90/ Porsche Cayenne", icon: "24-04" },
+  ] as const;
+
+  const blocks: Block[] = [{ type: "heading", level: 2, text: "OUR PRICING" }];
+  CLASSES.forEach((c, i) => {
+    blocks.push(
+      {
+        type: "image",
+        src: `/assets/2021/12/car-parts-icon-${c.icon}.png`,
+        alt: "",
+        icon: true,
+        w: 339,
+        h: 339,
+      },
+      { type: "heading", level: 3, text: c.label },
+      { type: "paragraph", html: c.eg },
+      { type: "heading", level: 2, text: `£${prices[i]}` },
+    );
+  });
+  return blocks;
+}
+
+/** Every wash page's own "+ Add-on services" heading — where its price
+ *  ladder belongs, ahead of the add-ons rather than after them. */
+const addOnServices = (b: Block) => b.type === "heading" && /add-on services/i.test(plain(b));
+
 /* ── The corrections themselves ───────────────────────────────────────── */
 
 /** The retired wash tiers, item 2. Exact names — "EXTERIOR PLUS WASH" stays. */
@@ -259,22 +381,36 @@ const RULES: Record<string, (page: Page) => void> = {
     }
   },
 
-  /* Item 3. */
+  /* Item 3, plus item 6's own-page price ladder (Small/Medium/Large/XL). */
   "mobile-car-wash/silver-wash": (page) => {
     swap(page.sections.flatMap((s) => s.blocks), "£48-£60", "£59-£73");
+    insertBefore(page, addOnServices, pricingLadder([59, 65, 69, 73]));
   },
 
-  /* Item 5. */
+  /* Item 6's own-page price ladder — the range was already correct. */
+  "mobile-car-wash/gold-wash": (page) => {
+    insertBefore(page, addOnServices, pricingLadder([110, 120, 130, 140]));
+  },
+
+  /* Item 6's own-page price ladder — the range was already correct. */
+  "mobile-car-wash/platinum-wash": (page) => {
+    insertBefore(page, addOnServices, pricingLadder([170, 190, 210, 225]));
+  },
+
+  /* Item 5, plus item 6's own-page price ladder. */
   "car-interior-cleaning/premium-interior-wash": (page) => {
     swap(page.sections.flatMap((s) => s.blocks), "£90-£120", "£115-£145");
+    insertBefore(page, addOnServices, pricingLadder([115, 125, 135, 145]));
   },
 
-  /* Item 4: the price band, and the wax the package now uses. */
+  /* Item 4: the price band, and the wax the package now uses. Plus item 6's
+     own-page price ladder. */
   "mobile-car-wash/exterior-plus-wash": (page) => {
     const blocks = page.sections.flatMap((s) => s.blocks);
     swap(blocks, "£41-£52", "£49-£65");
     swap(blocks, "✔ Paste Wax", "✔ Liquid Wax");
     swap(blocks, PASTE_WAX, LIQUID_WAX);
+    insertBefore(page, addOnServices, pricingLadder([49, 55, 60, 65]));
   },
 
   /* Item 11. The page quotes its ladder under "OUR PRICING". */
@@ -282,9 +418,11 @@ const RULES: Record<string, (page: Page) => void> = {
     repriceLadder(page, /^our pricing$/i, [59, 65, 69, 73]);
   },
 
-  /* Item 10, in the package comparison table. The trailing rung tells Triton
+  /* Item 9: Zeus gets the upholstery-shampoo line (see `addToZeus`).
+     Item 10, in the package comparison table. The trailing rung tells Triton
      from Neptune, which is otherwise priced identically and is unchanged. */
   "car-valeting": (page) => {
+    addToZeus(page, "Upholstery seats & mats shampoo + extract");
     swap(
       page.sections.flatMap((s) => s.blocks),
       "yaris£115Medium",
