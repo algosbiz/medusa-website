@@ -73,8 +73,9 @@ export const REPAIRS: HubSpec = {
 };
 
 /** Client, 2026-09-16: "one more master page to create, with links on the
- *  master page going to its childs". Nine services, five of which quote a
- *  price. */
+ *  master page going to its childs". Eight services, four of which quote a
+ *  price — nine and five until Premium Interior Wash moved to Car Wash on
+ *  2026-09-26. */
 export const INTERIOR: HubSpec = {
   slug: "car-interior-cleaning",
   title: "Interior Cleaning",
@@ -90,7 +91,7 @@ export const INTERIOR: HubSpec = {
   /*
     Every list in this group names its own service somewhere in the bodies —
     there is no fully general one to take. This is the least specific of the
-    nine: past the lead, "Convenience on Your Terms" and "Professional and
+    eight: past the lead, "Convenience on Your Terms" and "Professional and
     Fully Insured Service" say nothing about leather at all, and the other two
     mention it only in passing. The alternatives are worse: `interior-valet`'s
     second reason points at "the booking form on this page", which this page
@@ -110,9 +111,9 @@ export const INTERIOR: HubSpec = {
     narrow it.
   */
   intro: [["car-interior-cleaning/interior-valet", "It’s often said that it’s what’s on the inside"]],
-  /* Three of the nine carry real `faq` blocks — twenty-one questions between
+  /* Two of the eight carry real `faq` blocks — sixteen questions between
      them — so `hubQuestions` never reaches a fallback here. */
-  /* Nine cards: three across from `lg`, which is what `CardRow` uses. */
+  /* Eight cards: three across from `lg`, which is what `CardRow` uses. */
   cardCols: "sm:grid-cols-2 lg:grid-cols-3",
 };
 

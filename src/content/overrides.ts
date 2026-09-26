@@ -1,5 +1,6 @@
 import type { Block, Page, Section } from "@/lib/blocks";
 import { LOCAL_PLACES } from "@/lib/local-copy";
+import { CONTACT } from "@/lib/site";
 import {
   MIRROR_AUDIT,
   MIRROR_FIXES,
@@ -685,6 +686,15 @@ function dropBareLevelRow(page: Page) {
   page.sections = page.sections.filter((s) => s.blocks.length > 0);
 }
 
+/**
+ * The mobile number the source still prints on five pages. Client,
+ * 2026-09-26: "Update phone number on the following page… replace with:
+ * 02033556435" — which is `CONTACT.phone`, the number every other page
+ * already carries. The `tel:` href sits in the same paragraph HTML as the
+ * visible number, so one swap moves the link and the text together.
+ */
+const OLD_PHONE = "07434649960";
+
 const PASTE_WAX =
   "<strong>Paste Wax</strong>: Protect and extend your car’s paintwork with a wax sealant that shields against the elements while delivering a brilliant shine.";
 const LIQUID_WAX =
@@ -742,8 +752,9 @@ const RULES: Record<string, (page: Page) => void> = {
     insertBefore(page, addOnServices, pricingLadder([170, 190, 210, 225]));
   },
 
-  /* Item 5, plus item 6's own-page price ladder. */
-  "car-interior-cleaning/premium-interior-wash": (page) => {
+  /* Item 5, plus item 6's own-page price ladder. Under the car wash hub since
+     2026-09-26; it was `car-interior-cleaning/premium-interior-wash`. */
+  "mobile-car-wash/premium-interior-wash": (page) => {
     swap(page.sections.flatMap((s) => s.blocks), "£90-£120", "£115-£145");
     insertBefore(page, addOnServices, pricingLadder([115, 125, 135, 145]));
   },
@@ -982,7 +993,30 @@ export function applyOverrides(
     ),
   );
 
-  for (const [slug, fn] of Object.entries(RULES)) patch(slug, fn);
+  /* `patch` skips a slug with no page, which is right for the site-wide passes
+     below and wrong here: a rule keyed by a URL that has since moved would
+     simply stop applying, and its price with it. */
+  for (const [slug, fn] of Object.entries(RULES)) {
+    if (!out[slug]) throw new Error(`content override: no page "${slug}" for its rule`);
+    patch(slug, fn);
+  }
+
+  /*
+    Site-wide rather than per page, so a regeneration that puts the old number
+    on a sixth page is caught as well. Today it is `/repairs/car-graffiti-removal`,
+    `/repairs/paint-overspray-removal`, `/commercial-valeting/mobile-truck-cleaning`,
+    `/commercial-valeting/car-van-stickers-removal` and `/privacy-policy-cookies`
+    — the client's list. The homepage's JSON-LD reads `BUSINESS` instead.
+  */
+  let rephoned = 0;
+  for (const slug of Object.keys(out)) {
+    if (!JSON.stringify(out[slug].sections).includes(OLD_PHONE)) continue;
+    patch(slug, (p) => {
+      swap(p.sections.flatMap((s) => s.blocks), OLD_PHONE, CONTACT.phone);
+      rephoned++;
+    });
+  }
+  if (!rephoned) throw new Error(`content override: ${OLD_PHONE} is on no page`);
 
   /*
     The location-page copy audit, 2026-09-22 (`lib/local-mirror.ts`).

@@ -23,7 +23,7 @@
  * pages, then those prices can go onto the master page /repairs. If there are
  * no prices, then yeah then there would be a contact us or qoute button."
  * `HubCard.priceFrom` is therefore optional and the card falls back to the
- * quote button — two of the four repairs quote nothing, and four of the nine
+ * quote button — two of the four repairs quote nothing, and four of the eight
  * interior services.
  *
  * `lib/hubs.ts` holds the two specs; this file is the machinery.
@@ -97,7 +97,7 @@ export type HubSpec = {
     Record<string, string | { src: string; position: string }>
   >;
   /** Grid classes for the card row — a group of four wants different ones
-   *  from a group of nine. */
+   *  from a group of eight. */
   cardCols: string;
 };
 
@@ -325,8 +325,8 @@ const MAX_PER_PAGE = 3;
  * The questions the group's own pages already answer.
  *
  * Real `faq` blocks first, where the group has them: the interior pages carry
- * twenty-one between `interior-valet`, `premium-interior-wash` and
- * `mould-removal`, and those are questions the site wrote as questions. Capped
+ * sixteen between `interior-valet` and `mould-removal`, and those are
+ * questions the site wrote as questions. Capped
  * per page so one long FAQ cannot fill the accordion on its own, and taken in
  * the menu's order so the spread follows the cards above.
  *

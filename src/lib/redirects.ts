@@ -15,11 +15,14 @@ import { LOCATION_MOVES } from "./location-moves";
  * 262 rows were checked against this table row by row: 211 are genuine
  * redirects and every one of them is here, with the same destination; the other
  * 51 name a page that still exists and differ only by the trailing slash the
- * sheet's left column carries, which Next normalises without a rule. The 11
+ * sheet's left column carries, which Next normalises without a rule. The 12
  * rules below that the sheet does not mention are this clone's own
- * (`/ceramic-coating/*`, `/car-detailing/*` -> `/repairs/*`): URLs that only
- * ever existed on this build, so no sheet about the WordPress site would list
- * them, and dropping them would 404 something that shipped.
+ * (`/ceramic-coating/*`, `/car-detailing/*` -> `/repairs/*`, and
+ * `/car-interior-cleaning/premium-interior-wash`): URLs that only ever existed
+ * on this build, so no sheet about the WordPress site would list them, and
+ * dropping them would 404 something that shipped. The sheet's own
+ * `/premium-interior-wash` row now lands on the page's 2026-09-26 URL rather
+ * than the one the sheet names.
  *
  * **Every path here is written without a trailing slash**, which is the form
  * these rules are matched against: `trailingSlash` is off, so Next normalises
@@ -79,7 +82,7 @@ export const REDIRECTS: ReadonlyArray<readonly [from: string, to: string]> = [
   ["/ozone-odour-removal-disinfection", "/car-interior-cleaning/odour-removal"],
   ["/perfection", "/car-detailing/perfection-detail"],
   ["/pet-hair-removal", "/car-interior-cleaning/pet-hair-removal"],
-  ["/premium-interior-wash", "/car-interior-cleaning/premium-interior-wash"],
+  ["/premium-interior-wash", "/mobile-car-wash/premium-interior-wash"],
   ["/safely-clean-sickness-vomit-from-your-car-interior", "/car-interior-cleaning/vomit-cleaning"],
   ["/soft-top-reproofing", "/car-valeting/convertible-roof-cleaning"],
   ["/steam-cleaning", "/car-interior-cleaning/steam-cleaning"],
@@ -157,6 +160,11 @@ export const REDIRECTS: ReadonlyArray<readonly [from: string, to: string]> = [
   ["/car-detailing/engine-bay-steam-cleaning", "/repairs/engine-bay-steam-cleaning"],
   ["/car-detailing/car-graffiti-removal", "/repairs/car-graffiti-removal"],
   ["/car-detailing/paint-overspray-removal", "/repairs/paint-overspray-removal"],
+  /* And 2026-09-26: "premium interior wash needs to be moved over to car
+     wash… moving its url under the car wash main". The WordPress rule above
+     was pointed straight at the new URL in the same change, so it does not
+     chain through this one. */
+  ["/car-interior-cleaning/premium-interior-wash", "/mobile-car-wash/premium-interior-wash"],
 
   /*
     The 127 location pages now living under their service hub.

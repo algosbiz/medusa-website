@@ -129,9 +129,13 @@ and since 2026-09-19 it is written against the real domain rather than the
 one: 211 genuine redirects, all present with the same destination, and 51 rows
 that name a page which still exists and differ only by the trailing slash the
 sheet's left column carries. The only rules the sheet does not mention are the
-eleven this clone made for itself on 2026-09-15 — `/ceramic-coating/*` and
-`/car-detailing/*` → `/repairs/*` — which never existed on WordPress and so
-could not be on a sheet about it.
+twelve this clone made for itself — the eleven of 2026-09-15,
+`/ceramic-coating/*` and `/car-detailing/*` → `/repairs/*`, and
+`/car-interior-cleaning/premium-interior-wash` of 2026-09-26 — which never
+existed on WordPress and so could not be on a sheet about it. That last move
+also re-pointed one of the sheet's own rows: `/premium-interior-wash` goes
+straight to `/mobile-car-wash/premium-interior-wash` now, not to the URL the
+sheet names, because that URL itself redirects.
 
 ---
 
@@ -204,6 +208,28 @@ they did when Car Wax Service changed column — but nothing on the site links
 to it now. Exterior Wash is the other retired tier and is **not** in the same
 position: it is still sold, and since 2026-09-22 it has a card of its own on
 `/mobile-car-wash` (§5).
+
+**The mobile number is retired, 2026-09-26.** "Update phone number on the
+following page… replace with: 02033556435", against five pages that still
+printed `07434649960` — graffiti removal, paint overspray removal, truck
+cleaning, sticker removal and the privacy policy — and the homepage's
+JSON-LD, whose `contactPoint.telephone` is `BUSINESS.reservationsPhone` in
+`lib/site.ts`. The five are one site-wide swap in `applyOverrides` rather than
+five rules, so a regeneration that puts the old number on a sixth page is
+caught too; the `tel:` href is inside the same paragraph HTML as the number,
+so the link and the text move together. The replacement is `CONTACT.phone`,
+which is the number every other page already carried. On the graffiti and
+truck pages the number renders as plain text, not a link, as it did before:
+the source writes that line as one all-bold paragraph, which `Blocks.tsx` sets
+as a `LeadIn`, and a lead-in is text only — the anchor goes, and so does the
+`<br>`, which is why it reads "Get a FREE QuoteOR CALL US NOW". That is the
+client's own "No" against those two rows.
+
+**`RULES` throws on a slug with no page**, since the same day. `patch` skips a
+missing slug, which is right for the site-wide passes and was wrong here: when
+Premium Interior Wash moved under `/mobile-car-wash` (§5), a rule still keyed
+by its old URL would have stopped applying without a word, and its price with
+it.
 
 **A third kind arrived 2026-09-22: three plain errors the mirror ships**, which
 the repo owner asked for corrected after the location audit turned them up.
@@ -516,7 +542,7 @@ Three tiers, cheapest first:
    mid-word along its foot. At `50% 30%` the crop is the bike and nothing else.
 
    The questions come from real `faq` blocks where the group has them — the
-   interior pages carry twenty-one between three of the nine — and fall back to
+   interior pages carry sixteen between two of the eight — and fall back to
    the group's own question-shaped headings where it does not, which is what
    `/repairs` uses.
 
@@ -595,6 +621,19 @@ Three tiers, cheapest first:
    `nameReadMoreLinks`, and the photograph is named in `VALETING_TILES` beside
    the other seven. Both pages share an OG image and a header background, so
    neither photograph could be picked by rule.
+
+   **Premium Interior Wash moved to Car Wash on 2026-09-26** — "premium
+   interior wash needs to be moved over to car wash… moving its url under the
+   car wash main, removing internal link from interior cleaning hub, and making
+   sure the new internal link to the sub page, exists on the car wash hub". So
+   it is `/mobile-car-wash/premium-interior-wash`, last in the Car Wash column,
+   and the old URL 301s there. The interior hub lost its card, its chip and the
+   three questions it lent the accordion — all of which asked about a *car
+   wash* — with nothing more than the NAV edit, because that hub is built from
+   its column. It is **not** in `SERVICE_GROUPS`: `/mobile-car-wash`'s own
+   "OUR PRICING" row has always carried a PREMIUM INTERIOR WASH card, and its
+   button is the link the client asked for, so a band card would sell the same
+   package twice. The 27 built wash pages carry the same row and the same link.
 
    The grid caps its track at 400px (`auto-fit`) instead of dividing the shell,
    because a two-card row at `grid-cols-2` was 615px a card on a page whose
@@ -1217,9 +1256,9 @@ rendered `<main>`. Known, pre-existing gaps: `asLinkChips` drops commas and
   The same borrowing runs through the rest of a hub, and two spots are worth
   knowing about. `/repairs` has no `faq` block anywhere in its group, so its
   accordion is six of its pages' own question-shaped headings with the prose
-  underneath; `/car-interior-cleaning` has twenty-one real ones and uses them.
+  underneath; `/car-interior-cleaning` has sixteen real ones and uses them.
   And no list in the interior group names no service at all, so its reasons
-  mention leather in two of four bodies — the least specific of the nine.
+  mention leather in two of four bodies — the least specific of the eight.
   Written copy from the client replaces either in one line of `lib/hubs.ts`.
 - **`/blog` renders post titles its own source page does not list** — the
   source paginates at 10 and this index does not paginate at all. It used to

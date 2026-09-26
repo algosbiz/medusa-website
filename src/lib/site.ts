@@ -26,7 +26,11 @@ export const BUSINESS = {
     "Looking for a high-quality mobile car wash, valeting, or detailing service in London or Hertfordshire? Medusa Auto Detailing brings top-rated, 5-star car care right to your location! Offering a range of flexible packages to suit every need, Medusa ensures that your vehicle receives professional attention—anywhere you are.",
   tagline: "Mobile Car Wash, Valeting, & Detailing in London",
   telephone: "+442033556435",
-  reservationsPhone: "+44-7434649960",
+  /* Was the mobile, +44-7434649960, until the client retired it on 2026-09-26
+     in favour of the main line. Kept as its own field, in the live block's
+     own "+44-" form, because it is the ContactPoint's rather than the
+     business's. */
+  reservationsPhone: "+44-2033556435",
   priceRange: "££",
   openingHours: "Mo-Fr 07:00-18:00 Sa-Su 09:00-17:00",
   logo: "/assets/2021/12/4-e1639638656209.webp",
@@ -87,6 +91,12 @@ export const NAV: NavItem[] = [  { label: "Home", href: "/" },
           { label: "Exterior Wash", href: "/mobile-car-wash/exterior-wash" },
           { label: "Exterior Plus Wash", href: "/mobile-car-wash/exterior-plus-wash" },
           { label: "Alloy Wheel Cleaning", href: "/mobile-car-wash/alloy-wheel-cleaning" },
+          /* Moved out of the Interior Cleaning column on 2026-09-26 — "premium
+             interior wash needs to be moved over to car wash… moving its url
+             under the car wash main". Unlike Car Wax Service, the URL moved
+             with it: it was `/car-interior-cleaning/premium-interior-wash`,
+             which `lib/redirects.ts` now 301s here. */
+          { label: "Premium Interior Wash", href: "/mobile-car-wash/premium-interior-wash" },
         ],
       },
       {
@@ -152,13 +162,13 @@ export const NAV: NavItem[] = [  { label: "Home", href: "/" },
       {
         /* Client, 2026-09-16: "one more master page to create, with links on
            the master page going to its childs". `app/car-interior-cleaning`
-           builds it out of these nine pages' own copy, so the head is a link
-           now rather than a heading. */
+           builds it out of these eight pages' own copy, so the head is a link
+           now rather than a heading. Premium Interior Wash was the ninth until
+           2026-09-26, when it moved to Car Wash above. */
         label: "Interior Cleaning",
         href: "/car-interior-cleaning",
         children: [
           { label: "Interior Valet", href: "/car-interior-cleaning/interior-valet" },
-          { label: "Premium Interior Wash", href: "/car-interior-cleaning/premium-interior-wash" },
           { label: "Mould Removal & Sterilisation", href: "/car-interior-cleaning/mould-removal" },
           { label: "Car Steam Cleaning", href: "/car-interior-cleaning/steam-cleaning" },
           { label: "Odour Removal", href: "/car-interior-cleaning/odour-removal" },
@@ -943,7 +953,7 @@ export const CARWASH = [
     prices: [115, 125, 135, 145] as const,
     image:
       "/assets/2025/02/professional-car-cleaning-cleaning-the-steering-w-2023-11-27-05-30-02-utc-e1720860904413.webp",
-    href: "/car-interior-cleaning/premium-interior-wash",
+    href: "/mobile-car-wash/premium-interior-wash",
     features: [
       "The Ultimate Interior Clean",
       "Deep Vacuum",

@@ -63,7 +63,7 @@ export const SERVICE_SLUGS = new Set([
   "mobile-car-wash/platinum-wash",
   "mobile-car-wash/exterior-wash",
   "mobile-car-wash/exterior-plus-wash",
-  "car-interior-cleaning/premium-interior-wash",
+  "mobile-car-wash/premium-interior-wash",
   // More services
   "car-interior-cleaning/steam-cleaning",
   "commercial-valeting/mobile-truck-cleaning",
