@@ -26,10 +26,18 @@ import FaqAccordion from "@/components/FaqAccordion";
 import Icon from "@/components/Icon";
 import Reveal from "@/components/Reveal";
 import PackageTabs from "@/components/PackageTabs";
+import PriceMatrix from "@/components/PriceMatrix";
 import TableCards from "@/components/TableCards";
 import { type Block, getForms, type Section } from "@/lib/blocks";
 import { BOOK_URL } from "@/lib/site";
-import { DEFAULT_ACCENT, parseTable, shortLabel, TIER_ACCENT } from "@/lib/table-model";
+import {
+  DEFAULT_ACCENT,
+  parseLadder,
+  parseTable,
+  type PriceLadder,
+  shortLabel,
+  TIER_ACCENT,
+} from "@/lib/table-model";
 
 /**
  * The container width at which a table stops needing to be re-read, by how
@@ -1233,7 +1241,23 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
         tell apart from nothing, so it keeps the plain gold row 0 below.
       */
       const segmented = model && model.valueCount > 1;
-      const bodyRows = segmented ? rows.slice(model.headers.length) : rows;
+
+      /*
+        The price row, read back into one ladder per package — the same parse
+        `TableCards` gives it below the breakpoint. Only when every package's
+        cell parses: a column missing from the matrix would put each card under
+        the wrong package's ticks, so anything less keeps the raw row.
+      */
+      const note = segmented ? model.rows.find((r) => r.kind === "note") : undefined;
+      const ladders = note?.values.map(parseLadder);
+      const matrix =
+        segmented && ladders?.length === model.valueCount && ladders.every(Boolean)
+          ? (ladders as PriceLadder[])
+          : null;
+
+      const bodyRows = (segmented ? rows.slice(model.headers.length) : rows).filter(
+        (row) => !(matrix && note && row.some((cell) => String(cell ?? "").trim() === note.values[0])),
+      );
 
       return (
         <div
@@ -1348,6 +1372,9 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
                   ))}
                 </tbody>
               </table>
+              {model && matrix && (
+                <PriceMatrix names={model.headers[0] ?? []} ladders={matrix} hasDesc={model.hasDesc} />
+              )}
             </div>
           </div>
           {model && view && (

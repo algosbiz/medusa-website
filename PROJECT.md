@@ -799,6 +799,20 @@ column count. Both views are in the DOM and CSS picks one, so there is no
 layout shift and nothing is dropped — verified by asserting every 14+ character
 fragment of every table cell appears in the narrow view across all its tabs.
 
+**The price row renders twice as well.** Client, 2026-10-03, over a screenshot
+of the wide view: "just to style this on Madusa". The narrow view had read the
+trailing ladder back since it was built (`parseLadder`, `TablePrices`), but the
+wide `<table>` still printed it raw — five 270-character strings,
+`…Toyota yaris£70Medium Car…`, 704px tall, with BOOK NOW as dead text. Now
+`Blocks.tsx` lifts that row out of the table and `components/PriceMatrix.tsx`
+lays it out as class against package: the four classes down the label columns
+once, with the source's own examples, and one card per package on the same
+column track as the chips above, so a price sits under the ticks it buys. A row
+lights across all five cards on hover. It only takes the row when **every**
+package's cell parses — one column short and the cards would sit under the
+wrong ticks, so anything less keeps the raw row. `TablePrices` took the same
+tier colours the same day, so the two views are one design at two widths.
+
 ---
 
 ## 6. Design system
