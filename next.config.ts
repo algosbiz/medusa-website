@@ -9,11 +9,16 @@ const nextConfig: NextConfig = {
 
     Client, 2026-09-19: "I think URLs without a trailing dash is better".
 
-    Everything here is a **308**, not a 301 — both the normalisation above and
-    `permanent: true` below, which is what that flag has always meant in Next.
-    308 is the method-preserving permanent redirect and search engines treat it
-    exactly as they do a 301, so the rest of this repo calls them 301s; this is
-    the one file where the actual code is decided, so it says the number.
+    The redirect table below answers **301**. It answered 308 until 2026-10-06
+    — `permanent: true`, which is what that flag means in Next — and search
+    engines treat the two the same, but the client's brief for the alloy wheel
+    move said it twice: "Use ONE server-side permanent 301", and "Check old
+    URL returns: 301 not 302". A 308 reads as neither to anyone checking with a
+    header tool, so `statusCode: 301` is set rather than the flag. Every page
+    here is a GET, which is the one case where the two codes cannot differ.
+
+    The trailing-slash normalisation above is still a **308**: it is Next's
+    own and no config reaches it.
 
     Two things follow from dropping the slash, both handled rather than
     inherited:
@@ -23,13 +28,25 @@ const nextConfig: NextConfig = {
       table, so `/valeting/` arrives at it as `/valeting`; a rule still wearing
       the workbook's slash would never match anything.
     - **A legacy WordPress URL now takes two hops.** `/valeting/` 308s to
-      `/valeting` and then 308s to `/car-valeting`. That is the cost of the
+      `/valeting` and then 301s to `/car-valeting`. That is the cost of the
       switch and it is paid by inbound links only: nothing this site renders
       points at a slashed URL any more, so no internal link and no sitemap
       entry chains. Removing the extra hop would mean `skipTrailingSlashRedirect`
       and a proxy to do the normalising by hand, which puts a function in front
       of 305 static pages to save a crawler one redirect it already follows.
   */
+
+  /*
+    `next dev` behind an ngrok tunnel, for showing work in progress on a phone
+    or to a reviewer. Next 16 refuses dev assets (`/_next/static`, `/_next/hmr`)
+    to any origin but the one it was started on, so through the tunnel the HTML
+    arrived and its CSS and JavaScript did not — an unstyled page (2026-10-06).
+    Dev only: a production build ignores this.
+
+    Careful with what a tunnel exposes: `.env.local` holds live SendGrid keys,
+    so a form submitted through it emails the client for real.
+  */
+  allowedDevOrigins: ["*.ngrok-free.app"],
 
   /*
     Next's image optimiser is off, and this is a billing decision rather than a
@@ -152,7 +169,7 @@ const nextConfig: NextConfig = {
     return REDIRECTS.map(([source, destination]) => ({
       source,
       destination,
-      permanent: true,
+      statusCode: 301 as const,
     }));
   },
 };

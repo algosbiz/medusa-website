@@ -61,7 +61,7 @@ export default function FaqAccordion({
                   {item.a.map((p, j) => (
                     <p
                       key={j}
-                      className="measure mt-2 text-[15px] leading-[25px] font-normal text-white/70 [&_a]:text-gold [&_a:hover]:underline"
+                      className="measure mt-2 text-[15px] leading-[25px] font-normal text-white/70 [&_a]:text-gold [&_a:hover]:underline [&_strong]:font-semibold [&_strong]:text-white/90"
                       dangerouslySetInnerHTML={{ __html: p }}
                     />
                   ))}

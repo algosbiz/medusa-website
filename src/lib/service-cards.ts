@@ -51,7 +51,10 @@ export const SERVICE_GROUPS: Record<string, ServiceGroup> = {
     after: "Why Choose Medusa Auto Detailing?",
     services: [
       "mobile-car-wash/exterior-wash",
-      "mobile-car-wash/alloy-wheel-cleaning",
+      /* Alloy wheel protection was the second card here until 2026-10-06,
+         when the client moved it out of the car wash group altogether: "This
+         page is not alloy wheel cleaning its alloy wheel protectors". It is a
+         card on /car-detailing now, the column the menu moved it to. */
       /* In the Car Valeting column since 2026-09-08 and under this page's
          prefix on disk; the client lists it here, which is where its URL
          has always said it belongs. */
@@ -69,6 +72,10 @@ export const SERVICE_GROUPS: Record<string, ServiceGroup> = {
       "car-detailing/ceramic-coating",
       "car-detailing/machine-polish",
       "car-detailing/windscreen-protection",
+      /* Joined this column on 2026-10-06 (see the car wash list above), and
+         the brief asks for exactly this: "Other relevant Medusa pages should
+         link back using natural anchors such as: Alloy Wheel Protection". */
+      "car-detailing/alloy-wheel-protection",
     ],
   },
   /*
@@ -111,6 +118,19 @@ function navItemFor(slug: string, owner: string): NavItem {
   const found = everyNavItem(NAV).find((i) => i.href === href);
   if (!found) throw new Error(`${owner}: ${href} is not in the navigation`);
   return found;
+}
+
+/**
+ * Cards for named services, for a page that cross-sells a few rather than
+ * carrying a band — `/car-detailing/alloy-wheel-protection`'s "This service
+ * can also complement a Medusa: New Car Protection Detail or Ceramic Coating
+ * Package". Same card, same menu-label rule, same throw.
+ */
+export function cardsForSlugs(slugs: string[], owner: string): HubCard[] {
+  return cardsFrom(
+    slugs.map((s) => navItemFor(s, owner)),
+    { owner },
+  );
 }
 
 /** The band of cards a page carries, or null for the 301 pages that carry none. */

@@ -1,15 +1,31 @@
 "use server";
 
-import { headers } from "next/headers";
 import { type FormField, getForm } from "@/lib/blocks";
 import { cleanLabel, type EnquiryState } from "@/lib/enquiry";
-import { type Attachment, type Enquiry, sendEnquiry } from "@/lib/mail";
-import { CONTACT } from "@/lib/site";
-import { isMisconfigured, verifyTurnstile } from "@/lib/turnstile";
+import { checkTurnstile, deliver, FALLBACK } from "@/lib/form-delivery";
+import type { Attachment, Enquiry } from "@/lib/mail";
+import { PATH as WHEEL_PAGE } from "@/lib/alloy-wheel-protection";
+import { PATH as SIGNAGE_PAGE } from "@/lib/signage-removal";
+import {
+  isAcceptedPhoto,
+  LEAD_SOURCE,
+  MAX_PHOTOS,
+  PHOTO_BUDGET as QUOTE_PHOTO_BUDGET,
+  QUOTE_FORM_ID,
+  quoteEmail,
+  quoteSubject,
+  validateQuote,
+} from "@/lib/signage-quote";
+import {
+  answerLabel,
+  PHOTO_BUDGET,
+  validateWheelCheck,
+  WHEEL_FIELDS,
+  WHEEL_FORM_ID,
+  wheelCheckSubject,
+} from "@/lib/wheel-check";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const FALLBACK = `Please call ${CONTACT.phone} or email ${CONTACT.email} and we will pick it up right away.`;
 
 /**
  * Handles every enquiry form on the site. The posted `__slug`/`__form` pair
@@ -113,92 +129,177 @@ export async function submitEnquiry(
   return { status: "ok", message: successMessage() };
 }
 
-/* ── The challenge ────────────────────────────────────────────────────── */
+/**
+ * The WHEELUV™ suitability & booking form, /car-detailing/alloy-wheel-protection.
+ *
+ * Its own action because its own schema: radio groups, acknowledgements, a
+ * pair of questions asked only after a "Yes", four photographs and a subject
+ * line the brief spells out (`lib/wheel-check.ts`). The gates are the same
+ * three in the same order as `submitEnquiry`, and delivery is the same
+ * `deliver` — so it lands in the same inbox, through the same two sinks.
+ *
+ * Nothing is booked or charged here. "If the wheels clearly require manual
+ * assessment, send the submission for approval rather than taking immediate
+ * payment" — every submission is that: an email for a person to read.
+ */
+export async function submitWheelCheck(
+  _prev: EnquiryState,
+  formData: FormData,
+): Promise<EnquiryState> {
+  if (formData.get("__company")) return { status: "ok" };
 
-/** Returns a message to show the visitor, or nothing if they may pass. */
-async function checkTurnstile(formData: FormData): Promise<string | undefined> {
-  const token = String(formData.get("cf-turnstile-response") ?? "");
+  const read = (name: string) => {
+    const raw = formData.get(name);
+    return typeof raw === "string" ? raw.replace(/\r\n/g, "\n").trim() : "";
+  };
 
-  /* Cloudflare wants the visitor's address, not the proxy's. This site sits
-     behind Cloudflare and then Vercel, so `x-forwarded-for` is a chain and
-     the client is its first entry. */
-  const forwarded = (await headers()).get("x-forwarded-for") ?? "";
-  const ip = forwarded.split(",")[0]?.trim() || undefined;
+  const { errors, answers } = validateWheelCheck(read);
 
-  const result = await verifyTurnstile(token, ip);
-
-  if (result.status === "skipped") {
-    console.info("[enquiry] turnstile check skipped:", result.reason);
-    return undefined;
-  }
-  if (result.status === "failed") {
-    if (isMisconfigured(result.codes)) {
-      // Every visitor is being turned away and only this line says why.
-      console.error("TURNSTILE_SECRET_KEY is wrong — the form is refusing everyone", result.codes);
-      return `Sorry, we could not send your message just now. ${FALLBACK}`;
+  /* The photographs travel as attachments, in the form's order, and each is
+     named in the body too in case it was too large to attach. */
+  const attachments: Attachment[] = [];
+  const photoLines: Record<string, string> = {};
+  let bytes = 0;
+  for (const field of WHEEL_FIELDS) {
+    if (field.kind !== "photo") continue;
+    const raw = formData.get(field.name);
+    if (!(raw instanceof File) || raw.size === 0) continue;
+    if (!raw.type.startsWith("image/")) {
+      errors[field.name] = "Please choose a photograph.";
+      continue;
     }
-    return result.message;
+    bytes += raw.size;
+    photoLines[field.name] = `${raw.name} (${Math.round(raw.size / 1024)} KB)`;
+    attachments.push({ filename: raw.name, type: raw.type, content: await raw.arrayBuffer() });
   }
-  return undefined;
-}
+  if (bytes > PHOTO_BUDGET) {
+    return {
+      status: "error",
+      message: "Those photographs are too large to send together. Please choose smaller ones, or fewer.",
+    };
+  }
 
-/* ── Delivery ─────────────────────────────────────────────────────────── */
+  const challenge = await checkTurnstile(formData);
+  if (challenge) return { status: "error", message: challenge };
 
-/** Returns a message to show the visitor, or nothing if it went somewhere. */
-async function deliver(enquiry: Enquiry): Promise<string | undefined> {
-  const mail = await sendEnquiry(enquiry);
-  if (mail.status === "failed") console.error("enquiry email failed", mail.error);
-  if (mail.status === "skipped") console.info("[enquiry] email skipped:", mail.reason);
+  if (Object.keys(errors).length) {
+    return { status: "error", message: "Please check the highlighted fields and try again.", errors };
+  }
 
-  const webhook = await postWebhook(enquiry);
+  /* Back into the form's order, photographs in their place. */
+  const fields: Record<string, string> = {};
+  for (const field of WHEEL_FIELDS) {
+    if (field.kind === "photo") {
+      if (photoLines[field.name]) fields[answerLabel(field)] = photoLines[field.name];
+    } else if (answers[field.label]) {
+      fields[field.label] = answers[field.label];
+    }
+  }
 
-  if (mail.status === "sent" || webhook === "posted") return undefined;
-
-  /* Nothing took it. Log the whole enquiry either way — in production it is
-     the only copy that exists, and in development it is the point. */
-  const nothingConfigured = mail.status === "skipped" && webhook === "skipped";
-  const note = nothingConfigured
-    ? "[enquiry] nothing configured to deliver to, logging instead:"
-    : "enquiry not delivered";
-  console[nothingConfigured ? "info" : "error"](note, {
-    page: enquiry.page,
-    fields: enquiry.fields,
-    mail: mail.status,
-    webhook,
+  const failure = await deliver({
+    form: WHEEL_FORM_ID,
+    page: WHEEL_PAGE,
+    submittedAt: new Date(),
+    fields,
+    from: { email: read("email"), name: read("fullName") || undefined },
+    attachments,
+    subject: wheelCheckSubject(read),
   });
+  if (failure) return { status: "error", message: failure };
 
-  if (nothingConfigured && process.env.NODE_ENV !== "production") return undefined;
-  return `Sorry, we could not send your message just now. ${FALLBACK}`;
+  return { status: "ok", message: successMessage() };
 }
 
 /**
- * The webhook this action delivered to before SendGrid, kept because it is
- * still the cheapest way to put an enquiry somewhere that is not an inbox —
- * a Slack channel, a sheet, a CRM. It is a second sink, not a fallback: both
- * run on every enquiry and either one succeeding is enough.
+ * The vehicle signage removal quote form,
+ * /commercial-valeting/car-van-stickers-removal.
+ *
+ * Its own action for its own schema (`lib/signage-quote.ts`): multi-select
+ * groups, questions asked only after a "Yes", up to ten photographs in one
+ * field, and an email the brief writes out line by line — its subject, its
+ * order, a telephone number that can be tapped, and the lead source. Same
+ * three gates in the same order as `submitEnquiry`, and the same `deliver`.
+ *
+ * The photographs travel in the form's order, named `photo-1-…` so the inbox
+ * lists them the way the customer chose them. Those every mail client can
+ * draw are shown in the body as well; a HEIC is attached only.
  */
-async function postWebhook(enquiry: Enquiry): Promise<"posted" | "skipped" | "failed"> {
-  const webhook = process.env.CONTACT_WEBHOOK_URL;
-  if (!webhook) return "skipped";
-  try {
-    const res = await fetch(webhook, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        form: enquiry.form,
-        page: enquiry.page,
-        submittedAt: enquiry.submittedAt.toISOString(),
-        fields: enquiry.fields,
-      }),
-      signal: AbortSignal.timeout(10_000),
+export async function submitSignageQuote(
+  _prev: EnquiryState,
+  formData: FormData,
+): Promise<EnquiryState> {
+  if (formData.get("__company")) return { status: "ok" };
+
+  const read = (name: string) => {
+    const raw = formData.get(name);
+    return typeof raw === "string" ? raw.replace(/\r\n/g, "\n").trim() : "";
+  };
+  const readAll = (name: string) =>
+    formData.getAll(name).flatMap((v) => (typeof v === "string" && v.trim() ? [v.trim()] : []));
+
+  const { errors, answers } = validateQuote(read, readAll);
+
+  const files = formData.getAll("photos").filter((f): f is File => f instanceof File && f.size > 0);
+  if (!files.length) errors.photos = "Please upload at least one photograph.";
+  else if (files.length > MAX_PHOTOS) errors.photos = `Please send no more than ${MAX_PHOTOS} photographs.`;
+
+  const attachments: Attachment[] = [];
+  const named: string[] = [];
+  let bytes = 0;
+  for (const [i, file] of files.slice(0, MAX_PHOTOS).entries()) {
+    if (!isAcceptedPhoto(file)) {
+      errors.photos = "Please send JPG, PNG, HEIC or WebP photographs.";
+      continue;
+    }
+    bytes += file.size;
+    /* Some browsers send a HEIC with no type at all; name it from the file. */
+    const ext = file.name.match(/\.(\w+)$/)?.[1]?.toLowerCase() ?? "";
+    const type = file.type || `image/${ext === "jpg" ? "jpeg" : ext || "heic"}`;
+    const filename = `photo-${i + 1}-${file.name}`;
+    named.push(`${filename} (${Math.round(file.size / 1024)} KB)`);
+    attachments.push({
+      filename,
+      type,
+      content: await file.arrayBuffer(),
+      inline: /^image\/(jpeg|png|webp)$/i.test(type),
     });
-    if (!res.ok) throw new Error(`webhook responded ${res.status}`);
-    return "posted";
-  } catch (e) {
-    console.error("enquiry webhook delivery failed", e);
-    return "failed";
   }
+  if (bytes > QUOTE_PHOTO_BUDGET) {
+    return {
+      status: "error",
+      message: "Those photographs are too large to send together. Please choose smaller ones, or fewer.",
+    };
+  }
+
+  const challenge = await checkTurnstile(formData);
+  if (challenge) return { status: "error", message: challenge };
+
+  if (Object.keys(errors).length) {
+    return { status: "error", message: "Please check the highlighted fields and try again.", errors };
+  }
+
+  const photoLine = `${named.length} attached:\n${named.join("\n")}`;
+  const { fields, links } = quoteEmail(answers, photoLine);
+
+  const failure = await deliver({
+    form: QUOTE_FORM_ID,
+    page: SIGNAGE_PAGE,
+    source: LEAD_SOURCE,
+    submittedAt: new Date(),
+    fields,
+    links,
+    from: { email: answers.email, name: answers.fullName || undefined },
+    attachments,
+    subject: quoteSubject(answers),
+  });
+  if (failure) return { status: "error", message: failure };
+
+  return { status: "ok" };
 }
+
+/* The challenge and delivery — Turnstile, SendGrid and the webhook — live in
+   `lib/form-delivery.ts`, shared with the quote forms whose actions sit
+   beside their own routes. */
 
 /**
  * Who to answer. The form's own email field is the address, and the first

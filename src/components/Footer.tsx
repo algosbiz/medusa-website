@@ -6,8 +6,12 @@ import { CONTACT, FOOTER } from "@/lib/site";
  * `slug` is only for the location strip — see `FooterLocations`. A route that
  * does not pass one gets no strip, which is what every page outside the three
  * service hubs and the 195 location pages should have.
+ *
+ * `whatsapp` replaces the floating WhatsApp button's link on one page — the
+ * signage removal page's, which opens with the brief's pre-filled message
+ * ("Keep WhatsApp available throughout the page").
  */
-export default function Footer({ slug }: { slug?: string } = {}) {
+export default function Footer({ slug, whatsapp }: { slug?: string; whatsapp?: string } = {}) {
   return (
     <footer className="w-full bg-[#0d0d0d]">
       {/* This page's own service's locations, above the footer's own columns
@@ -151,11 +155,11 @@ export default function Footer({ slug }: { slug?: string } = {}) {
 
       {/* Floating WhatsApp button, as on the live site */}
       <a
-        href={CONTACT.whatsapp}
+        href={whatsapp ?? CONTACT.whatsapp}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
-        className="fixed bottom-6 right-6 z-40 flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#25D366] shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-transform duration-200 hover:scale-110"
+        className="wa-float fixed bottom-6 right-6 z-40 flex h-[56px] w-[56px] items-center justify-center rounded-full bg-[#25D366] shadow-[0_4px_16px_rgba(0,0,0,0.4)] transition-transform duration-200 hover:scale-110"
       >
         <Image
           src="/assets/icons/whatsapp.svg"

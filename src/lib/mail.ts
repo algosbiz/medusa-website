@@ -50,6 +50,12 @@ export type Attachment = {
   /** MIME type, as the browser reported it. */
   type: string;
   content: ArrayBuffer;
+  /**
+   * Shown in the body of the email as well as attached — for a photograph
+   * every mail client can draw (JPEG, PNG, WebP). The signage removal quote
+   * form sets it: "Make uploaded images easy for staff to open."
+   */
+  inline?: boolean;
 };
 
 export type Enquiry = {
@@ -63,6 +69,22 @@ export type Enquiry = {
   /** The visitor, for `reply_to`. Absent if the form has no email field. */
   from?: { email: string; name?: string };
   attachments?: Attachment[];
+  /**
+   * A subject the form's owner asked for by name, in place of the generic
+   * one. The WHEELUV™ form sets it — its brief writes the subject line out:
+   * "WHEELUV™ ENQUIRY — [VEHICLE MAKE] [MODEL] — [WHEEL SIZE]" — and so does
+   * the signage removal quote form.
+   */
+  subject?: string;
+  /**
+   * Where the lead came from, in the business's own words — "Store the lead
+   * source/page as: Vehicle Signage Removal Page". Printed at the head of the
+   * email and sent to the webhook.
+   */
+  source?: string;
+  /** Field label -> a link its value opens: a `tel:` for a phone number, so
+   *  it can be called with one tap from the inbox. */
+  links?: Record<string, string>;
 };
 
 export type MailResult =
@@ -88,6 +110,10 @@ export async function sendEnquiry(enquiry: Enquiry): Promise<MailResult> {
     return true;
   });
 
+  /* Decided once, because the body has to know which photographs made it
+     into the message before it can show them. */
+  const files = withinBudget(enquiry.attachments ?? []);
+
   const body = {
     personalizations: [
       { to: to.map(named), ...(cc.length ? { cc: cc.map(named) } : {}) },
@@ -102,9 +128,9 @@ export async function sendEnquiry(enquiry: Enquiry): Promise<MailResult> {
     subject: subjectFor(enquiry),
     content: [
       { type: "text/plain", value: textBody(enquiry) },
-      { type: "text/html", value: htmlBody(enquiry) },
+      { type: "text/html", value: htmlBody(enquiry, files) },
     ],
-    ...attachmentsFor(enquiry),
+    ...attachmentsFor(files),
   };
 
   try {
@@ -163,6 +189,7 @@ const named = (email: string) => ({ email });
  * free text and this is the only place it reaches a header.
  */
 function subjectFor(enquiry: Enquiry): string {
+  if (enquiry.subject) return oneLine(enquiry.subject);
   const who = enquiry.from?.name?.trim();
   const where = enquiry.page;
   return oneLine(who ? `Website enquiry from ${who} — ${where}` : `Website enquiry — ${where}`);
@@ -180,6 +207,7 @@ const stamp = (at: Date) =>
 
 function textBody(enquiry: Enquiry): string {
   const lines = [
+    ...(enquiry.source ? [`Source:   ${enquiry.source}`] : []),
     `Page:     ${SITE}${enquiry.page}`,
     `Form:     ${enquiry.form}`,
     `Received: ${stamp(enquiry.submittedAt)}`,
@@ -230,20 +258,45 @@ const LOGO = `${SITE}${FOOTER.logo}`;
  *   inbox list. Left alone it takes whatever text comes first — here, the
  *   logo's `alt`. Given one, the list row says who wrote and from where.
  */
-function htmlBody(enquiry: Enquiry): string {
+function htmlBody(enquiry: Enquiry, files: Attachment[]): string {
   const who = enquiry.from?.name?.trim() || enquiry.from?.email || "Website visitor";
   const url = SITE + enquiry.page;
 
   const fields = Object.entries(enquiry.fields)
-    .map(
-      ([label, value], i) => `
+    .map(([label, value], i) => {
+      const text = esc(value).replace(/\n/g, "<br>");
+      const href = enquiry.links?.[label];
+      return `
               <tr><td style="padding:${i ? "18px" : "0"} 0 0;">
                 <div style="font:600 11px/1.4 ${FONT};letter-spacing:.14em;text-transform:uppercase;color:${GOLD};">${esc(label)}</div>
-                <div style="margin-top:6px;font:400 16px/1.55 ${FONT};color:${TEXT};">${esc(value).replace(/\n/g, "<br>")}</div>
+                <div style="margin-top:6px;font:400 16px/1.55 ${FONT};color:${TEXT};">${
+                  href
+                    ? `<a href="${esc(href)}" style="color:${TEXT};font-weight:700;text-decoration:underline;">${text}</a>`
+                    : text
+                }</div>
               </td></tr>
-              <tr><td style="padding-top:18px;"><div style="height:1px;background:${HAIRLINE};line-height:1px;font-size:0;">&nbsp;</div></td></tr>`,
-    )
+              <tr><td style="padding-top:18px;"><div style="height:1px;background:${HAIRLINE};line-height:1px;font-size:0;">&nbsp;</div></td></tr>`;
+    })
     .join("");
+
+  /* The photographs themselves, full width one under another, so the job can
+     be judged from the email on a phone without opening anything. Each is an
+     inline part of the message, which every client lets the reader open full
+     size and save. */
+  const inline = files.filter((f) => f.inline);
+  const photos = inline.length
+    ? `
+              <tr><td style="padding-top:18px;">
+                <div style="font:600 11px/1.4 ${FONT};letter-spacing:.14em;text-transform:uppercase;color:${GOLD};">Photos</div>
+                ${inline
+                  .map(
+                    (f) => `
+                <img src="cid:${esc(contentId(f, files))}" alt="${esc(f.filename)}" width="536" style="display:block;width:100%;max-width:536px;height:auto;margin-top:12px;border:0;border-radius:10px;">
+                <div style="margin-top:6px;font:400 12px/1.5 ${FONT};color:${MUTED};">${esc(f.filename)}</div>`,
+                  )
+                  .join("")}
+              </td></tr>`
+    : "";
 
   /* A real button, so answering is one tap from the phone the enquiry is read
      on. Only when the form actually carried an email field. */
@@ -290,7 +343,9 @@ function htmlBody(enquiry: Enquiry): string {
 
       <!-- Who, and where from. -->
       <tr><td style="padding:34px 32px 0;">
-        <div style="font:700 11px/1.4 ${FONT};letter-spacing:.2em;text-transform:uppercase;color:${GOLD};">New website enquiry</div>
+        <div style="font:700 11px/1.4 ${FONT};letter-spacing:.2em;text-transform:uppercase;color:${GOLD};">New website enquiry${
+          enquiry.source ? ` &middot; ${esc(enquiry.source)}` : ""
+        }</div>
         <div style="margin-top:10px;font:700 26px/1.25 ${FONT};color:${TEXT};">${esc(who)}</div>
         <div style="margin-top:10px;font:400 13px/1.6 ${FONT};color:${MUTED};">
           ${esc(stamp(enquiry.submittedAt))}<br>
@@ -304,7 +359,7 @@ function htmlBody(enquiry: Enquiry): string {
 
       <!-- What they wrote. -->
       <tr><td style="padding:26px 32px 34px;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">${fields}${reply}
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">${fields}${photos}${reply}
         </table>
       </td></tr>
 
@@ -341,26 +396,36 @@ const esc = (value: string) =>
 /* ── Attachments ──────────────────────────────────────────────────────── */
 
 /**
- * One form — the caravan page's — has a file field, and the photograph a
- * visitor puts in it is the point of the enquiry. Anything past the budget is
+ * Three forms take photographs — the caravan page's one, the four on the
+ * WHEELUV™ suitability form and the signage removal quote form's ten — and
+ * the photographs are the point of the enquiry. Anything past the budget is
  * left off; the field's own line in the body still names the file, so the
  * business can see that something was sent and ask for it.
  */
-function attachmentsFor(enquiry: Enquiry) {
-  const files = enquiry.attachments ?? [];
-  if (!files.length) return {};
-
-  const out: { content: string; filename: string; type: string; disposition: "attachment" }[] = [];
+function withinBudget(files: Attachment[]): Attachment[] {
+  const kept: Attachment[] = [];
   let used = 0;
   for (const file of files) {
     if (used + file.content.byteLength > ATTACHMENT_BUDGET) continue;
     used += file.content.byteLength;
-    out.push({
+    kept.push(file);
+  }
+  return kept;
+}
+
+/** The `cid:` an inline photograph is referred to by — its place in the message. */
+const contentId = (file: Attachment, files: Attachment[]) => `photo-${files.indexOf(file) + 1}`;
+
+function attachmentsFor(files: Attachment[]) {
+  if (!files.length) return {};
+  return {
+    attachments: files.map((file) => ({
       content: Buffer.from(file.content).toString("base64"),
       filename: file.filename,
       type: file.type || "application/octet-stream",
-      disposition: "attachment",
-    });
-  }
-  return out.length ? { attachments: out } : {};
+      ...(file.inline
+        ? { disposition: "inline" as const, content_id: contentId(file, files) }
+        : { disposition: "attachment" as const }),
+    })),
+  };
 }

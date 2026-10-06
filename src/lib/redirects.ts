@@ -19,7 +19,9 @@ import { LOCATION_MOVES } from "./location-moves";
  * rules below that the sheet does not mention are this clone's own
  * (`/ceramic-coating/*`, `/car-detailing/*` -> `/repairs/*`): URLs that only
  * ever existed on this build, so no sheet about the WordPress site would list
- * them, and dropping them would 404 something that shipped.
+ * them, and dropping them would 404 something that shipped. Two more postdate
+ * the sheet: `/mobile-car-wash/alloy-wheel-cleaning` and
+ * `/repairs/paint-overspray-removal`, both moved 2026-10-06.
  *
  * **Every path here is written without a trailing slash**, which is the form
  * these rules are matched against: `trailingSlash` is off, so Next normalises
@@ -58,7 +60,7 @@ export const REDIRECTS: ReadonlyArray<readonly [from: string, to: string]> = [
   ["/car-graffiti-removal", "/repairs/car-graffiti-removal"],
   ["/car-leather-seats-cleaning-conditioning-and-protection", "/car-interior-cleaning/leather-cleaning"],
   ["/car-machine-polish", "/car-detailing/machine-polish"],
-  ["/car-paint-spillage-removal-service", "/repairs/paint-overspray-removal"],
+  ["/car-paint-spillage-removal-service", "/repairs/car-interior-paint-spill-removal"],
   ["/car-van-stickers-removal", "/commercial-valeting/car-van-stickers-removal"],
   ["/car-windscreen-protection", "/car-detailing/windscreen-protection"],
   ["/caravan-valeting", "/vehicles/caravan-cleaning"],
@@ -86,7 +88,8 @@ export const REDIRECTS: ReadonlyArray<readonly [from: string, to: string]> = [
   ["/summer-glow-valet", "/car-valeting/summer-glow-valet"],
   ["/triton-premium-interior-valet", "/car-interior-cleaning/interior-valet"],
   ["/ultimate-pre-sale-valet", "/car-valeting/pre-sale-valet"],
-  ["/wheeluv", "/mobile-car-wash/alloy-wheel-cleaning"],
+  /* Straight to the page's 2026-10-06 URL, never via the one it had before. */
+  ["/wheeluv", "/car-detailing/alloy-wheel-protection"],
   ["/winter-protection", "/car-valeting/winter-protection"],
   ["/zeus-full-valet", "/car-valeting/premium-full-valet"],
 
@@ -156,7 +159,22 @@ export const REDIRECTS: ReadonlyArray<readonly [from: string, to: string]> = [
   ["/car-detailing/headlight-restoration", "/repairs/headlight-restoration"],
   ["/car-detailing/engine-bay-steam-cleaning", "/repairs/engine-bay-steam-cleaning"],
   ["/car-detailing/car-graffiti-removal", "/repairs/car-graffiti-removal"],
-  ["/car-detailing/paint-overspray-removal", "/repairs/paint-overspray-removal"],
+  ["/car-detailing/paint-overspray-removal", "/repairs/car-interior-paint-spill-removal"],
+
+  /* Client, 2026-10-06 ("Webite changes.pdf"): "This page is not alloy wheel
+     cleaning its alloy wheel protectors. It should be under the detailing
+     section", with this exact pair and "Use ONE server-side permanent 301".
+     The page sells WHEELUV™ rim protectors, and the old URL named a cleaning
+     service it never offered. */
+  ["/mobile-car-wash/alloy-wheel-cleaning", "/car-detailing/alloy-wheel-protection"],
+
+  /* Client, 2026-10-06 ("Webite changes (5).pdf"): "IMPORTANT — CHANGE THE
+     URL … THEN CREATE A PERMANENT 301 REDIRECT", this pair. The page sells
+     the removal of paint spilled *inside* a car — "This page is NOT for
+     exterior paint overspray" — and the old URL named the opposite. The two
+     older rows that led to the old URL point straight here, so nothing
+     chains. */
+  ["/repairs/paint-overspray-removal", "/repairs/car-interior-paint-spill-removal"],
 
   /*
     The 127 location pages now living under their service hub.

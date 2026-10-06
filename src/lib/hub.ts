@@ -32,7 +32,7 @@
 import { asFeatures, type Feature } from "@/components/blocks-groups";
 import { type Block, getPage, heroImageFor, type Page } from "@/lib/blocks";
 import { entryPrice } from "@/lib/service-frame";
-import { NAV, type NavItem } from "@/lib/site";
+import { AREAS_INTRO, NAV, type NavItem } from "@/lib/site";
 
 /** What one hub needs to know about itself. `lib/hubs.ts` writes these. */
 export type HubSpec = {
@@ -111,6 +111,8 @@ export type HubCard = {
   blurbHtml: string;
   /** Its entry price, where the page quotes one at all. */
   priceFrom?: string;
+  /** "+£20" — the price of a service sold only on top of another one. */
+  addOn?: string;
   image?: string;
   /** `object-position` for that photograph, where the centre is wrong. */
   imagePosition?: string;
@@ -209,6 +211,26 @@ export function hubIntro(spec: HubSpec): string[] {
  */
 const priceOf = (page: Page) => entryPrice(page.sections)?.replace(/\s+/g, "");
 
+/**
+ * A price written "+£20": a service that can only be bought on top of another.
+ *
+ * `/car-interior-cleaning/pet-hair-removal` since 2026-10-06 — "Pet Hair
+ * Removal should now be displayed as: +£20 ADD-ON. Must be booked with Triton
+ * Interior Valet." `entryPrice` does not read it, deliberately: as "From £20"
+ * it would sell the add-on on its own, and as the cheapest card in the group
+ * it would become `/car-interior-cleaning`'s own entry price.
+ *
+ * "From +£60" reads the same way — `/car-interior-cleaning/odour-removal`,
+ * the same day, three treatments that are each only an add-on to a valet.
+ */
+const ADDON_RE = /^\s*(?:from\s+)?\+\s*£\s*[\d,]+/i;
+const addOnOf = (page: Page) => {
+  const b = flatten(page.sections.flatMap((s) => s.blocks)).find(
+    (x) => x.type === "heading" && ADDON_RE.test(x.text),
+  );
+  return b?.type === "heading" ? b.text.replace(/\s+/g, " ").replace(/\+\s+£/, "+£").trim() : undefined;
+};
+
 /** One column of the Services mega-menu. */
 function menuGroup(spec: HubSpec): NavItem[] {
   const services = NAV.find((i) => i.label === "Services")?.children ?? [];
@@ -257,13 +279,15 @@ export function cardsFrom(
     if (!blurbHtml) throw new Error(`${opts.owner}: no opening paragraph on /${slug}`);
 
     const named = opts.images?.[slug];
+    const priceFrom = priceOf(page);
 
     return {
       slug,
       name: item.label,
       href: item.href!,
       blurbHtml,
-      priceFrom: priceOf(page),
+      priceFrom,
+      addOn: priceFrom ? undefined : addOnOf(page),
       image: typeof named === "string" ? named : (named?.src ?? heroImageFor(page)),
       imagePosition: typeof named === "object" ? named.position : undefined,
     };
@@ -461,6 +485,18 @@ export function hubAreas(spec: HubSpec): string[] {
     const p = blocks[at + 1];
     if (p?.type !== "paragraph") continue;
     for (const m of p.html.matchAll(REGION)) seen.add(m[0]);
+  }
+  /*
+    The group's pages no longer say it themselves. Since the client's briefs of
+    2026-10-06 rebuilt every page under `/repairs` and the caravan page under
+    `/vehicles`, none of them closes on a "… Near You" paragraph any more —
+    they say "within our London service area" instead. The company's coverage
+    is the same for every service, and the homepage states it ("MOBILE CAR
+    WASH, VALETING, & DETAILING NEAR YOU"), so a hub whose own pages are silent
+    reads it from there rather than going without.
+  */
+  if (seen.size < 4) {
+    for (const body of AREAS_INTRO.body) for (const m of body.matchAll(REGION)) seen.add(m[0]);
   }
   if (seen.size < 4) {
     throw new Error(`${spec.slug}: only ${seen.size} regions found across the group`);

@@ -131,7 +131,17 @@ that name a page which still exists and differ only by the trailing slash the
 sheet's left column carries. The only rules the sheet does not mention are the
 eleven this clone made for itself on 2026-09-15 — `/ceramic-coating/*` and
 `/car-detailing/*` → `/repairs/*` — which never existed on WordPress and so
-could not be on a sheet about it.
+could not be on a sheet about it — and two that postdate the sheet:
+`/mobile-car-wash/alloy-wheel-cleaning` → `/car-detailing/alloy-wheel-protection`
+and `/repairs/paint-overspray-removal` →
+`/repairs/car-interior-paint-spill-removal` (both 2026-10-06, §5). `/wheeluv` points straight at the new URL, so nothing chains.
+
+**The table answers 301, not 308, since 2026-10-06.** It was `permanent: true`
+until then, which in Next is a 308; search engines treat the two alike, but the
+alloy wheel brief asked twice for a 301 by number ("Check old URL returns: 301
+not 302"), and a header tool reads 308 as neither. `next.config.ts` sets
+`statusCode: 301` for every rule. The trailing-slash hop in front of them is
+Next's own and stays 308.
 
 ---
 
@@ -458,6 +468,383 @@ Three tiers, cheapest first:
    in `CUSTOM_ROUTES`). Copy is transcribed verbatim into a `lib/*.ts` file or
    read back out of `pages.json`.
 
+   **Or a page the client rewrote: `/car-detailing/alloy-wheel-protection`.**
+   Client, 2026-10-06, in a 47-page brief ("Webite changes .pdf"): "This page
+   is not alloy wheel cleaning its alloy wheel protectors. It should be under
+   the detailing section" — then a new URL with a 301 from
+   `/mobile-car-wash/alloy-wheel-cleaning`, the menu label "Alloy Wheel
+   Protection" in the Car Detailing column, twenty-three sections of copy, a
+   dedicated suitability form, Service + FAQPage schema and a sticky
+   "BOOK £159 | CHECK FITMENT" bar on phones. Every word is the client's and
+   lives in `lib/alloy-wheel-protection.ts`; the route is layout only, in the
+   order of the brief's own "Elementor page structure".
+
+   - **Nothing of the old page survives.** Its copy made the claims the brief
+     names for removal ("Won't damage your wheels"). `content/overrides.ts`
+     replaces the page's sections with the brief's opening, price and FAQ, so
+     the card `/car-detailing` now shows for it, the sitemap and the WebPage
+     node all read the new page too. The rule throws if the mirror's h1
+     changes — delete it when the live site publishes the rebuild.
+   - **Three answers are assembled, not transcribed**, because the brief asks
+     the developer a question instead of answering it: "Does £159 include
+     fitting?" (answered with the brief's own Section 18 sentence), "Is there
+     a guarantee?" (the old page's 1-year product guarantee, plus the brief's
+     line that it is not a guarantee against wheel damage) and the five colour
+     names (Silver, Black, Anthracite, Red, Blue — WHEELUV's own, matching the
+     old page's five product photographs and "Available in 5 colours"). All
+     three are marked `ASSEMBLED` in the file. **The client has to confirm**
+     the fitting answer, that all five colours are stocked, and whether £159
+     is four wheels — the page says "£159 per set", the brief's fallback
+     until it is.
+   - **Photographs**: the old page's three installation shots and five product
+     shots, under the brief's image-SEO filenames in `public/assets/2026/10/`.
+     The product shots are transparent PNGs with a colour picker baked under
+     the tyre; the cut keeps the alpha, because flattened, the transparent
+     pixels show the encoder's colour noise. The brief also wants a before &
+     after, a full vehicle and an installation in progress — none exists, and
+     none is faked. The header's full-width backdrop is not one of them: no
+     installation shot fills a 1900px band, so it is the 2560px black-car
+     studio photograph `/car-detailing/perfection-detail` already carries,
+     under `PageHero`'s own wash (client: "ini emang gk ada background
+     imagenya kah?"). It is decorative and claims nothing about WHEELUV.
+   - **Internal links**: the Car Wash band no longer carries the card;
+     `/car-detailing`'s "Other Car Detailing Services" does, and the four
+     valeting pages' "WHEELUV ™ – Alloy Wheel Protectors" add-on card now
+     links to the page.
+   - **Conversion events** (`lib/track.ts`, `components/TrackClicks.tsx`):
+     `book_wheeluv_click`, `check_compatibility_click`,
+     `compatibility_form_submitted`, `whatsapp_click`, `phone_click`. **The
+     site loads no analytics**, so these go to `gtag` if a GA4 tag is ever
+     added, and to `window.dataLayer` for Tag Manager otherwise. "Completed
+     WHEELUV Booking" happens on book.medusaautodetailing.co.uk and has to be
+     tracked there.
+
+   **And a second one, the same day: `/vehicles/motorcycle-valeting-detailing`.**
+   Client, 2026-10-06, in a 14-page brief ("Webite changes (1).pdf"): "This
+   page needs to be fully changes please" — new copy, an SEO block (title,
+   meta, one H1, nine H2s), a ten-section layout, mobile conversion rules and
+   a list of services that must leave the site. Same shape as the alloy
+   rebuild: every word is in `lib/motorcycle.ts`, the route is layout only,
+   and the URL stays where it is ("Keep existing URL").
+
+   - **Three packages replace the old three and their 25 add-ons**:
+     Maintenance Wash £75, Deep Valet £110 (MOST POPULAR, the page's gold
+     card), Protection Valet £150. The old £165 / £240 / £375 washes carried
+     chain lubrication, sprocket cleaning, fairing removal, oil and tyre
+     pressure checks, caliper detailing and re-painting — every item the
+     brief's "IMPORTANT OPERATIONAL INSTRUCTIONS" orders removed — so nothing
+     of the old page survives, add-ons included. `content/overrides.ts`
+     replaces the mirror's sections with the brief's opening, prices and FAQ,
+     which is what `/vehicles` now borrows: its intro paragraph, a "From £75"
+     card (the hub's entry price too) and the first three questions.
+   - **The comparison table derives its ticks** from the packages' own
+     "What's Included" lines (`tiersWith()`, reading "Everything in the …" as
+     the tier below), and throws on a row no package lists. Below 640px it is
+     a stacked list with the package names held under the header, not the
+     horizontal scroll the brief allowed "if required" — scrolled, a phone
+     showed one package at a time.
+   - **The hero follows the layout's list** — H1, short intro, trust icons,
+     Book + WhatsApp — and the copy's two longer intro paragraphs sit under
+     the buttons, which keeps both buttons above the fold from a 360px phone
+     to a 1280x720 laptop. The sticky bar is `StickyBookBar` again, now
+     taking its two actions as props: "Book Now | WhatsApp" here, "Book £159
+     | Check Fitment" on the alloy page.
+   - **One answer is reworded and marked `ASSEMBLED`**: the ceramic-coating
+     FAQ ended "This should not be advertised as a professional long-term
+     ceramic coating", a note to the developer; the page says "It is not a
+     professional long-term ceramic coating."
+   - **Photographs, both genuinely Medusa's**: the bike cut out of the site's
+     one motorcycle poster, clear of its baked-in text (which advertised the
+     ceramic coating this page stopped selling), and the liveried van, a frame
+     from the promotional film at 0:08 — the layout's "image of Medusa
+     technician/van". The brief's deep-clean, protection and before & after
+     images do not exist, so **Section 4, Before & After, is not built** and
+     waits for real photographs. Reviews are the site's general ones under
+     "What Our Clients Say", never presented as motorcycle reviews.
+   - **The brief's "BOOKING SYSTEM" section** — three bookable options, a
+     make-and-model question, a condition question that asks for photographs
+     when the bike is very dirty — belongs to book.medusaautodetailing.co.uk,
+     which is not this repo. Every booking button here goes to it and fires
+     `book_motorcycle_click`.
+
+   **And a page the client restructured: `/car-interior-cleaning/vomit-cleaning`.**
+   Client, 2026-10-06, "vomit cleaning.pdf" (20 pages): "This document
+   replaces/restructures the existing Vomit Cleaning page. KEEP EXISTING URL"
+   — thirteen sections, SEO strings, mobile rules, an image-SEO table and a
+   "wording to avoid" list. Copy in `lib/vomit-cleaning.ts`, layout in the
+   route, in the brief's order. It left `SERVICE_SLUGS` for `CUSTOM_ROUTES`.
+
+   - **Unlike the two above, part of the old page stays.** Section 12: "The
+     useful educational/DIY information … can remain for SEO purposes, but
+     move it underneath". `content/overrides.ts` keeps the mirror's four DIY
+     rows word for word (`GUIDE` names them) after the brief's opening,
+     prices and FAQ, and the route sets them as four closed `<details>` below
+     the FAQ — in the served HTML, four lines tall until opened. The old
+     page's commercial rows are not kept: they promised what the brief's
+     wording list forbids ("ensuring no lingering odours", "restored to its
+     pristine condition"), and the brief's own sections replace them.
+   - **One price is reconciled, `ASSEMBLED`:** XL is £240 in the brief's
+     pricing section and £230 in its FAQ, closing price list and booking
+     list. The page quotes £230 from one constant, `XL_PRICE`. **The client
+     has to confirm it.**
+   - **Mobile rules decided the hero**: FROM £180, OZONE TREATMENT INCLUDED
+     and both buttons straight after the h1 and subtitle on a phone (above the
+     fold at 375x667), the opening paragraphs after them; the four prices in
+     the hero card and as the next band; the disclaimer a full band after the
+     process, not above the prices; the FAQ an accordion; `StickyBookBar`
+     "Book Now | WhatsApp", firing `book_vomit_cleaning_click`.
+   - **Not built, for want of what the brief requires**: Section 6, Before &
+     After ("Do not use stock photographs"), and the ozone photograph — the
+     one fogging shot the site has shows a technician inside the car, which
+     the ozone step forbids, so it is the hero. The hero, process and
+     extraction photographs are the site's own April 2026 blog images under
+     the brief's filenames in `public/assets/2026/10/`.
+   - **The "BOOKING SYSTEM INSTRUCTIONS"** — four sizes, "Where is the
+     vomit/sickness located?", the incident date, prior cleaning, photo
+     upload and the required acknowledgement checkbox — belong to
+     book.medusaautodetailing.co.uk, as the motorcycle brief's did. The
+     acknowledgement's text is on the page in Section 7 regardless.
+   - **Reviews**: the site's four, word for word, under the brief's heading;
+     "See Our Reviews" is the Facebook reviews page the WordPress badges
+     linked to. The brief asks for Google reviews and no Google Business
+     Profile link exists anywhere in the repo or the mirror.
+
+   **And a fourth rebuild the same day:
+   `/commercial-valeting/car-van-stickers-removal`.** Client, 2026-10-06,
+   "car van sticker removal.pdf" (32 pages): "Full replacement/re-optimisation
+   of the existing page. KEEP EXISTING URL" — fourteen sections, a dedicated
+   quote form, SEO strings, an Elementor page structure, back-end rules for
+   the form's email and a list of pages *not* to create. Copy in
+   `lib/signage-removal.ts`, the form in `lib/signage-quote.ts`, layout in the
+   route. It left `SERVICE_SLUGS` for `CUSTOM_ROUTES`; the menu label stays
+   "Vehicle Signage & Vinyl Removal".
+
+   - **Nothing of the old page survives.** It promised "leaving your
+     vehicle's paintwork flawless", which three of the brief's sections now
+     contradict. `content/overrides.ts` replaces its sections with the brief's
+     opening and FAQ, so `/commercial-valeting`'s card reads the new opening.
+   - **The h2s are the brief's "RECOMMENDED H2 STRUCTURE"**, which for five
+     sections is the line *under* the section's name ("WHAT WE REMOVE" over
+     "Car, Van & Commercial Vehicle Branding Removal"); the name is the
+     kicker. One h1.
+   - **The hero follows the brief's mobile list at every width** — h1, the
+     opening question, SEND US PHOTOS FOR A QUOTE, both buttons, the
+     photograph, then the rest. The desktop note puts the CTA after the
+     trust points, which on a 1366x768 laptop is under the fold; the brief's
+     own rule is "Do not make customers scroll before discovering that they
+     need to send photos for a quote".
+   - **Every GET A QUOTE is `#get-quote`**, the section the form is in.
+     WhatsApp everywhere on the page — buttons, sticky bar and the footer's
+     floating button (`Footer`'s new `whatsapp` prop) — opens wa.me with the
+     brief's pre-filled message; `CONTACT.whatsapp` is a wa.link short URL,
+     which cannot carry one.
+   - **The disclaimer is two calm bands of panels, no red**: "don't
+     make it look frightening". The design note's three bold phrases lead
+     Section 8; Sections 9 and 10 sit side by side on gold, with a small
+     drawing of ghosting made only of the copy's own two phrases.
+   - **Internal links are laid on the copy's own words**: "machine
+     polishing", "paint correction", "mobile valeting", "detailing",
+     "commercial quote". The brief also names Van Valeting; no such page
+     exists.
+   - **Not built, for want of what the brief requires**: Section 5, Before &
+     After ("Do not use stock images and imply they are Medusa jobs"), and
+     four of the six image-SEO files. The two photographs are the old page's
+     own, under the brief's filenames in `public/assets/2026/10/`, captioned
+     as nothing.
+   - **Reviews** are the site's general ones under "What Our Clients Say";
+     the brief wants ones about vans and signage, and none exists.
+
+   **And a fifth the same day: `/car-interior-cleaning/pet-hair-removal`.**
+   Client, 2026-10-06, "pet hair removal.pdf" (21 pages): "Replace/
+   re-optimise the existing Pet Hair Removal page … KEEP EXISTING URL" —
+   thirteen sections, SEO strings, a recommended layout, an image-SEO table,
+   internal-linking and sticky-CTA rules, booking-system instructions, and
+   the change that matters: "The existing page currently displays Pet Hair
+   Removal from £90. REMOVE THIS … +£20 ADD-ON. Must be booked with Triton
+   Interior Valet." Copy in `lib/pet-hair-removal.ts`, layout in the route,
+   in the order of the brief's layout list. It left `SERVICE_SLUGS` for
+   `CUSTOM_ROUTES`.
+
+   - **The four points lead.** "The customer should understand these four
+     points within seconds: PET HAIR REMOVAL = +£20 · ONLY AVAILABLE WITH
+     TRITON INTERIOR VALET · WE AIM FOR UP TO 90% REMOVAL · EXCESSIVE PET
+     HAIR = ADDITIONAL CHARGE". They are one panel straight under the h1,
+     with the booking button under it — above the fold on a 375x812 phone —
+     and the closing card repeats them.
+   - **Every booking button books Triton with the add-on** ("Book Triton
+     Interior Valet + Pet Hair", "Book Triton + Pet Hair", firing
+     `book_triton_pet_hair_click`), and `StickyBookBar` reads "Book Triton +
+     Pet Hair" alone: the brief names one action, so `secondary` is optional
+     now and the button takes the bar's width.
+   - **Nothing of the old page survives.** It promised to eliminate "lingering
+     pet odours" and listed steam cleaning and sanitation in the package — all
+     on the brief's list of claims to remove. `content/overrides.ts` replaces
+     its sections with the brief's opening, a `+£20` price and its FAQ. The
+     breadcrumb is kept, so a Read More pointing here is still "Pet Hair
+     Removal".
+   - **An add-on price is not an entry price.** `/car-interior-cleaning`'s
+     card for this page said "From £90". `lib/hub.ts` now reads a heading
+     written `+£20` as `HubCard.addOn`, which `ServiceCards` shows as "+£20
+     Add-On" with Book Now — never "From £20", and never the hub's own entry
+     price.
+   - **The Triton page's side of it.** "The Triton Interior Valet page should
+     also link back to this page from its optional extras section using: Pet
+     Hair Removal +£20". `/car-interior-cleaning/interior-valet`'s "Pet Hair
+     Removal" add-on card (already £20) links here, and its sentence — "we
+     ensure all pet hair is carefully removed", the 100% promise the brief
+     withdraws — is replaced by the brief's own text for the same optional
+     extra in the booking flow (`TRITON_EXTRA`). This page links to Triton
+     five times, "Book our Triton Interior Valet" among them.
+   - **One answer is `ASSEMBLED`:** "Do you remove pet smells?" ended on two
+     sentences to the developer ("Do not advertise odour removal … direct
+     them to the appropriate Medusa odour-treatment service"). The page keeps
+     the first sentence and links Odour Removal.
+   - **Twelve icons joined `Icon`** — the six steps and the "simple icon grid"
+     of what the add-on reaches (seat, seat edge, carpet, mat, footwell, boot,
+     paw, and search/vacuum/brush/target/eye).
+   - **Photographs**: the homepage's own pet-hair carpet picture and two of the
+     interior group's vacuuming shots, under the brief's filenames in
+     `public/assets/2026/10/`. The brief's boot photograph and its before &
+     after do not exist, so **Section 8, Before & After, is not built** and
+     neither is faked.
+   - **The "BOOKING SYSTEM INSTRUCTIONS"** — the optional extra, the
+     Light/Moderate/Heavy/Excessive question, the photo upload and the
+     required acknowledgement checkbox — belong to
+     book.medusaautodetailing.co.uk. Section 12's terms carry the
+     acknowledgement on this page.
+   - **Reviews** are the site's general ones; none mentions interiors or pet
+     hair, which the brief asked to prioritise "where available".
+   - **Left alone, and worth the client's word:** thirteen other pages sell a
+     "Pet Hair Removal" add-on with their own packages (the wash tiers, the
+     valets, mould removal) and several promise to "remove all embedded
+     pet-hair"; the homepage's card says "smelling as good as new". The brief
+     is about this page and Triton, so they are unchanged.
+
+   **And a sixth: `/car-interior-cleaning/odour-removal`.** Client,
+   2026-10-06, "car odou.pdf" (29 pages): "Replace/re-optimise the existing
+   Odour Removal page … KEEP EXISTING URL" — sixteen sections, the same
+   kinds of developer notes as the pet hair brief, and the same shape of
+   change: odour & ozone treatment is now **only an add-on** to the Triton
+   Interior, Zeus Full or Medusa Gold valet, at +£60 / +£90 / +£100 for 15 /
+   30 / 60 minutes, and "complete or permanent odour removal cannot be
+   guaranteed". Copy in `lib/odour-removal.ts`, layout in the route; it left
+   `SERVICE_SLUGS` for `CUSTOM_ROUTES`.
+
+   - **The four points lead again** — add-on, requires Triton/Zeus/Medusa
+     Gold, from +£60, not guaranteed — as one panel under the h1, with BOOK
+     NOW and WHATSAPP under it, above the fold on a 375x812 phone. No button
+     says "Book Ozone"; the sticky bar says "Book Valet + Odour Treatment".
+   - **Sixteen sections, fifteen bands.** "Why can a smell return?" and
+     "Cabin / pollen filter" share one — both are about a source the
+     treatment cannot reach — which is what keeps gold and ink alternating
+     to the end.
+   - **The h1 is reconciled, `ASSEMBLED`:** Section 1 says "Car Odour
+     Treatment & Ozone Treatment London", the SEO section "Car Odour & Ozone
+     Treatment London" — the second, which the layout's hero also uses.
+   - **Medusa Gold has no page.** It is a package on `/car-valeting`, which is
+     where every "Medusa Gold Valet" link goes (`VALETS`).
+   - **The three valets' add-on cards** ("Odour Neutralisation & Ozone
+     treatment £60" on Triton and Zeus, "Ozone treatment £60" on
+     `/car-valeting`) promised to remove "bacteria and viruses" and "10
+     Minutes of Ozone". `relinkOdourAddOn` in `content/overrides.ts` renames
+     each "Odour & Ozone Treatment", prices it "From £60", links it here and
+     gives it the brief's three tiers and its booking-flow information line
+     (`VALET_EXTRA`). It throws unless it finds exactly one card per page.
+     Mini Valet and Deep Clean carry the same card and are left alone — the
+     brief makes the treatment available with the three only; that conflict
+     is the client's to settle.
+   - **Hub card**: `lib/hub.ts` reads "From +£60" as an add-on price too, so
+     `/car-interior-cleaning` shows "From +£60 Add-On". The breadcrumb tail is
+     now "Odour & Ozone Treatment", so no Read More pointing here says
+     "Disinfection".
+   - **Photographs**: the homepage's own ozone-machine picture (600x400, the
+     largest there is), and the April 2026 blog's extraction and littered-
+     interior shots, under the brief's filenames; the old page's air-vent
+     close-up beside the cabin filter. The brief's smoke and pet photographs
+     do not exist, so the odour types are icon cards.
+   - **Not built here:** the booking-system questions, photo upload and
+     required checkbox (book.medusaautodetailing.co.uk). The checkbox's
+     wording is on the page as the Section 15 acknowledgement.
+   - **Left alone, and worth the client's word:** the homepage's "OZONE Odour
+     Removal" card ("we bring the ozone treatment directly to you!") and the
+     same card on Deep Clean read as a standalone service; `/car-valeting`
+     still carries a sanitisation line claiming to kill "99.9% of bacteria …
+     including … coronavirus", and several pages' fogger add-on claims 99% —
+     medical claims of the kind this brief says not to make.
+
+   **And a second batch the same afternoon: eight more pages at once.**
+   "Webite changes .pdf" and "(1)…(7)" — 319 pages of brief for steam
+   cleaning, caravan, headlight restoration, engine bay, graffiti, interior
+   paint spill, flooded car and car wax. Each is the pattern above: copy in
+   its own `lib/*.ts`, layout in a hand-built route, every word the client's,
+   bold where the brief bolds, gold and ink alternating, the brief's key
+   points as the first panel under the h1, its MOBILE STICKY CTA wording on
+   `StickyBookBar`, Service + FAQPage schema. They were built in parallel by
+   one agent per page against a written guide, then integrated and checked
+   together (overflow and spill at 320–1440px on all eight, `npm run
+   verify`).
+
+   | Page | Route / module | Price the hub shows | Form |
+   | --- | --- | --- | --- |
+   | Steam cleaning | `car-interior-cleaning/steam-cleaning` · `lib/steam-cleaning.ts` | none — "not sold as a separate standalone service" | — |
+   | Caravan & motorhome | `vehicles/caravan-cleaning` · `lib/caravan-cleaning.ts` | none (quote) | `lib/caravan-quote.ts` |
+   | Headlight restoration | `repairs/headlight-restoration` · `lib/headlight.ts` (overwritten) | From £100 | — |
+   | Engine bay | `repairs/engine-bay-steam-cleaning` · `lib/engine-bay.ts` | From £100 (a fixed £100) | — |
+   | Graffiti | `repairs/car-graffiti-removal` · `lib/graffiti-removal.ts` | none (quote) | `lib/graffiti-quote.ts` |
+   | Interior paint spill | `repairs/car-interior-paint-spill-removal` · `lib/paint-spill.ts` | none (quote) | `lib/paint-spill-quote.ts` |
+   | Flooded car | `car-interior-cleaning/flooded-car-cleaning` · `lib/flooded-car.ts` | none (assessment) | `lib/flooded-assessment.ts` |
+   | Car wax | `mobile-car-wash/car-wax-service` · `lib/car-wax.ts` | From +£40 Add-On | — |
+
+   - **`REBUILD` and `rebuiltFrom`.** Every module exports a `REBUILD` record
+     — SEO strings, opening, hub price, "Why choose" reasons, FAQ — and
+     `rebuiltFrom` in `content/overrides.ts` turns it into the sections the
+     rest of the site reads. The reasons go back in as "Label: text" items
+     because that is what `hubReasons` parses.
+   - **The paint page moved.** "IMPORTANT — CHANGE THE URL": it lives at
+     `/repairs/car-interior-paint-spill-removal` now (the `pages.json` key
+     was renamed, as the alloy page's was), `/repairs/paint-overspray-removal`
+     answers one 301 to it, the two older rows that led to the old URL point
+     straight at the new one, and the menu says "Interior Paint Spill
+     Removal". "This page is NOT for exterior paint overspray."
+   - **Names the briefs gave.** Menu: "Engine Bay Top Section Detail" ("The
+     better service name is…"; the URL keeps `steam-cleaning`) and "Caravan &
+     Motorhome Valeting" ("link prominently back … using wording such as").
+     Breadcrumb tails, which name Read More buttons: those two, "Car Wax
+     Service" (was "Autoglym"), "Flooded Car & Water Damage Cleaning" (was
+     "…Repair") and "Interior Paint Spill Removal".
+   - **Links back the briefs ask for, done:** the valets the wax brief names —
+     Zeus, Medusa Gold (`/car-valeting`) and Pre-Sale — end their add-on band
+     on its "Want Extra Paint Protection? / Add Professional Car Wax From £40"
+     (`addWaxLink`); the mould page's "Vehicles affected by flooding or water
+     ingress" and the odour page's specialist band link "Flooded Car & Water
+     Damage Cleaning". The optional ones ("where appropriate", headlight,
+     graffiti, steam, paint spill) are left for the client.
+   - **The hubs.** `/repairs` lost both borrowed intro paragraphs — no
+     paragraph of the four rebuilt pages speaks for the group, so its header
+     has none — and its question-heading fallback, since all four carry a
+     real FAQ now; its reasons come from the graffiti page's "Why Choose
+     Medusa?". `/vehicles` reads the caravan page's new opening and reasons.
+     Neither group closes on a "… Near You" paragraph any more, so
+     `hubAreas` falls back to the homepage's own coverage statement.
+   - **Not built, everywhere:** every Before & After section and gallery (no
+     genuine photographs exist, and none is faked), the image-SEO slots with
+     no fitting photograph, and the booking-system instructions
+     (book.medusaautodetailing.co.uk). Each module's header comment lists its
+     own, and its `ASSEMBLED` decisions.
+   - **Icons and events stay with their page.** New icons are drawn by a local
+     glyph component in each route (same grid and stroke as `Icon`), and each
+     module exports a `TRACK` of its brief's conversion events; `TrackClicks`
+     reads `data-track` generically, and now also counts `mailto:` links
+     (`email_click`), which two briefs list.
+   - **Worth the client's word, not changed:** the homepage cards still read
+     "Autoglym HD Wax" and the old engine-bay copy; 51 pages mention Autoglym
+     HD Wax; the Pre-Sale valet already includes an engine bay clean the
+     engine brief wants sold there as a £100 add-on; Zeus and Medusa Gold
+     already include paste wax; `/car-valeting`'s sanitisation line claims
+     "99.9% of bacteria … coronavirus", which the steam brief forbids on its
+     own page; there is no exterior overspray page for the graffiti brief to
+     link to.
+
    **A fourth kind: the menu-group hubs.** `/repairs` and
    `/car-interior-cleaning` have no source page at all. The client asked for
    them — "a page for /Repairs will need to be created, which will have links
@@ -484,9 +871,10 @@ Three tiers, cheapest first:
 
    **`/vehicles` is the third**, added 2026-09-22: "We need to create a page for
    Other Vehicles as well, which will include the children". It is the smallest
-   group — a caravan page and a motorcycle page, neither quoting a price, so
-   both cards carry the quote button — and it needed two things the first two
-   did not:
+   group — a caravan page and a motorcycle page. Neither quoted a price at
+   first, so both cards carried the quote button; the motorcycle card has said
+   "From £75" since its rebuild on 2026-10-06, which also makes £75 the hub's
+   entry price. It needed two things the first two did not:
 
    - **`runTogether` in `hubReasons`.** The caravan page is the group's only
      one with a "Why Choose Medusa Auto Detailing?" row and it writes its four
@@ -506,14 +894,16 @@ Three tiers, cheapest first:
    ordinary limit of building a page out of two children, and both take one
    line of `lib/hubs.ts` to replace when the client writes copy.
 
-   `cardImages` names both photographs, because the two pages share an OG image
+   `cardImages` names both photographs, because the two pages shared an OG image
    and neither card could be photographed by rule without printing the same
-   picture twice. The motorcycle one also carries a crop point, which is why
+   picture twice. The motorcycle one used to carry a crop point, which is why
    `cardImages` takes `{ src, position }` as well as a bare string: the site's
    one motorcycle picture is a 1024x1536 poster with its title baked across the
    top third and a services list across the bottom, and a 3:2 card centred on
-   it shows the bike **and** "OUR MOTORCYCLE VALETING & DETAILING SER-" clipped
-   mid-word along its foot. At `50% 30%` the crop is the bike and nothing else.
+   it showed the bike **and** "OUR MOTORCYCLE VALETING & DETAILING SER-"
+   clipped mid-word along its foot. Since 2026-10-06 it names the bike cut out
+   of that poster instead (`/assets/2026/10/motorcycle-valeting-london.webp`),
+   which needs no crop point.
 
    The questions come from real `faq` blocks where the group has them — the
    interior pages carry twenty-one between three of the nine — and fall back to
@@ -1111,6 +1501,14 @@ These come from the repo owner and have each been enforced after a mistake:
    every word in it. The two files together are the whole of the written word
    on this site; nothing else anywhere may grow a sentence.
 
+   (`lib/alloy-wheel-protection.ts` and `lib/motorcycle.ts` are not a third
+   and fourth: their copy is the client's own, transcribed from the briefs of
+   2026-10-06, the way `lib/headlight.ts` transcribes the mirror. The four
+   answers they had to assemble or reword are marked `ASSEMBLED` and listed
+   in §5. The same goes for the day's later rebuilds — `lib/vomit-cleaning.ts`,
+   `lib/signage-removal.ts`, `lib/pet-hair-removal.ts` and
+   `lib/odour-removal.ts`.)
+
    **`HUB_LINES`, at the foot of `local-copy.ts`, is the third thing that file
    holds** and the only one that rewrites the mirror's own words rather than
    adding to them: eight sentences a service hub writes about London, in the
@@ -1208,16 +1606,17 @@ rendered `<main>`. Known, pre-existing gaps: `asLinkChips` drops commas and
   should be what it needs". It is — a few of these pages open on a paragraph
   about the whole subject rather than about their own service, and `spec.intro`
   names those. `/car-interior-cleaning` takes one from the interior valet page
-  ("what's on the inside that counts"); `/repairs` takes two, from the graffiti
-  and engine bay pages, which between them say that damage costs a car its
-  value and the right work gives it back. Each is one paragraph, whole, and the
+  ("what's on the inside that counts"); `/repairs` took two, from the graffiti
+  and engine bay pages, until the client's briefs rebuilt both on 2026-10-06 —
+  it has none now, because no paragraph of the new pages speaks for the group. Each is one paragraph, whole, and the
   card for that page then shows its *next* paragraph so the same words are not
   on screen twice.
 
   The same borrowing runs through the rest of a hub, and two spots are worth
-  knowing about. `/repairs` has no `faq` block anywhere in its group, so its
-  accordion is six of its pages' own question-shaped headings with the prose
-  underneath; `/car-interior-cleaning` has twenty-one real ones and uses them.
+  knowing about. `/repairs` had no `faq` block anywhere in its group, so its
+  accordion was its pages' own question-shaped headings — until 2026-10-06,
+  when all four rebuilt pages gained a real FAQ; `/car-interior-cleaning` has
+  twenty-one real ones and uses them.
   And no list in the interior group names no service at all, so its reasons
   mention leather in two of four bodies — the least specific of the nine.
   Written copy from the client replaces either in one line of `lib/hubs.ts`.
@@ -1456,6 +1855,68 @@ Six Contact Form 7 forms survive the mirror, on five pages — `/contact-us`,
 through `components/EnquiryForm.tsx` and post to the one server action in
 `app/actions.ts`, which re-reads the form's schema out of `pages.json` by its
 `__slug`/`__form` pair, so a tampered payload cannot bypass a required field.
+
+**A seventh, since 2026-10-06: the WHEELUV™ suitability & booking form** on
+`/car-detailing/alloy-wheel-protection` — "Create a dedicated form rather than
+relying only on the generic contact form." Radio groups, a two-question "IF
+YES" follow-up, four photographs and three required acknowledgements, so it
+has its own schema (`lib/wheel-check.ts`), component
+(`components/WheelCheckForm.tsx`) and action (`submitWheelCheck`), behind the
+same three gates and into the same `deliver`. Three things differ:
+
+- **`validateWheelCheck` runs in the browser too**, so a missed radio is
+  flagged before four photographs upload; the server runs it again.
+- **It is dispatched from `onSubmit`, not `<form action>`.** A form action
+  resets the form when it settles, and a file input cannot be refilled.
+- **Photographs are shrunk in the browser** to 1800px JPEGs before sending —
+  four phone photos are well over the 4 MB body limit otherwise. A file the
+  browser cannot decode (HEIC on desktop) goes as it is, and a 3.6 MB budget
+  check stops the submission with a message rather than a 413.
+
+The email's subject is the brief's: "WHEELUV™ ENQUIRY — [MAKE] [MODEL] —
+[WHEEL SIZE]" (`Enquiry.subject`). Tested end to end on 2026-10-06 against a
+production build with `SENDGRID_API_KEY=""`, Cloudflare's dummy Turnstile
+pair and `CONTACT_WEBHOOK_URL` on a local catcher — **`.env.local` holds live
+SendGrid and Turnstile keys, so a test submission against `npm run dev` sends
+a real email to the client.**
+
+**An eighth, the same day: the vehicle signage removal quote form** on
+`/commercial-valeting/car-van-stickers-removal` — "WEBSITE DEVELOPER: BUILD
+THE FOLLOWING FORM." Schema `lib/signage-quote.ts`, component
+`components/SignageQuoteForm.tsx`, action `submitSignageQuote`, the same
+gates and the same `deliver`, built the way the WHEELUV™ form is. What is
+new:
+
+- **Multi-select groups and up to ten photographs in one field.** The
+  photographs live in state, not in the file input — shrunk to 1600px
+  (`lib/photo-shrink.ts`, now shared with the WHEELUV™ form), previewed,
+  removable one at a time, and appended to the submission by hand.
+- **The email is the brief's, line for line** (`quoteEmail`): subject "NEW
+  SIGNAGE REMOVAL QUOTE — [MAKE] [MODEL] — [POSTCODE]", the sixteen items in
+  its order, the telephone as a `tel:` link (`Enquiry.links`), the lead
+  source "Vehicle Signage Removal Page" at the head and in the webhook
+  (`Enquiry.source`), and JPEG/PNG/WebP photographs **shown in the body** as
+  inline parts (`Attachment.inline`) — "Make uploaded images easy for staff to
+  open". A HEIC is attached only.
+- **The privacy box is required** though the brief does not star it: a
+  quotation the business may not reply to is not one.
+- Fires `quote_form_submitted` — "the completed quote form should be treated
+  as the primary lead conversion".
+
+Its validation and email were tested on 2026-10-06 with `sendEnquiry` against
+a fake `fetch`, not against `npm run dev`, for the reason above.
+
+**Four more the same afternoon**, each the brief's own dedicated form with
+its subject line and field order: the caravan & motorhome quote (replacing
+that page's Contact Form 7 form, so five CF7 forms remain on four pages), the
+graffiti quote, the interior paint spill quote and the flooded car
+assessment. Each is three files of its own — `lib/<page>-quote.ts` (or
+`flooded-assessment.ts`), `components/<Page>QuoteForm.tsx`, and an action in
+`app/<route>/actions.ts` beside its route — because the gates moved into
+`lib/form-delivery.ts`: `checkTurnstile`, `collectPhotos` (named, ordered,
+JPEG/PNG/WebP inline, HEIC attached, a byte budget) and `deliver`, which
+`app/actions.ts` imports too. None was submitted against `npm run dev`;
+their validation and email builders were tested with scripts.
 
 **Three gates, cheapest first.** The honeypot — one hidden input a person
 leaves empty and a bot fills. Then Turnstile. Then the form's own required

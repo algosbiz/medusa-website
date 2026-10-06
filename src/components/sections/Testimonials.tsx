@@ -18,6 +18,8 @@ import { REVIEW_BADGES, TESTIMONIALS } from "@/lib/site";
  */
 export default function Testimonials({
   onGold = true,
+  title = "What Our Clients Say",
+  footer,
 }: {
   /**
    * Gold on the homepage, where an ink row sits either side of it. Ink on
@@ -25,6 +27,11 @@ export default function Testimonials({
    * client, 2026-09-22, "pastikan warna bg tetap selang seling".
    */
   onGold?: boolean;
+  /** The section's heading — a page whose brief names it passes its own. */
+  title?: string;
+  /** Set under the quotes — `/car-interior-cleaning/vomit-cleaning`'s rating
+   *  line and link to the reviews themselves. */
+  footer?: React.ReactNode;
 } = {}) {
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -65,7 +72,7 @@ export default function Testimonials({
       <div className="shell">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
-            <SectionHead title="What Our Clients Say" tone={onGold ? "gold" : undefined} />
+            <SectionHead title={title} tone={onGold ? "gold" : undefined} />
 
             <div
               ref={stack}
@@ -120,6 +127,8 @@ export default function Testimonials({
                 </button>
               ))}
             </div>
+
+            {footer}
           </div>
 
           <ul className="flex flex-col gap-3 lg:col-span-5 lg:pt-4">

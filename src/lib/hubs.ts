@@ -19,10 +19,12 @@ export const REPAIRS: HubSpec = {
   title: "Repairs & Restoration",
   menuLabel: "Repairs & Restoration",
   /*
-    A technician sanding a body panel, from `/repairs/paint-overspray-removal`.
-    The only landscape file of header size among the four — the graffiti page's
-    is an 800px square Elementor thumbnail and the headlight one is a 1200x1500
-    portrait — and the one that reads as repair work rather than cleaning.
+    A technician sanding a body panel — the old paint overspray page's
+    photograph. That page became Interior Paint Spill Removal on 2026-10-06
+    and no longer shows it, but repair and restoration work on a panel is
+    still this group's subject as a whole; the interior page itself is never
+    illustrated with it. It is also the group's only header-sized landscape
+    photograph that reads as repair work rather than cleaning.
   */
   heroImage:
     "/assets/2025/02/polishing-the-surface-repairman-is-working-with-c-2024-02-28-19-11-55-utc-1.webp",
@@ -30,41 +32,34 @@ export const REPAIRS: HubSpec = {
   whyImage:
     "/assets/elementor/thumbs/close-up-of-the-hands-of-a-car-mechanic-at-a-servi-2024-12-02-11-55-00-utc-1-r1e9o8d56eqisnmplho9bfo70eb8lujn6d3l6oh2kg.webp",
   /*
-    The graffiti page's list: the longest of the three the group carries, and
-    the only one whose reasons past the lead are about the company rather than
-    about one service.
+    The graffiti page's "Why Choose Medusa?" — since the client's brief of
+    2026-10-06 rebuilt it, a run of the company's reasons (local, assessed
+    before work starts, realistic about results) rather than one service's.
+    `content/overrides.ts` writes them back into the page as "Label: text"
+    items, which is what `hubReasons` reads.
   */
   why: {
     slug: "repairs/car-graffiti-removal",
-    heading: "Why Choose Medusa Auto Detailing?",
-    dropLead: 1,
+    heading: "Why Choose Medusa?",
+    dropLead: 0,
   },
   /*
-    Two paragraphs, from two of the four. The graffiti page's opener is the
-    only one in the group written about damage in general rather than about
-    its own service — damage costs a car its value, and the right work gives
-    it back — and the engine bay page's second paragraph says the same thing
-    about upkeep and resale. Together they are the hub's subject. The other
-    two pages open on a phone number and on foggy headlights.
+    No introduction. Until 2026-10-06 the header borrowed two paragraphs — the
+    graffiti page's opener about damage costing a car its value, and the
+    engine bay page's about upkeep and resale. The client's briefs rebuilt all
+    four pages that day, and every paragraph they write is about its own
+    service; none speaks for the group, and rule 8.1 forbids writing one. The
+    header carries the title and the four services' chips, and the cards
+    below say what each one is.
+
+    The accordion needs no fallback either: all four pages carry a real FAQ
+    now, so `hubQuestions` reads those and the old `questionHeadings` went.
   */
-  intro: [
-    ["repairs/car-graffiti-removal", "Graffiti on your car is not only unsightly"],
-    ["repairs/engine-bay-steam-cleaning", "Whether you’re focused on maintaining"],
-  ],
-  /* No page in this group carries an `faq` block, so the accordion is built
-     from these pages' own question-shaped headings instead. */
-  questionHeadings: [
-    ["repairs/headlight-restoration", "Why Headlight Restoration Matters"],
-    ["repairs/headlight-restoration", "The Headlight Restoration Process"],
-    ["repairs/engine-bay-steam-cleaning", "Why Engine Bay Steam Cleaning Matters"],
-    ["repairs/car-graffiti-removal", "Why Trust Professionals for Car Graffiti Removal?"],
-    ["repairs/paint-overspray-removal", "What to Do If You Have Paint Spillage in Your Car"],
-    ["repairs/paint-overspray-removal", "Why Removing Paint from Car Interiors Is Challenging:"],
-  ],
+  intro: [],
   cardImages: {
     /* Headlight restoration is a hand-built route and the photograph it
-       actually runs is in `lib/headlight.ts`; its `ogImage` is a 1474x2208
-       portrait that a 3:2 card would crop to a sliver. */
+       runs is in `lib/headlight.ts` — since the 2026-10-06 rebuild a 3:2 cut
+       of the old page's own close-up, which is the card's shape already. */
     "repairs/headlight-restoration": HEADLIGHT.hero.image,
   },
   /* Four across only from `xl`: at `lg` the shell is 834px and four columns
@@ -119,13 +114,15 @@ export const INTERIOR: HubSpec = {
 /**
  * Client, 2026-09-22: "We need to create a page for Other Vehicles as well,
  * which will include the children" — the third menu column to get a page, and
- * the smallest: two services, neither of which quotes a price on the card.
+ * the smallest: two services. The caravan card carries the quote button; the
+ * motorcycle card has quoted "From £75" since its page was rebuilt from the
+ * client's brief on 2026-10-06, which is also the hub's entry price now.
  *
- * Both of this group's pages are unusual. The caravan page writes its reasons
- * as one `<br>`-joined paragraph rather than a list, which is why `hubReasons`
- * grew `runTogether`; and the motorcycle page is a hand-built route whose only
- * photograph is a portrait poster, so it needs `cardImages` like the headlight
- * page does.
+ * Both of this group's pages are hand-built routes since the client's briefs
+ * of 2026-10-06, and each names its card's picture in `cardImages`. The
+ * caravan page used to write its reasons as one `<br>`-joined paragraph, which
+ * is why `hubReasons` grew `runTogether`; the rebuilt page hands them over as
+ * a list.
  */
 export const VEHICLES: HubSpec = {
   slug: "vehicles",
@@ -138,16 +135,14 @@ export const VEHICLES: HubSpec = {
   /* The photograph the caravan page already sets beside these same reasons. */
   whyImage: "/assets/2024/11/caravan-2718561_1280-1280x770.webp",
   /*
-    The group's only "Why Choose Medusa Auto Detailing?" row. Its four reasons
-    are the company's rather than one service's — local, punctual, trusted,
-    insured — but two of the four name caravans in their labels, because a
-    group of two pages has no less specific list to offer. That is the same
-    limit `/car-interior-cleaning` has with leather, and written copy from the
-    client replaces it in one line.
+    The caravan page's "Why Choose Medusa?", as the client's brief of
+    2026-10-06 rewrote it. The old list it replaced promised "100% customer
+    satisfaction" and an on-time guarantee, which that brief told the page to
+    stop saying — and this hub said it too, until the page changed.
   */
   why: {
     slug: "vehicles/caravan-cleaning",
-    heading: "Why Choose Medusa Auto Detailing?",
+    heading: "Why Choose Medusa?",
     dropLead: 0,
   },
   /*
@@ -157,27 +152,24 @@ export const VEHICLES: HubSpec = {
     in general to borrow, and rule 8.1 forbids writing one.
   */
   intro: [
-    ["vehicles/caravan-cleaning", "Caravans, motorhomes, and other recreational vehicles"],
-    ["vehicles/motorcycle-valeting-detailing", "At Medusa Auto Detailing"],
+    /* The rebuilt caravan page's own statement of the service (2026-10-06). */
+    ["vehicles/caravan-cleaning", "Medusa Auto Detailing provides professional mobile caravan"],
+    ["vehicles/motorcycle-valeting-detailing", "Keep your motorcycle looking its best"],
   ],
   cardImages: {
-    /* Both pages carry the same OG image, so neither card could be
-       photographed by rule without printing the same picture twice. */
-    "vehicles/caravan-cleaning":
-      "/assets/2024/05/house-on-wheels-standing-on-green-grass-in-pinetre-2023-11-27-05-36-39-utc-1.webp",
+    /* The two pages shared an OG image until the motorcycle rebuild, so
+       neither card could be photographed by rule without printing the same
+       picture twice. */
+    "vehicles/caravan-cleaning": "/assets/2026/10/caravan-cleaning-london.webp",
     /*
-      The site's one motorcycle photograph is a 1024x1536 poster with its
-      title baked across the top third and a services list across the bottom.
-      A 3:2 card shows 683 of its 1536 rows, and centred that is rows 427-1110
-      — the bike, and "OUR MOTORCYCLE VALETING & DETAILING SER-" clipped
-      mid-word along the foot of the card. At 30% it is rows 256-939, which is
-      the bike and nothing else. The page's own hero frames it at 46%; a wider
-      crop wants less.
+      The bike from the site's one motorcycle photograph, cut clear of the
+      poster text it was printed under (`lib/motorcycle.ts`, 2026-10-06). The
+      poster itself needed a 30% crop point here to keep "OUR MOTORCYCLE
+      VALETING & DETAILING SER-" off the foot of the card; the cut-out does
+      not, and it no longer advertises the ceramic coating the rebuilt page
+      stopped selling.
     */
-    "vehicles/motorcycle-valeting-detailing": {
-      src: "/assets/2025/09/motorcycle-detailing-london-medusa-auto-detailing.jpg.webp",
-      position: "50% 30%",
-    },
+    "vehicles/motorcycle-valeting-detailing": "/assets/2026/10/motorcycle-valeting-london.webp",
   },
   /* "Our Other Vehicles Services" is two determiners deep. */
   servicesHeading: "Our Services for Other Vehicles",

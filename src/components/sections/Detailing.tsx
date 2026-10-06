@@ -14,7 +14,7 @@ export default function Detailing() {
   return (
     <section className="cut-top bg-gold-wash relative w-full pt-[calc(var(--cut)+5rem)] pb-16 lg:pb-[104px]">
       <div className="shell">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-10 xl:flex-row xl:items-end xl:justify-between">
           <SectionHead
             title={DETAILING_INTRO.heading}
             lede={DETAILING_INTRO.body}

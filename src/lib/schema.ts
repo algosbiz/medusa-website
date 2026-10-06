@@ -114,6 +114,90 @@ function article(page: Page) {
   };
 }
 
+/**
+ * A FAQPage for a page's own questions. Answers are joined as plain text —
+ * the ones that carry markup have it stripped, since `text` is not HTML.
+ */
+export function faqPageSchema(items: { q: string; a: string[] }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a.map((p) => p.replace(/<[^>]+>/g, "")).join(" "),
+      },
+    })),
+  };
+}
+
+/**
+ * A Service node, for a page that sells one thing at one price.
+ *
+ * `/car-detailing/alloy-wheel-protection` is the first: its brief asks for
+ * "Service schema … Service name: Alloy Wheel Protection. Brand/product can
+ * reference: WHEELUV™. Area served: London. Only include genuine product/offer
+ * information." So the offer is the page's own price and inclusions and
+ * nothing else — no rating, no availability, no validity date that nobody
+ * has stated.
+ */
+export function serviceSchema(service: {
+  slug: string;
+  name: string;
+  serviceType: string;
+  description: string;
+  brand?: string;
+  areaServed: string;
+  image?: string;
+  offer?: { price: string; currency: string; description: string };
+  /**
+   * One Offer per package, for a page that sells the same service at more
+   * than one level — `/vehicles/motorcycle-valeting-detailing`'s three valets.
+   * Each is the package's own name, starting price and description.
+   */
+  offers?: { name: string; price: string; currency: string; description: string }[];
+}) {
+  const id = url(service.slug);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${id}#service`,
+    name: service.name,
+    serviceType: service.serviceType,
+    description: service.description,
+    url: id,
+    provider: { "@type": "Organization", "@id": ORG_ID, name: BUSINESS.name, url: `${SITE}/` },
+    areaServed: { "@type": "City", name: service.areaServed },
+    ...(service.brand ? { brand: { "@type": "Brand", name: service.brand } } : {}),
+    ...(service.image ? { image: abs(service.image) } : {}),
+    ...(service.offer
+      ? {
+          offers: {
+            "@type": "Offer",
+            price: service.offer.price,
+            priceCurrency: service.offer.currency,
+            description: service.offer.description,
+            url: id,
+          },
+        }
+      : {}),
+    ...(service.offers?.length
+      ? {
+          offers: service.offers.map((o) => ({
+            "@type": "Offer",
+            name: o.name,
+            price: o.price,
+            priceCurrency: o.currency,
+            description: o.description,
+            url: id,
+          })),
+        }
+      : {}),
+  };
+}
+
 /** The @graph every page emits. */
 export function pageSchema(page: Page) {
   const id = url(page.slug);

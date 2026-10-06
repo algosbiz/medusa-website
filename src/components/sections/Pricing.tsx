@@ -43,7 +43,9 @@ export default function Pricing() {
   return (
     <section id="services" className="bg-gold-wash w-full py-16 lg:py-[104px]">
       <div className="shell">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
+        {/* The heading and the size picker share a row from `xl` only: at
+            1024 the picker's four 104px tabs ran past the column (2026-10-06). */}
+        <div className="flex flex-col gap-10 xl:flex-row xl:items-end xl:justify-between">
           <SectionHead
             title="Services & Prices"
             lede="Every wash, valet and detail we offer. Pick a service type, set your vehicle size, and the whole list reprices."
@@ -170,7 +172,9 @@ function Row({
           </p>
         </div>
 
-        <div className="flex items-center justify-between gap-4 sm:justify-end sm:gap-6">
+        {/* Wraps: on a 320px phone the price and the two buttons needed 269px
+            of a 240px row, and the buttons ran past the card (2026-10-06). */}
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 sm:flex-nowrap sm:justify-end sm:gap-6">
           <p className="font-[family-name:var(--font-display)] text-[26px] leading-none whitespace-nowrap text-gold sm:w-[130px] sm:text-right">
             {service.prices ? (
               <ClassPrice prices={service.prices} />

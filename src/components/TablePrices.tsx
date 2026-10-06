@@ -41,7 +41,11 @@ export default function TablePrices({
       <div
         role="tablist"
         aria-label="Vehicle class"
-        className="flex flex-wrap gap-1 rounded-[10px] bg-ink p-1"
+        /* A container, so the car icons can drop out when the row is too
+           narrow for four of them beside their labels: under 340px a tab was
+           57px and "Medium" with its icon was 75 (found at 320–375px on
+           `/car-valeting`, 2026-10-06). */
+        className="@container flex flex-wrap gap-1 rounded-[10px] bg-ink p-1"
       >
         {classes.map((rung, i) => {
           const on = i === index;
@@ -64,7 +68,7 @@ export default function TablePrices({
                   alt=""
                   width={200}
                   height={120}
-                  className={`h-[15px] w-auto object-contain ${
+                  className={`hidden h-[15px] w-auto object-contain @min-[340px]:block ${
                     on ? "brightness-0" : "opacity-70"
                   }`}
                 />

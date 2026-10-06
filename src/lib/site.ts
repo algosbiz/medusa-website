@@ -86,7 +86,8 @@ export const NAV: NavItem[] = [  { label: "Home", href: "/" },
           { label: "Platinum Wash", href: "/mobile-car-wash/platinum-wash" },
           { label: "Exterior Wash", href: "/mobile-car-wash/exterior-wash" },
           { label: "Exterior Plus Wash", href: "/mobile-car-wash/exterior-plus-wash" },
-          { label: "Alloy Wheel Cleaning", href: "/mobile-car-wash/alloy-wheel-cleaning" },
+          /* "Alloy Wheel Cleaning" left this column on 2026-10-06 — see Car
+             Detailing below. */
         ],
       },
       {
@@ -128,6 +129,11 @@ export const NAV: NavItem[] = [  { label: "Home", href: "/" },
           { label: "Paint Correction", href: "/car-detailing/paint-correction" },
           { label: "Machine Polish", href: "/car-detailing/machine-polish" },
           { label: "Windscreen Protection", href: "/car-detailing/windscreen-protection" },
+          /* Client, 2026-10-06: "This page is not alloy wheel cleaning its
+             alloy wheel protectors. It should be under the detailing section"
+             — renamed from "Alloy Wheel Cleaning" and moved here from the Car
+             Wash column, beside the other protection services. */
+          { label: "Alloy Wheel Protection", href: "/car-detailing/alloy-wheel-protection" },
           { label: "Enhancement", href: "/car-detailing/enhancement-detail" },
           { label: "Perfection", href: "/car-detailing/perfection-detail" },
           { label: "Mini Car Detail", href: "/car-detailing/mini-detail" },
@@ -144,9 +150,14 @@ export const NAV: NavItem[] = [  { label: "Home", href: "/" },
         href: "/repairs",
         children: [
           { label: "Headlight Restoration", href: "/repairs/headlight-restoration" },
-          { label: "Engine Bay Steam Cleaning", href: "/repairs/engine-bay-steam-cleaning" },
+          /* Client, 2026-10-06: "avoid advertising the service simply as:
+             ENGINE STEAM CLEANING. The better service name is: ENGINE BAY TOP
+             SECTION DETAIL". The URL keeps "steam-cleaning" for its SEO. */
+          { label: "Engine Bay Top Section Detail", href: "/repairs/engine-bay-steam-cleaning" },
           { label: "Car Graffiti Removal", href: "/repairs/car-graffiti-removal" },
-          { label: "Paint Overspray Removal", href: "/repairs/paint-overspray-removal" },
+          /* Client, 2026-10-06: "Update navigation label to: Interior Paint
+             Spill Removal" — the page moved with it, and the old URL 301s. */
+          { label: "Interior Paint Spill Removal", href: "/repairs/car-interior-paint-spill-removal" },
         ],
       },
       {
@@ -176,7 +187,10 @@ export const NAV: NavItem[] = [  { label: "Home", href: "/" },
         label: "Other Vehicles",
         href: "/vehicles",
         children: [
-          { label: "Caravan Cleaning", href: "/vehicles/caravan-cleaning" },
+          /* Client, 2026-10-06: "The main Other Vehicles page should link
+             prominently back to this page using wording such as: Caravan &
+             Motorhome Valeting" — and the hub's card takes this label. */
+          { label: "Caravan & Motorhome Valeting", href: "/vehicles/caravan-cleaning" },
           { label: "Motorcycle Valeting & Detailing", href: "/vehicles/motorcycle-valeting-detailing" },
         ],
       },

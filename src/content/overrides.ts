@@ -1,5 +1,24 @@
 import type { Block, Page, Section } from "@/lib/blocks";
+import { AWP, PATH as ALLOY_WHEEL_PATH, PHOTOS as ALLOY_WHEEL_PHOTOS } from "@/lib/alloy-wheel-protection";
 import { LOCAL_PLACES } from "@/lib/local-copy";
+import { MOTORCYCLE, PHOTOS as MOTORCYCLE_PHOTOS } from "@/lib/motorcycle";
+import { GUIDE, VOMIT, PHOTOS as VOMIT_PHOTOS } from "@/lib/vomit-cleaning";
+import {
+  PATH as PET_HAIR_PATH,
+  PET_HAIR,
+  PHOTOS as PET_HAIR_PHOTOS,
+  TRITON_EXTRA,
+} from "@/lib/pet-hair-removal";
+import { ODOUR, PATH as ODOUR_PATH, PHOTOS as ODOUR_PHOTOS, VALET_EXTRA } from "@/lib/odour-removal";
+import { REBUILD as CARAVAN_REBUILD } from "@/lib/caravan-cleaning";
+import { PATH as WAX_PATH, REBUILD as WAX_REBUILD } from "@/lib/car-wax";
+import { REBUILD as ENGINE_REBUILD } from "@/lib/engine-bay";
+import { PATH as FLOOD_PATH, REBUILD as FLOOD_REBUILD } from "@/lib/flooded-car";
+import { REBUILD as GRAFFITI_REBUILD } from "@/lib/graffiti-removal";
+import { REBUILD as HEADLIGHT_REBUILD } from "@/lib/headlight";
+import { REBUILD as PAINT_REBUILD } from "@/lib/paint-spill";
+import { REBUILD as STEAM_REBUILD } from "@/lib/steam-cleaning";
+import { SIGNAGE, PHOTOS as SIGNAGE_PHOTOS } from "@/lib/signage-removal";
 import {
   MIRROR_AUDIT,
   MIRROR_FIXES,
@@ -854,6 +873,462 @@ const RULES: Record<string, (page: Page) => void> = {
   },
 
   /*
+    The WHEELUV™ page, rebuilt from the client's brief of 2026-10-06 —
+    "Completely rebuild the existing Alloy Wheel Cleaning page" — and moved to
+    this URL the same day. It renders through its own route
+    (`app/car-detailing/alloy-wheel-protection`), which reads the brief's copy
+    out of `lib/alloy-wheel-protection.ts` directly.
+
+    This rule is for everything else that reads the page: the card
+    `/car-detailing` shows for it (`blurbOf` takes the opening paragraph,
+    `entryPrice` the price heading), the sitemap's lastmod, and the WebPage
+    node's name and description. Left alone they would keep quoting the old
+    page — "Won't damage your wheels" among it, which is the one line the
+    brief names as having to go. So the mirror's sections are replaced by the
+    brief's opening, its price and its questions.
+
+    Matched on the mirror's own h1, and it throws when that has changed: the
+    day the live site publishes the rebuilt page, this rule is to be deleted
+    rather than left overwriting it.
+  */
+  "car-detailing/alloy-wheel-protection": (page) => {
+    if (page.h1 !== "Wheeluv™ Alloy Wheel Protection") {
+      throw new Error(`content override: the alloy wheel page's h1 is "${page.h1}", not the mirror's`);
+    }
+    const { hero, faq, seo } = AWP;
+    page.title = seo.title;
+    page.description = seo.description;
+    page.h1 = hero.h1;
+    page.ogImage = ALLOY_WHEEL_PHOTOS.hero.src;
+    page.ogW = ALLOY_WHEEL_PHOTOS.hero.w;
+    page.ogH = ALLOY_WHEEL_PHOTOS.hero.h;
+    page.modified = "2026-10-06";
+    page.breadcrumb = [{ name: "Home", href: "/" }, { name: "Alloy Wheel Protection" }];
+    page.sections = [
+      {
+        blocks: [
+          { type: "heading", level: 1, text: hero.h1 },
+          ...hero.intro.map((html): Block => ({ type: "paragraph", html })),
+          { type: "heading", level: 4, text: hero.offer.price },
+        ],
+      },
+      {
+        blocks: [
+          { type: "heading", level: 2, text: faq.heading },
+          { type: "faq", items: faq.items },
+        ],
+      },
+    ];
+  },
+
+  /*
+    The motorcycle page, rebuilt from the client's brief of 2026-10-06 — "This
+    page needs to be fully changes please". It renders through its own route
+    (`app/vehicles/motorcycle-valeting-detailing`), which reads the brief's
+    copy out of `lib/motorcycle.ts` directly.
+
+    This rule is for everything else that reads the page: `/vehicles` borrows
+    its opening paragraph, its card blurb and entry price and its first three
+    questions; the sitemap reads its lastmod and the WebPage node its name and
+    description. Left alone they would keep selling the old £165 / £240 /
+    £375 washes, chain lubrication and "ceramic coating … 1–5 year
+    durability" — every one of which the brief orders off the site. So the
+    mirror's sections are replaced by the brief's opening, its three prices
+    and its questions.
+
+    Matched on the mirror's own h1, and it throws when that has changed: the
+    day the live site publishes the rebuilt page, this rule is to be deleted
+    rather than left overwriting it.
+  */
+  "vehicles/motorcycle-valeting-detailing": (page) => {
+    if (page.h1 !== "Bike Wash Packages") {
+      throw new Error(`content override: the motorcycle page's h1 is "${page.h1}", not the mirror's`);
+    }
+    const { hero, packages, faq, seo } = MOTORCYCLE;
+    page.title = seo.title;
+    page.description = seo.description;
+    page.h1 = hero.h1;
+    page.ogImage = MOTORCYCLE_PHOTOS.hero.src;
+    page.ogW = MOTORCYCLE_PHOTOS.hero.w;
+    page.ogH = MOTORCYCLE_PHOTOS.hero.h;
+    page.modified = "2026-10-06";
+    page.sections = [
+      {
+        blocks: [
+          { type: "heading", level: 1, text: hero.h1 },
+          { type: "heading", level: 2, text: hero.title },
+          { type: "paragraph", html: hero.lead },
+          ...hero.body.map((html): Block => ({ type: "paragraph", html })),
+        ],
+      },
+      {
+        blocks: [
+          { type: "heading", level: 2, text: packages.heading },
+          ...packages.items.flatMap((p): Block[] => [
+            { type: "heading", level: 3, text: p.name },
+            { type: "heading", level: 4, text: p.price },
+            { type: "paragraph", html: p.body },
+          ]),
+        ],
+      },
+      {
+        blocks: [
+          { type: "heading", level: 2, text: faq.heading },
+          { type: "faq", items: faq.items },
+        ],
+      },
+    ];
+  },
+
+  /*
+    The vomit cleaning page, restructured from the client's brief of
+    2026-10-06 — "This document replaces/restructures the existing Vomit
+    Cleaning page." It renders through its own route
+    (`app/car-interior-cleaning/vomit-cleaning`), which reads the brief's copy
+    out of `lib/vomit-cleaning.ts` directly.
+
+    Unlike the two rebuilds above, part of the old page stays: "The useful
+    educational/DIY information currently on the existing page can remain for
+    SEO purposes, but move it underneath". So the mirror's sections are
+    replaced by the brief's opening, its four prices and its questions — what
+    `/car-interior-cleaning`'s card, the sitemap and the WebPage node read —
+    followed by the old page's own guide, word for word, which the route sets
+    below the FAQ. `GUIDE` names the rows kept and why the rest are not.
+
+    Matched on the mirror's own h1, and it throws when that has changed: the
+    day the live site publishes the restructured page, this rule is to be
+    deleted rather than left overwriting it.
+  */
+  "car-interior-cleaning/vomit-cleaning": (page) => {
+    if (page.h1 !== "Car Vomit Cleaning Service In London") {
+      throw new Error(`content override: the vomit cleaning page's h1 is "${page.h1}", not the mirror's`);
+    }
+    const { hero, pricing, faq, seo } = VOMIT;
+
+    /* The guide, read out of the mirror before its sections are replaced.
+       Photographs are left behind: they were the old layout's, stock shots
+       of valeting in general, and the guide is set as text below the FAQ. */
+    const old = allBlocks(page).filter((b) => b.type !== "image");
+    const isH2 = (b: Block) => b.type === "heading" && b.level <= 2;
+    const row = (title: string): Section => {
+      const at = old.findIndex((b) => isH2(b) && plain(b) === title);
+      if (at === -1) throw new Error(`content override: the vomit cleaning guide has no "${title}" row`);
+      let end = at + 1;
+      while (end < old.length && !isH2(old[end])) end++;
+      return { blocks: old.slice(at, end) };
+    };
+    const opener = GUIDE.intro.map((start) => {
+      const p = old.find((b) => b.type === "paragraph" && plain(b).startsWith(start));
+      if (!p) throw new Error(`content override: the vomit cleaning guide no longer opens "${start}…"`);
+      return p;
+    });
+
+    page.title = seo.title;
+    page.description = seo.description;
+    page.h1 = hero.h1;
+    page.ogImage = VOMIT_PHOTOS.hero.src;
+    page.ogW = VOMIT_PHOTOS.hero.w;
+    page.ogH = VOMIT_PHOTOS.hero.h;
+    page.modified = "2026-10-06";
+    page.breadcrumb = [{ name: "Home", href: "/" }, { name: hero.h1 }];
+    page.sections = [
+      {
+        blocks: [
+          { type: "heading", level: 1, text: hero.h1 },
+          { type: "heading", level: 2, text: hero.title },
+          ...hero.intro.map((html): Block => ({ type: "paragraph", html })),
+          { type: "paragraph", html: hero.serviceHtml },
+        ],
+      },
+      {
+        blocks: [
+          { type: "heading", level: 2, text: pricing.heading },
+          { type: "paragraph", html: pricing.lead },
+          ...pricing.sizes.flatMap((s): Block[] => [
+            { type: "heading", level: 3, text: s.name },
+            { type: "heading", level: 4, text: s.price },
+            { type: "paragraph", html: `${pricing.examplesLabel} ${s.examples}` },
+          ]),
+        ],
+      },
+      {
+        blocks: [
+          { type: "heading", level: 2, text: faq.heading },
+          { type: "faq", items: faq.items },
+        ],
+      },
+      { blocks: [{ type: "heading", level: 2, text: GUIDE.heading }, ...opener] },
+      ...GUIDE.topics.map(row),
+    ];
+  },
+
+  /*
+    The pet hair removal page, rebuilt from the client's brief of 2026-10-06 —
+    "Replace/re-optimise the existing Pet Hair Removal page … The existing
+    page currently displays Pet Hair Removal from £90. REMOVE THIS." It
+    renders through its own route (`app/car-interior-cleaning/
+    pet-hair-removal`), which reads the brief's copy out of
+    `lib/pet-hair-removal.ts` directly.
+
+    This rule is for everything else that reads the page: the card
+    `/car-interior-cleaning` shows for it, the sitemap's lastmod and the
+    WebPage node. Left alone the card would go on saying "From £90" — the one
+    line the brief orders removed — so the mirror's sections are replaced by
+    the brief's opening, its price as the add-on it is ("+£20", which
+    `lib/hub.ts` reads as an add-on rather than an entry price) and its
+    questions. Nothing of the old page is kept: it promised to eliminate
+    "unpleasant and lingering pet odours" and listed steam cleaning and
+    sanitation in the package, which the brief's list of claims to remove
+    names one by one.
+
+    The breadcrumb is left as the mirror has it, so a "Read More" pointing
+    here is still labelled "Pet Hair Removal" by `nameReadMoreLinks`.
+
+    Matched on the mirror's own h1, and it throws when that has changed: the
+    day the live site publishes the rebuilt page, this rule is to be deleted
+    rather than left overwriting it.
+  */
+  "car-interior-cleaning/pet-hair-removal": (page) => {
+    if (page.h1 !== "Professional Pet Hair Removal in London") {
+      throw new Error(`content override: the pet hair removal page's h1 is "${page.h1}", not the mirror's`);
+    }
+    const { hero, points, price, faq, seo } = PET_HAIR;
+    page.title = seo.title;
+    page.description = seo.description;
+    page.h1 = hero.h1;
+    page.ogImage = PET_HAIR_PHOTOS.hero.src;
+    page.ogW = PET_HAIR_PHOTOS.hero.w;
+    page.ogH = PET_HAIR_PHOTOS.hero.h;
+    page.modified = "2026-10-06";
+    page.sections = [
+      {
+        blocks: [
+          { type: "heading", level: 1, text: hero.h1 },
+          { type: "heading", level: 2, text: hero.title },
+          ...hero.intro.map((html): Block => ({ type: "paragraph", html })),
+        ],
+      },
+      {
+        blocks: [
+          { type: "heading", level: 2, text: price.heading },
+          { type: "heading", level: 4, text: points.price.value },
+          ...price.bodyHtml.map((html): Block => ({ type: "paragraph", html })),
+        ],
+      },
+      {
+        blocks: [
+          { type: "heading", level: 2, text: faq.heading },
+          { type: "faq", items: faq.items },
+        ],
+      },
+    ];
+  },
+
+  /*
+    The other half of the pet hair brief's internal linking: "The Triton
+    Interior Valet page should also link back to this page from its optional
+    extras section using: Pet Hair Removal +£20". That section is this page's
+    "+ Add-on services" grid, whose "Pet Hair Removal" card already carries
+    the £20 — so its title becomes the link, as the WHEELUV card's did.
+
+    And its sentence is replaced, because it said "we ensure all pet hair is
+    carefully removed from your car's interior": the 100% promise the brief
+    withdraws, on the one page the add-on is sold from. The replacement is
+    the brief's own wording for this same optional extra in the Triton
+    booking flow (`TRITON_EXTRA`), so the card, the pet hair page and the
+    checkout say the same four things. Throws if the card or its sentence
+    has gone.
+  */
+  "car-interior-cleaning/interior-valet": (page) => {
+    const blocks = allBlocks(page);
+    const at = blocks.findIndex((b) => b.type === "heading" && plain(b) === "Pet Hair Removal");
+    const title = blocks[at];
+    const blurb = blocks[at + 1];
+    if (
+      title?.type !== "heading" ||
+      blurb?.type !== "paragraph" ||
+      !plain(blurb).startsWith("Pet hair can be difficult to remove")
+    ) {
+      throw new Error("content override: the Triton page's Pet Hair Removal add-on card has changed");
+    }
+    title.href = PET_HAIR_PATH;
+    blurb.html = TRITON_EXTRA.body;
+
+    relinkOdourAddOn(page);
+  },
+
+  /*
+    The second batch of the client's 2026-10-06 briefs ("Webite changes
+    (1)…(7).pdf" and "Webite changes .pdf"): eight pages rebuilt at once, each
+    a hand-built route whose copy lives in its own `lib/*.ts`. Every one of
+    them exports a `REBUILD` record — the brief's SEO strings, its opening,
+    its price as the hub should show it, its "Why choose" reasons and its
+    FAQ — and `rebuiltFrom` turns that into the sections everything else
+    reads: hub cards, the sitemap, the WebPage node, Read More labels.
+
+    Each rule throws if the mirror's h1 has changed, so the day the live site
+    publishes a rebuild, its rule is deleted rather than left overwriting it.
+    The breadcrumb tails that move are the ones the briefs name: "Engine Bay
+    Top Section Detail" ("The better service name is …"), "Car Wax Service"
+    (it read "Autoglym"), "Flooded Car & Water Damage Cleaning" (it read
+    "…Repair", which the brief says the service is not), "Caravan & Motorhome
+    Valeting" and "Interior Paint Spill Removal".
+  */
+  "repairs/headlight-restoration": rebuiltFrom(HEADLIGHT_REBUILD),
+  "car-interior-cleaning/steam-cleaning": rebuiltFrom(STEAM_REBUILD),
+  "repairs/engine-bay-steam-cleaning": rebuiltFrom(ENGINE_REBUILD, "Engine Bay Top Section Detail"),
+  "repairs/car-graffiti-removal": rebuiltFrom(GRAFFITI_REBUILD),
+  "mobile-car-wash/car-wax-service": rebuiltFrom(WAX_REBUILD),
+  "vehicles/caravan-cleaning": rebuiltFrom(CARAVAN_REBUILD, "Caravan & Motorhome Valeting"),
+  "car-interior-cleaning/flooded-car-cleaning": rebuiltFrom(FLOOD_REBUILD, "Flooded Car & Water Damage Cleaning"),
+  /* Moved here from /repairs/paint-overspray-removal the same day (301 in
+     `lib/redirects.ts`): "This page is NOT for exterior paint overspray". */
+  "repairs/car-interior-paint-spill-removal": rebuiltFrom(PAINT_REBUILD, "Interior Paint Spill Removal"),
+
+  /* Zeus — the second of the three valets the odour brief names. */
+  "car-valeting/premium-full-valet": (page) => {
+    relinkOdourAddOn(page);
+    addWaxLink(page);
+  },
+
+  /* Pre-Sale Valet — one of the three the car wax brief names as eligible. */
+  "car-valeting/pre-sale-valet": (page) => {
+    addWaxLink(page);
+  },
+
+  /*
+    The flooded car brief, 2026-10-06: "The Mould Removal and Odour pages
+    should also link back where appropriate using: Flooded Car & Water Damage
+    Cleaning". This page's own list of when mould grows names "Vehicles
+    affected by flooding or water ingress" — the place it is appropriate —
+    and the link follows that item in the brief's words. (The odour page is a
+    hand-built route and carries its link itself.)
+  */
+  "car-interior-cleaning/mould-removal": (page) => {
+    let hits = 0;
+    for (const b of allBlocks(page)) {
+      if (b.type !== "list") continue;
+      b.items = b.items.map((item) => {
+        if (!/^Vehicles affected by flooding or water ingress$/i.test(item.trim())) return item;
+        hits += 1;
+        return `${item.trim()} — <a href="${FLOOD_PATH}">Flooded Car &amp; Water Damage Cleaning</a>`;
+      });
+    }
+    if (hits !== 1) throw new Error(`content override: mould-removal has ${hits} flooding list items, not one`);
+  },
+
+  /*
+    The car odour & ozone treatment page, rebuilt from the client's brief of
+    2026-10-06 — "Replace/re-optimise the existing Odour Removal page". It
+    renders through its own route (`app/car-interior-cleaning/
+    odour-removal`), which reads the brief's copy out of
+    `lib/odour-removal.ts` directly.
+
+    This rule is for everything else that reads the page: the card
+    `/car-interior-cleaning` shows for it, the sitemap's lastmod and the
+    WebPage node. The old page was "OZONE Odour Removal & Disinfection" and
+    promised to "eliminate viruses, germs, and unpleasant odors" — the brief's
+    list of wording to remove, nearly line for line — so its sections are
+    replaced by the brief's opening, its price as the add-on it is ("From
+    +£60", which `lib/hub.ts` reads as an add-on rather than an entry price)
+    and its questions.
+
+    The breadcrumb's tail moves too, because `nameReadMoreLinks` labels every
+    Read More pointing here with it, and "Disinfection" is one of the claims
+    the brief withdraws. It becomes the name the brief gives the service.
+
+    Matched on the mirror's own h1, and it throws when that has changed.
+  */
+  "car-interior-cleaning/odour-removal": (page) => {
+    if (page.h1 !== "OZONE Odour Removal & Disinfection") {
+      throw new Error(`content override: the odour removal page's h1 is "${page.h1}", not the mirror's`);
+    }
+    const { hero, points, tiers, pricing, faq, seo } = ODOUR;
+    page.title = seo.title;
+    page.description = seo.description;
+    page.h1 = hero.h1;
+    page.ogImage = ODOUR_PHOTOS.hero.src;
+    page.ogW = ODOUR_PHOTOS.hero.w;
+    page.ogH = ODOUR_PHOTOS.hero.h;
+    page.modified = "2026-10-06";
+    page.breadcrumb = [{ name: "Home", href: "/" }, { name: VALET_EXTRA.title }];
+    page.sections = [
+      {
+        blocks: [
+          { type: "heading", level: 1, text: hero.h1 },
+          { type: "heading", level: 2, text: hero.title },
+          ...hero.intro.map((html): Block => ({ type: "paragraph", html })),
+        ],
+      },
+      {
+        blocks: [
+          { type: "heading", level: 2, text: tiers.heading },
+          { type: "heading", level: 4, text: `${points.price.label} ${points.price.value}` },
+          ...pricing.important.bodyHtml.map((html): Block => ({ type: "paragraph", html })),
+        ],
+      },
+      {
+        blocks: [
+          { type: "heading", level: 2, text: faq.heading },
+          { type: "faq", items: faq.items },
+        ],
+      },
+    ];
+  },
+
+  /*
+    The vehicle signage & sticker removal page, rebuilt from the client's
+    brief of 2026-10-06 — "Full replacement/re-optimisation of the existing
+    page. KEEP EXISTING URL". It renders through its own route
+    (`app/commercial-valeting/car-van-stickers-removal`), which reads the
+    brief's copy out of `lib/signage-removal.ts` directly.
+
+    This rule is for everything else that reads the page: the card
+    `/commercial-valeting` shows for it (`blurbOf` takes the opening
+    paragraph), the sitemap's lastmod and the WebPage node's name and
+    description. Left alone they would keep the old page's promise — "leaving
+    your vehicle's paintwork flawless" — which is the opposite of what the
+    brief now says about the paint underneath. So the mirror's sections are
+    replaced by the brief's opening and its questions. Nothing of the old
+    page is kept: its copy is what the brief replaces, and its photographs
+    are on the new page under the brief's own filenames.
+
+    Matched on the mirror's own h1, and it throws when that has changed: the
+    day the live site publishes the rebuilt page, this rule is to be deleted
+    rather than left overwriting it.
+  */
+  "commercial-valeting/car-van-stickers-removal": (page) => {
+    if (page.h1 !== "Car & Van Sticker Removal in London") {
+      throw new Error(`content override: the sticker removal page's h1 is "${page.h1}", not the mirror's`);
+    }
+    const { hero, faq, seo } = SIGNAGE;
+    page.title = seo.title;
+    page.description = seo.description;
+    page.h1 = hero.h1;
+    page.ogImage = SIGNAGE_PHOTOS.hero.src;
+    page.ogW = SIGNAGE_PHOTOS.hero.w;
+    page.ogH = SIGNAGE_PHOTOS.hero.h;
+    page.modified = "2026-10-06";
+    page.sections = [
+      {
+        blocks: [
+          { type: "heading", level: 1, text: hero.h1 },
+          { type: "heading", level: 2, text: hero.subtitle },
+          { type: "paragraph", html: hero.lead },
+          { type: "paragraph", html: hero.introHtml },
+          { type: "paragraph", html: hero.body },
+        ],
+      },
+      {
+        blocks: [
+          { type: "heading", level: 2, text: faq.heading },
+          { type: "faq", items: faq.items },
+        ],
+      },
+    ];
+  },
+
+  /*
     The one page on the site whose h1 names the wrong service. Turned up in the
     audit of the last 52 mirror location pages, 2026-09-22: `/car-detailing/brent`
     opens on "Mobile Car Valeting in Brent" while its `<title>`, its breadcrumb
@@ -884,6 +1359,9 @@ const RULES: Record<string, (page: Page) => void> = {
     );
     swap(page.sections.flatMap((s) => s.blocks), "Boxter/ BMW 1 Series£125Large", "Boxter/ BMW 1 Series£145Large");
     swap(page.sections.flatMap((s) => s.blocks), "Porsche Macan£135XL Careg. BMW X5/ Volvo XC90/ Porsche Cayenne£145", "Porsche Macan£155XL Careg. BMW X5/ Volvo XC90/ Porsche Cayenne£165");
+    /* Medusa Gold has no page of its own; this is where it is sold. */
+    relinkOdourAddOn(page);
+    addWaxLink(page);
   },
 
   /* Item 16: the two checks the client struck off, and both subscription
@@ -912,6 +1390,166 @@ const RULES: Record<string, (page: Page) => void> = {
     ]);
   },
 };
+
+/**
+ * What a rebuilt page's content module exports for this file — `REBUILD` in
+ * `lib/headlight.ts`, `lib/steam-cleaning.ts` and the rest of 2026-10-06's
+ * second batch.
+ */
+type Rebuild = {
+  slug: string;
+  mirrorH1: string;
+  title: string;
+  description: string;
+  h1: string;
+  og: { src: string; w: number; h: number };
+  intro: string[];
+  /** "From £100" (entry price), "+£20" / "From +£40" (add-on only), or none. */
+  price?: string;
+  why?: { heading: string; items: { title: string; body: string | string[] }[] };
+  faq: { heading: string; items: { q: string; a: string[] }[] };
+  breadcrumbName?: string;
+};
+
+/**
+ * The mirror page's sections replaced by the brief's own: the opening, the
+ * price (a bare "£100" heading for an entry price, which `entryPrice` reads;
+ * "+£40"-style for an add-on, which `lib/hub.ts` reads as one), the reasons as
+ * "Label: sentence" items — the shape `hubReasons` parses, so `/repairs` and
+ * `/vehicles` keep their "Why choose" band — and the FAQ, which the hubs'
+ * accordions read before anything else.
+ */
+function rebuiltFrom(r: Rebuild, crumb?: string) {
+  return (page: Page) => {
+    if (page.h1 !== r.mirrorH1) {
+      throw new Error(`content override: ${r.slug}'s h1 is "${page.h1}", not the mirror's "${r.mirrorH1}"`);
+    }
+    page.title = r.title;
+    page.description = r.description;
+    page.h1 = r.h1;
+    page.ogImage = r.og.src;
+    page.ogW = r.og.w;
+    page.ogH = r.og.h;
+    page.modified = "2026-10-06";
+    const name = crumb ?? r.breadcrumbName;
+    if (name) page.breadcrumb = [{ name: "Home", href: "/" }, { name }];
+
+    const sections: Section[] = [
+      {
+        blocks: [
+          { type: "heading", level: 1, text: r.h1 },
+          ...r.intro.map((html): Block => ({ type: "paragraph", html })),
+        ],
+      },
+    ];
+    if (r.price) {
+      const addOn = /\+\s*£/.test(r.price);
+      sections.push({
+        blocks: [
+          { type: "heading", level: 2, text: "Price" },
+          { type: "heading", level: 4, text: addOn ? r.price : r.price.replace(/^\s*from\s+(?=£)/i, "") },
+        ],
+      });
+    }
+    if (r.why?.items.length) {
+      const amp = (t: string) => t.replace(/&(?!\w+;|#\d+;)/g, "&amp;");
+      sections.push({
+        blocks: [
+          { type: "heading", level: 2, text: r.why.heading },
+          {
+            type: "list",
+            ordered: false,
+            items: r.why.items.map((it) => {
+              const body = Array.isArray(it.body) ? it.body.join(" ") : it.body;
+              return `<strong>${amp(it.title)}:</strong> ${amp(body)}`;
+            }),
+          },
+        ],
+      });
+    }
+    sections.push({
+      blocks: [
+        { type: "heading", level: 2, text: r.faq.heading },
+        { type: "faq", items: r.faq.items },
+      ],
+    });
+    page.sections = sections;
+  };
+}
+
+/**
+ * The car wax brief's link back, on the valets it names as eligible — Zeus,
+ * Medusa Gold (`/car-valeting`, its only page) and Pre-Sale: "Then add
+ * contextual links back to this page from relevant valet pages: WANT EXTRA
+ * PAINT PROTECTION? Add Professional Car Wax From £40". The last row of the
+ * page's add-on band — the brief's heading over a button carrying its line —
+ * so it reads as one more optional extra, which is what it is.
+ *
+ * Found by the "+ Add-on services" heading and the run of card rows after it,
+ * never by index; throws if the heading has gone.
+ */
+function addWaxLink(page: Page) {
+  const at = page.sections.findIndex((s) =>
+    s.blocks.some((b) => b.type === "heading" && /^\+\s*add-on services$/i.test(plain(b))),
+  );
+  if (at === -1) throw new Error(`content override: ${page.slug} has no "+ Add-on services" row for the wax link`);
+  let last = at;
+  /* The cards are columns rows carrying prices; on some pages they share the
+     heading's own row, on others they follow it. */
+  const isCardRow = (s: Section) => s.blocks.some((b) => b.type === "columns" && flatten([b]).some(isPrice));
+  while (last + 1 < page.sections.length && isCardRow(page.sections[last + 1])) last += 1;
+  /* Inside the add-ons' own band, as its last row — a band of its own
+     landed ink under the ink add-on band. */
+  page.sections[last].blocks.push(
+    { type: "heading", level: 3, text: "Want Extra Paint Protection?" },
+    { type: "button", label: "Add Professional Car Wax From £40", href: WAX_PATH },
+  );
+}
+
+/**
+ * The odour add-on card on the three valets the odour brief names — Triton,
+ * Zeus and Medusa Gold (`/car-valeting`, its only page). "These three main
+ * valet pages should also link back to this page from their optional extras:
+ * Odour & Ozone Treatment — From +£60."
+ *
+ * Each page writes the card the same way — "£60", an icon, "Odour
+ * Neutralisation & Ozone treatment" (plain "Ozone treatment" on
+ * `/car-valeting`), one paragraph — and each paragraph promised what the
+ * brief withdraws: "removing smoke, dust mites, mould, bacteria, and other
+ * contaminants", "Effectively removes smoke & pet smells". So the card takes
+ * the brief's name and is linked, the flat £60 becomes "From £60" (there are
+ * three treatments now), and the paragraph becomes the brief's own lines for
+ * this optional extra (`VALET_EXTRA`).
+ *
+ * Exactly one card per page, matched on its title and its £60, or it throws.
+ * Mini Valet and Deep Clean carry the same card and are left alone: the brief
+ * makes the treatment available with these three only.
+ */
+function relinkOdourAddOn(page: Page) {
+  let hits = 0;
+  const visit = (blocks: Block[]) => {
+    for (let i = 0; i < blocks.length; i++) {
+      const b = blocks[i];
+      if (b.type === "columns") {
+        b.cols.forEach(visit);
+        continue;
+      }
+      if (b.type !== "heading" || !/^(odour neutralisation & ozone treatment|ozone treatment)$/i.test(plain(b))) continue;
+      const price = blocks.slice(Math.max(0, i - 2), i).find(isPrice);
+      const blurb = blocks[i + 1];
+      if (!price || plain(price) !== "£60" || blurb?.type !== "paragraph") {
+        throw new Error(`content override: ${page.slug}'s odour add-on card has changed shape`);
+      }
+      price.text = VALET_EXTRA.price;
+      b.text = VALET_EXTRA.title;
+      b.href = ODOUR_PATH;
+      blocks.splice(i + 1, 1, ...VALET_EXTRA.body.map((html): Block => ({ type: "paragraph", html })));
+      hits += 1;
+    }
+  };
+  page.sections.forEach((s) => visit(s.blocks));
+  if (hits !== 1) throw new Error(`content override: ${page.slug} has ${hits} odour add-on cards, not one`);
+}
 
 /* Item 10 again: the same Triton ladder is quoted on every location hub. */
 const TRITON_LADDER = [135, 145, 155, 165] as const;
@@ -951,6 +1589,10 @@ function useTranscoded(page: Page): boolean {
   }
   return hits > 0;
 }
+
+/** "WHEELUV ™ – Alloy Wheel Protectors", with either dash the mirror uses. */
+const isWheeluvAddon = (b: Block): b is Extract<Block, { type: "heading" }> =>
+  b.type === "heading" && /^WHEELUV\s*™\s*[–—-]\s*Alloy Wheel Protectors$/i.test(decodeEntities(b.text).trim());
 
 /* ── Application ──────────────────────────────────────────────────────── */
 
@@ -1030,6 +1672,28 @@ export function applyOverrides(
     );
     if (carriesSource) patch(slug, useTranscoded);
   }
+
+  /*
+    The WHEELUV™ add-on card, linked to the page that sells it. Client,
+    2026-10-06: "Other relevant Medusa pages should link back using natural
+    anchors such as … WHEELUV™ Wheel Protectors". Four valeting pages offer it
+    as an add-on at £159, under the heading "WHEELUV ™ – Alloy Wheel
+    Protectors" — the anchor the brief asks for, already written — and none
+    of them linked anywhere. Site-wide, and counted, like the pass below.
+  */
+  let wheeluv = 0;
+  for (const slug of Object.keys(out)) {
+    if (!allBlocks(out[slug]).some(isWheeluvAddon)) continue;
+    patch(slug, (p) => {
+      for (const b of allBlocks(p)) {
+        if (isWheeluvAddon(b) && !b.href) {
+          b.href = ALLOY_WHEEL_PATH;
+          wheeluv += 1;
+        }
+      }
+    });
+  }
+  if (!wheeluv) throw new Error("content override: no WHEELUV add-on card left to link");
 
   /*
     Last, because `restoreTilePhotos` finds its tiles by the label this pass

@@ -1179,7 +1179,10 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
         from the copy above, so nothing in the card shared a left edge. The
         action row is a flex row with its own gap, so it needs neither.
       */
-      const spacing = ctx.actionRow ? "" : "mt-7 mx-1.5";
+      /* The side margins only from `sm`: below it the button is `w-full`,
+         and 100% plus 6px a side ran 6px past the column on every phone —
+         found on 2026-10-06 checking the car wax link the valet pages gained. */
+      const spacing = ctx.actionRow ? "" : "mt-7 sm:mx-1.5";
 
       return (
         <a
@@ -1443,10 +1446,24 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
         picture stick while the copy scrolls is the difference between a
         photograph parked above a wall of text and a section.
       */
-      const imageCol = block.cols.findIndex(
+      /*
+        An empty cell is a WPBakery spacer, not a column. Three rows on the
+        site carry them, and `/car-interior-cleaning/mould-removal`'s is
+        `[spacer 2 | copy 6 | pricing 2 | spacer 2]`: read literally, its
+        price widget got 2/12 of the width — 106px at 1024, one word to a line
+        and "£180" spilling out of its card (found 2026-10-06). The spacers go
+        before the spans are read, and what is left is laid out on its own.
+      */
+      const cells = block.cols
+        .map((col, i) => ({ col, span: block.spans[i] }))
+        .filter((c) => c.col.length > 0);
+      const cols = cells.map((c) => c.col);
+      const spans = cells.map((c) => c.span);
+
+      const imageCol = cols.findIndex(
         (col) => col.length > 0 && col.every((b) => b.type === "image" && !b.icon),
       );
-      const split = block.cols.length === 2 && imageCol !== -1;
+      const split = cols.length === 2 && imageCol !== -1;
 
       /*
         The spans are a ratio, not a measurement. Fifteen rows in the content
@@ -1457,19 +1474,33 @@ function BlockView({ block, ctx }: { block: Block; ctx: Ctx }) {
         does, at 24) is left alone: it means two rows of two, and the 12-column
         grid already wraps it that way.
       */
-      const filled = block.spans.reduce((a, b) => a + b, 0) >= 12;
-      const even = filled ? undefined : EVEN[block.cols.length];
+      const total = spans.reduce((a, b) => a + b, 0);
+      const filled = total >= 12;
+      const even = filled ? undefined : EVEN[cols.length];
+      /*
+        A row that adds up to exactly 12 gets one track per cell in the same
+        ratio — `6fr 6fr` rather than twelve tracks spanned six apiece. The
+        widths are identical wherever there is room; the difference is the
+        gaps. Twelve tracks carry eleven 40px gaps, 440px before any content,
+        and a row nested inside a half-width column has less than that: on
+        `/car-interior-cleaning/mould-removal` at 1024 the inner row was
+        397px and its second cell sat 43px outside it (found 2026-10-06).
+        A row that overshoots 12 keeps the twelve tracks — that is how it
+        wraps into two rows.
+      */
+      const ratio = total === 12 ? spans.map((n) => `${n}fr`).join(" ") : undefined;
 
       return (
         <div
-          className={`mt-8 grid gap-x-10 gap-y-8 ${even ?? "lg:grid-cols-12"} ${
-            split ? "lg:items-center" : ""
-          }`}
+          className={`mt-8 grid gap-x-10 gap-y-8 ${
+            even ?? (ratio ? "lg:[grid-template-columns:var(--cols)]" : "lg:grid-cols-12")
+          } ${split ? "lg:items-center" : ""}`}
+          style={ratio ? ({ "--cols": ratio } as React.CSSProperties) : undefined}
         >
-          {block.cols.map((col, i) => (
+          {cols.map((col, i) => (
             <div
               key={i}
-              className={`${even ? "" : (SPAN[block.spans[i]] ?? "lg:col-span-12")} ${
+              className={`${even || ratio ? "" : (SPAN[spans[i]] ?? "lg:col-span-12")} ${
                 split && i === imageCol ? "lg:sticky lg:top-[120px] [&_img]:ring-1 [&_img]:ring-white/[0.08]" : ""
               }`}
             >

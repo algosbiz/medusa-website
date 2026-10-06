@@ -670,3 +670,27 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-gold);
 }
+
+/* ── The phone booking bar ────────────────────────────────────────────────
+   `components/StickyBookBar.tsx`, on /car-detailing/alloy-wheel-protection.
+   While it is up, the footer's floating WhatsApp button rides above it and
+   the footer gains the bar's height, so it never covers either.
+
+   Unlayered on purpose: the button's own `bottom-6` is a Tailwind utility,
+   and an unlayered rule outranks every layer, where a component rule would
+   lose to it. Below `lg` only — the bar is never shown from there up. */
+.wa-float {
+  transition:
+    bottom 0.3s ease,
+    transform 0.2s ease;
+}
+
+@media (max-width: 1023.98px) {
+  body:has(.sticky-book[data-shown="true"]) .wa-float {
+    bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+
+  body:has(.sticky-book) footer {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+}

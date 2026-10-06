@@ -30,8 +30,16 @@ import { type Block, heroImageFor, type Page, type Section } from "@/lib/blocks"
  * Listed rather than detected: the shape test would also match a long blog
  * post, and a header built around an entry price is wrong for an article.
  * These are the service pages in `NAV` — the four service menus, minus
- * `/headlight-restoration`, `/motorcycle-valeting-detailing` and
- * `/car-lovers-club`, which have hand-built routes of their own.
+ * `/headlight-restoration`, `/motorcycle-valeting-detailing`,
+ * `/car-detailing/alloy-wheel-protection`,
+ * `/car-interior-cleaning/vomit-cleaning`,
+ * `/car-interior-cleaning/pet-hair-removal`,
+ * `/car-interior-cleaning/odour-removal`,
+ * `/commercial-valeting/car-van-stickers-removal`, `/car-lovers-club`, and
+ * the eight pages the client's second batch of 2026-10-06 briefs rebuilt —
+ * steam cleaning, flooded car, engine bay, graffiti, interior paint spill,
+ * car wax, caravan and headlight restoration — which have hand-built routes
+ * of their own.
  */
 export const SERVICE_SLUGS = new Set([
   // Valeting
@@ -52,7 +60,6 @@ export const SERVICE_SLUGS = new Set([
   "car-detailing/enhancement-detail",
   "car-detailing/paint-correction",
   "car-detailing/perfection-detail",
-  "mobile-car-wash/alloy-wheel-cleaning",
   "car-detailing/machine-polish",
   "car-detailing/ceramic-coating",
   // Mobile car wash
@@ -65,20 +72,9 @@ export const SERVICE_SLUGS = new Set([
   "mobile-car-wash/exterior-plus-wash",
   "car-interior-cleaning/premium-interior-wash",
   // More services
-  "car-interior-cleaning/steam-cleaning",
   "commercial-valeting/mobile-truck-cleaning",
-  "repairs/paint-overspray-removal",
-  "car-interior-cleaning/vomit-cleaning",
-  "repairs/car-graffiti-removal",
-  "car-interior-cleaning/flooded-car-cleaning",
-  "commercial-valeting/car-van-stickers-removal",
   "car-interior-cleaning/leather-cleaning",
   "car-detailing/windscreen-protection",
-  "vehicles/caravan-cleaning",
-  "mobile-car-wash/car-wax-service",
-  "car-interior-cleaning/pet-hair-removal",
-  "car-interior-cleaning/odour-removal",
-  "repairs/engine-bay-steam-cleaning",
 ]);
 
 export type ServiceModel = {

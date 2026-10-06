@@ -5,7 +5,7 @@
  * every page one level below Home, so 294 of the 313 two-segment URLs came
  * back as `Home > Page` — `/car-detailing/watford` never named `/car-detailing`
  * — and the names are the WordPress titles from before the client renamed and
- * re-parented the pages: `/mobile-car-wash/alloy-wheel-cleaning` was "Wheeluv",
+ * re-parented the pages: `/car-detailing/alloy-wheel-protection` was "Wheeluv",
  * `/mobile-car-wash/car-wax-service` "Autoglym", and thirteen carried an HTML
  * entity such as `&#038;`, which JSON-LD does not decode.
  *

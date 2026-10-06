@@ -88,10 +88,10 @@ export function ServiceCards({
             {/* The client's rule: a page that quotes a price shows it
                 here, a page that does not gets the quote button at the
                 foot instead. Same badge the price ladders use. */}
-            {card.priceFrom && (
+            {(card.priceFrom || card.addOn) && (
               <p className="mt-3">
                 <span className="inline-flex rounded-full bg-gold px-3 py-1 font-[family-name:var(--font-ui)] text-[13px] font-semibold text-ink">
-                  From {card.priceFrom}
+                  {card.priceFrom ? `From ${card.priceFrom}` : `${card.addOn} Add-On`}
                 </span>
               </p>
             )}
@@ -106,13 +106,13 @@ export function ServiceCards({
                 it opens rather than reading "Read More". */}
             <div className="mt-auto flex flex-wrap gap-2.5 pt-7">
               <a
-                href={card.priceFrom ? BOOK_URL : "/contact-us"}
+                href={card.priceFrom || card.addOn ? BOOK_URL : "/contact-us"}
                 className="btn btn-gold w-full rounded-full sm:w-auto"
-                {...(card.priceFrom
+                {...(card.priceFrom || card.addOn
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}
               >
-                {card.priceFrom ? "Book Now" : "Get a Free Quote"}
+                {card.priceFrom || card.addOn ? "Book Now" : "Get a Free Quote"}
                 <Icon name="arrow" size={18} className="ml-2.5" />
               </a>
               <a href={card.href} className="btn btn-outline w-full rounded-full sm:w-auto">
