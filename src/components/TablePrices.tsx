@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import Image from "next/image";
 import { BOOK_URL, CAR_SIZES } from "@/lib/site";
-import type { PriceLadder } from "@/lib/table-model";
+import { DEFAULT_ACCENT, TIER_ACCENT, type PriceLadder } from "@/lib/table-model";
 
 /**
  * The comparison table's price row, as a price row.
@@ -21,6 +21,10 @@ import type { PriceLadder } from "@/lib/table-model";
  *
  * The tab strip is `components/PriceTabs.tsx`'s, so the page's several price
  * ladders read as one control rather than several.
+ *
+ * Each package is a card in its tier colour — the same accents the sticky
+ * header above it and `PriceMatrix` at desktop width use — so the five read
+ * as five packages rather than five rows of one list.
  */
 export default function TablePrices({
   packages,
@@ -58,18 +62,21 @@ export default function TablePrices({
               aria-selected={on}
               aria-controls={`${id}-panel`}
               onClick={() => setIndex(i)}
-              className={`flex min-w-[52px] flex-1 basis-[calc(25%-3px)] items-center justify-center gap-1.5 rounded-[7px] px-1 py-2 font-[family-name:var(--font-ui)] text-[10.5px] font-semibold tracking-[0.03em] whitespace-nowrap uppercase transition-colors duration-200 ${
-                on ? "bg-gold text-ink" : "text-white/70 hover:bg-white/[0.08]"
+              className={`flex min-w-[52px] flex-1 basis-[calc(25%-3px)] flex-col items-center justify-center gap-0.5 overflow-hidden rounded-[7px] px-1 pt-1 pb-2 font-[family-name:var(--font-ui)] text-[10.5px] font-semibold tracking-[0.03em] whitespace-nowrap uppercase transition-colors duration-200 ${
+                on ? "bg-gold text-ink shadow-[0_6px_16px_-6px_rgb(193_146_49/0.6)]" : "text-white/70 hover:bg-white/[0.08]"
               }`}
             >
+              {/* The icon is a thin outline with a wide margin baked in: drawn
+                  at 15px it was a smudge, so it is drawn larger and the
+                  negative margin takes the baked-in margin back. */}
               {CAR_SIZES[i] && (
                 <Image
                   src={CAR_SIZES[i].icon}
                   alt=""
                   width={200}
                   height={120}
-                  className={`hidden h-[15px] w-auto object-contain @min-[340px]:block ${
-                    on ? "brightness-0" : "opacity-70"
+                  className={`-my-1.5 h-[34px] w-auto max-w-none object-contain ${
+                    on ? "brightness-0" : ""
                   }`}
                 />
               )}
@@ -91,17 +98,30 @@ export default function TablePrices({
         role="tabpanel"
         id={`${id}-panel`}
         aria-labelledby={`${id}-tab-${index}`}
-        className="mt-2"
+        className="mt-3 flex flex-col gap-2"
       >
         {packages.map(({ name, ladder }, i) => {
           const rung = ladder.rungs[index] ?? ladder.rungs[ladder.rungs.length - 1];
+          const accent = TIER_ACCENT[name] ?? DEFAULT_ACCENT;
           return (
             <li
               key={name + i}
-              className="flex items-start gap-3 border-t border-white/[0.07] px-1 py-3"
+              className="relative flex items-center gap-3 overflow-hidden rounded-[12px] py-3 pr-3 pl-4 ring-1 ring-white/[0.08]"
+              style={{
+                background: `linear-gradient(90deg, color-mix(in srgb, ${accent} 18%, #161616) 0%, #131313 55%, #101010 100%)`,
+                boxShadow: `0 14px 28px -18px rgb(0 0 0 / 0.95), inset 0 1px 0 rgb(255 255 255 / 0.05)`,
+              }}
             >
+              <span
+                aria-hidden
+                className="absolute inset-y-0 left-0 w-[3px]"
+                style={{ backgroundColor: accent }}
+              />
               <p className="min-w-0 flex-1">
-                <span className="block font-[family-name:var(--font-sub)] text-[13px] tracking-[0.12em] text-gold uppercase">
+                <span
+                  className="block font-[family-name:var(--font-sub)] text-[14px] tracking-[0.12em] uppercase"
+                  style={{ color: accent }}
+                >
                   {name}
                 </span>
                 {ladder.duration && (
@@ -115,7 +135,7 @@ export default function TablePrices({
                   buttons ran the full width and the footer became a stack of
                   gold slabs taller than the features they price. */}
               <div className="flex shrink-0 flex-col items-end gap-1.5">
-                <p className="font-[family-name:var(--font-display)] text-[20px] leading-none text-white">
+                <p className="font-[family-name:var(--font-display)] text-[22px] leading-none text-white">
                   {rung?.price}
                 </p>
                 {ladder.cta && (

@@ -129,12 +129,17 @@ and since 2026-09-19 it is written against the real domain rather than the
 one: 211 genuine redirects, all present with the same destination, and 51 rows
 that name a page which still exists and differ only by the trailing slash the
 sheet's left column carries. The only rules the sheet does not mention are the
-eleven this clone made for itself on 2026-09-15 — `/ceramic-coating/*` and
-`/car-detailing/*` → `/repairs/*` — which never existed on WordPress and so
-could not be on a sheet about it — and two that postdate the sheet:
-`/mobile-car-wash/alloy-wheel-cleaning` → `/car-detailing/alloy-wheel-protection`
-and `/repairs/paint-overspray-removal` →
-`/repairs/car-interior-paint-spill-removal` (both 2026-10-06, §5). `/wheeluv` points straight at the new URL, so nothing chains.
+fourteen this clone made for itself — the eleven of 2026-09-15,
+`/ceramic-coating/*` and `/car-detailing/*` → `/repairs/*`,
+`/car-interior-cleaning/premium-interior-wash` of 2026-09-26, and the two of
+2026-10-06, `/mobile-car-wash/alloy-wheel-cleaning` →
+`/car-detailing/alloy-wheel-protection` and `/repairs/paint-overspray-removal`
+→ `/repairs/car-interior-paint-spill-removal` (§5) — none of which ever
+existed on WordPress and so could not be on a sheet about it. The 2026-09-26
+move also re-pointed one of the sheet's own rows: `/premium-interior-wash`
+goes straight to `/mobile-car-wash/premium-interior-wash` now, not to the URL
+the sheet names, because that URL itself redirects. `/wheeluv` points straight
+at the new URL, so nothing chains.
 
 **The table answers 301, not 308, since 2026-10-06.** It was `permanent: true`
 until then, which in Next is a 308; search engines treat the two alike, but the
@@ -214,6 +219,28 @@ they did when Car Wax Service changed column — but nothing on the site links
 to it now. Exterior Wash is the other retired tier and is **not** in the same
 position: it is still sold, and since 2026-09-22 it has a card of its own on
 `/mobile-car-wash` (§5).
+
+**The mobile number is retired, 2026-09-26.** "Update phone number on the
+following page… replace with: 02033556435", against five pages that still
+printed `07434649960` — graffiti removal, paint overspray removal, truck
+cleaning, sticker removal and the privacy policy — and the homepage's
+JSON-LD, whose `contactPoint.telephone` is `BUSINESS.reservationsPhone` in
+`lib/site.ts`. The five are one site-wide swap in `applyOverrides` rather than
+five rules, so a regeneration that puts the old number on a sixth page is
+caught too; the `tel:` href is inside the same paragraph HTML as the number,
+so the link and the text move together. The replacement is `CONTACT.phone`,
+which is the number every other page already carried. On the graffiti and
+truck pages the number renders as plain text, not a link, as it did before:
+the source writes that line as one all-bold paragraph, which `Blocks.tsx` sets
+as a `LeadIn`, and a lead-in is text only — the anchor goes, and so does the
+`<br>`, which is why it reads "Get a FREE QuoteOR CALL US NOW". That is the
+client's own "No" against those two rows.
+
+**`RULES` throws on a slug with no page**, since the same day. `patch` skips a
+missing slug, which is right for the site-wide passes and was wrong here: when
+Premium Interior Wash moved under `/mobile-car-wash` (§5), a rule still keyed
+by its old URL would have stopped applying without a word, and its price with
+it.
 
 **A third kind arrived 2026-09-22: three plain errors the mirror ships**, which
 the repo owner asked for corrected after the location audit turned them up.
@@ -906,7 +933,7 @@ Three tiers, cheapest first:
    which needs no crop point.
 
    The questions come from real `faq` blocks where the group has them — the
-   interior pages carry twenty-one between three of the nine — and fall back to
+   interior pages carry sixteen between two of the eight — and fall back to
    the group's own question-shaped headings where it does not, which is what
    `/repairs` uses.
 
@@ -985,6 +1012,19 @@ Three tiers, cheapest first:
    `nameReadMoreLinks`, and the photograph is named in `VALETING_TILES` beside
    the other seven. Both pages share an OG image and a header background, so
    neither photograph could be picked by rule.
+
+   **Premium Interior Wash moved to Car Wash on 2026-09-26** — "premium
+   interior wash needs to be moved over to car wash… moving its url under the
+   car wash main, removing internal link from interior cleaning hub, and making
+   sure the new internal link to the sub page, exists on the car wash hub". So
+   it is `/mobile-car-wash/premium-interior-wash`, last in the Car Wash column,
+   and the old URL 301s there. The interior hub lost its card, its chip and the
+   three questions it lent the accordion — all of which asked about a *car
+   wash* — with nothing more than the NAV edit, because that hub is built from
+   its column. It is **not** in `SERVICE_GROUPS`: `/mobile-car-wash`'s own
+   "OUR PRICING" row has always carried a PREMIUM INTERIOR WASH card, and its
+   button is the link the client asked for, so a band card would sell the same
+   package twice. The 27 built wash pages carry the same row and the same link.
 
    The grid caps its track at 400px (`auto-fit`) instead of dividing the shell,
    because a two-card row at `grid-cols-2` was 615px a card on a page whose
@@ -1149,6 +1189,20 @@ container is wide enough, which `WIDE_ENOUGH` in `Blocks.tsx` decides from the
 column count. Both views are in the DOM and CSS picks one, so there is no
 layout shift and nothing is dropped — verified by asserting every 14+ character
 fragment of every table cell appears in the narrow view across all its tabs.
+
+**The price row renders twice as well.** Client, 2026-10-03, over a screenshot
+of the wide view: "just to style this on Madusa". The narrow view had read the
+trailing ladder back since it was built (`parseLadder`, `TablePrices`), but the
+wide `<table>` still printed it raw — five 270-character strings,
+`…Toyota yaris£70Medium Car…`, 704px tall, with BOOK NOW as dead text. Now
+`Blocks.tsx` lifts that row out of the table and `components/PriceMatrix.tsx`
+lays it out as class against package: the four classes down the label columns
+once, with the source's own examples, and one card per package on the same
+column track as the chips above, so a price sits under the ticks it buys. A row
+lights across all five cards on hover. It only takes the row when **every**
+package's cell parses — one column short and the cards would sit under the
+wrong ticks, so anything less keeps the raw row. `TablePrices` took the same
+tier colours the same day, so the two views are one design at two widths.
 
 ---
 
@@ -1618,7 +1672,7 @@ rendered `<main>`. Known, pre-existing gaps: `asLinkChips` drops commas and
   when all four rebuilt pages gained a real FAQ; `/car-interior-cleaning` has
   twenty-one real ones and uses them.
   And no list in the interior group names no service at all, so its reasons
-  mention leather in two of four bodies — the least specific of the nine.
+  mention leather in two of four bodies — the least specific of the eight.
   Written copy from the client replaces either in one line of `lib/hubs.ts`.
 - **`/blog` renders post titles its own source page does not list** — the
   source paginates at 10 and this index does not paginate at all. It used to
@@ -2076,19 +2130,27 @@ to this repo's own h1s, so only paths, slugs and categories changed.
 | Measured | Now |
 | --- | --- |
 | `/mobile-car-wash/alloy-wheel-cleaning` | `/car-detailing/alloy-wheel-protection` |
-| `/mobile-car-wash/premium-interior-wash` | `/car-interior-cleaning/premium-interior-wash` |
 | `/repairs/paint-overspray-removal` | `/repairs/car-interior-paint-spill-removal` |
 
-`linkedFromBody` on the four affected categories is `null` with a `TODO`: the
+It was three for a few hours. `/mobile-car-wash/premium-interior-wash` looked
+like a third, because this branch had the page under `/car-interior-cleaning/`
+— but the 2026-09-26 move had already taken it back to the car wash on a
+branch that had not landed yet, so the handover's measured URL was right all
+along and the row was restored. Worth remembering before "correcting" the
+handover against a working tree: it measured the **live** site, which is not
+always behind.
+
+`linkedFromBody` on the affected categories is `null` with a `TODO`: the
 measured figure counted a package list this repo has since changed, and
 `hasOfferCatalog` must not be turned on from a stale count.
 
 ### Open, and the client's to answer
 
-- **The reservations telephone.** The handover read `+44-2033556435` off the
-  live site; `site.ts` has carried `+44-7434649960`. `businessFull()` keeps the
-  repo's value and overrides that one field. A telephone number is a fact about
-  the business, not a layout decision.
+- ~~**The reservations telephone.**~~ **Settled.** The handover read
+  `+44-2033556435` off the live site where `site.ts` carried
+  `+44-7434649960`, so `businessFull()` overrode that one field while the
+  client decided. They changed `site.ts` to the handover's number in the same
+  week; the two agree and the override is gone.
 - **FAQPage, on 15 pages.** `DO-NOT-EMIT.md` says it earns no rich result
   outside government and health sites and is not to be rolled out further; the
   live site carries two and this repo carries fifteen, all built from client

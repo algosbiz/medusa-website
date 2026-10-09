@@ -65,19 +65,13 @@ const website = (): Json => ({
 /**
  * The full business node, from `medusa-schema/data/business.json`. Homepage only.
  *
- * One field is this repo's rather than the mirror's: the reservations number.
- * The measurement read `+44-2033556435` off the live site, which is the main
- * switchboard again; `site.ts` has carried `+44-7434649960` since the contact
- * page was built. A telephone number is a fact about the business, so the
- * repo's own value stands until the client says which is right.
+ * The reservations number was the one field this repo and the handover
+ * disagreed on — `site.ts` carried `+44-7434649960` and the measurement read
+ * `+44-2033556435` off the live site — so it was overridden here while the
+ * client decided. They settled it the same week: `site.ts` now carries the
+ * number the handover read, the two agree, and the override is gone.
  */
-export const businessFull = (): Json => ({
-  ...(business as Json),
-  contactPoint: {
-    ...((business as Json).contactPoint as Json),
-    telephone: BUSINESS.reservationsPhone,
-  },
-});
+export const businessFull = (): Json => business as Json;
 
 /**
  * The business as a REFERENCE, for the other 382 pages. Thinner than the full

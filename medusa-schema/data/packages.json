@@ -422,8 +422,8 @@
   },
   {
     "slug": "premium-interior-wash",
-    "path": "/car-interior-cleaning/premium-interior-wash",
-    "category": "car-interior-cleaning",
+    "path": "/mobile-car-wash/premium-interior-wash",
+    "category": "mobile-car-wash",
     "name": "Premium Interior Wash",
     "nameConfirmed": false,
     "liveH1": "PREMIUM INTERIOR WASH",
@@ -432,8 +432,7 @@
       "priceStatedOnPage": "£15 to £145 (12 figures)",
       "TODO": "read the figures off the page table"
     },
-    "pricedByVehicleSize": true,
-    "movedFrom": "/mobile-car-wash/premium-interior-wash"
+    "pricedByVehicleSize": true
   },
   {
     "slug": "silver-wash",

@@ -11,10 +11,11 @@
       "exterior-wash",
       "gold-wash",
       "platinum-wash",
+      "premium-interior-wash",
       "silver-wash"
     ],
     "linkedFromBody": null,
-    "totalPackages": 7,
+    "totalPackages": 8,
     "TODO": "linkedFromBody: re-measure against the Next.js build before turning hasOfferCatalog on"
   },
   {
@@ -66,12 +67,11 @@
       "mould-removal",
       "odour-removal",
       "pet-hair-removal",
-      "premium-interior-wash",
       "steam-cleaning",
       "vomit-cleaning"
     ],
     "linkedFromBody": null,
-    "totalPackages": 9,
+    "totalPackages": 8,
     "TODO": "linkedFromBody: re-measure against the Next.js build before turning hasOfferCatalog on"
   },
   {

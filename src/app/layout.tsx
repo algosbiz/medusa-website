@@ -104,18 +104,11 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
-  /* Ahrefs Webmaster Tools. This was added when the deployment lived on a
-     *.vercel.app subdomain, whose DNS was Vercel's and where the TXT-record
-     method was therefore not open to us. The site is on its own domain now,
-     so a TXT record is available and would be the tidier proof — but Ahrefs
-     re-checks this tag periodically and swapping methods risks un-verifying
-     the property, so it stays until someone has the Cloudflare zone open. */
-  verification: {
-    other: {
-      "ahrefs-site-verification":
-        "dc5dd1bce15a92d58fc8a1eb2e876ebb9949c06e0a5a9f6c9b28dd925dc9d71b",
-    },
-  },
+  /* No Ahrefs verification tag. It was here while the deployment lived on a
+     *.vercel.app subdomain, where the TXT-record method was not open to us.
+     Since 2026-09-26 the property is verified by a TXT record on the domain
+     itself (Cloudflare DNS), so the tag went. Ahrefs re-checks ownership
+     before each crawl: that record has to stay. */
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
