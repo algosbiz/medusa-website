@@ -2159,9 +2159,49 @@ measured figure counted a package list this repo has since changed, and
 - **`DO-NOT-EMIT.md` ships with its first three headings as literal
   `undefined`** — a failed export from `Medusa-framework-vocabulary.xlsx`. The
   21 real entries are intact; the file needs re-exporting.
-- The richer modelling the handover supplies and this pass did **not** turn on:
-  `hasOfferCatalog` on category pages, `ItemList` on the location hubs, and the
-  area `Place` graph. Both are gated on page work the handover names — no
-  location hub links its own area pages, and `/mobile-car-wash` links 8 of its
-  9 packages — and an `ItemList` naming pages the body never mentions is a page
-  problem dressed up as markup.
+- **27 of the 41 package pages still carry no `Service`.** The 14 that do are
+  the hand-built rebuilds, which pass their own. Of the rest, `packages.json`
+  marks 13 `nameConfirmed: false` — three of them (`ENHANCEMENT`,
+  `PERFECTION`, `NEW CAR / PROTECTION`) do not name a service at all — so a
+  `Service` there would publish a reading as a name. The other 14 could be
+  wired today.
+- **23 of the 31 stated prices are not published as an `Offer`.** Each has to
+  be read off its own page's table; `offer.TODO` marks them. A guessed price is
+  the single worst thing this repo could ship.
+
+### What is deliberately still off
+
+`hasOfferCatalog` on the 7 category pages and `ItemList` on the 19 location
+hubs. Both are gated on page work the handover names, not on anything in the
+markup: **no location hub links its own area pages**, and `/mobile-car-wash`
+links 8 of its 9 packages. A catalogue or a list naming pages the body never
+mentions is a page problem dressed up as markup. `derivedNode` emits the
+`Service` and the `Place` without either, which is exactly what `build.ts`
+does when `includeCatalogue` is false and `listServices` is off.
+
+### Coverage, as of 2026-10-09
+
+`derivedNode` in `src/lib/schema.ts` gives a page the node it earns by being
+the kind of page it is, read off the handover's own data by path. The four
+path sets — categories, packages, area-services, area hubs — are disjoint, so
+a page's node is decided by its path alone, and a hand-built page that passes
+its own `service` always wins.
+
+| | Carries it |
+| --- | --- |
+| `Service` on a category hub | **7 / 7** |
+| `Service` on a service-in-a-place page | **253 / 253** |
+| `Service` on a package page | 14 / 41 |
+| `Place` / `AdministrativeArea` on a location hub | **19 / 19** |
+| `Article` on a blog post | 21 / 21 (none with `about`, by design) |
+
+Every one of those 253 names is the page's **rendered** h1, checked page by
+page — not the h1 in `pages.json`, which is the mirror's and is corrected at
+render time by `lib/local-mirror.ts`. `/car-detailing/brent` is why that
+distinction matters: the mirror heads it "Mobile Car Valeting in Brent", the
+rendered page says "Mobile Car Detailing in Brent", and only the second is
+true. Check against the served HTML.
+
+The `@id`s reconcile across pages, which is the point of them:
+`/mobile-car-wash/barnet` serves `…/our-locations/barnet#area`, and
+`/our-locations/barnet` defines that same node. One entity, two pages.

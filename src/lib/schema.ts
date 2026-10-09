@@ -17,7 +17,10 @@
  * an `openingHours` string holding two ranges and so not parsing, and
  * `areaServed: ["GB"]` on the contact point.
  */
+import areaServices from "@schema/data/area-services.json";
+import areas from "@schema/data/areas.json";
 import business from "@schema/data/business.json";
+import categories from "@schema/data/categories.json";
 import { id } from "@schema/ids";
 
 import type { Page } from "@/lib/blocks";
@@ -159,6 +162,100 @@ function faqPage(slug: string, items: { q: string; a: string[] }[]): Json {
   };
 }
 
+/* The four path sets below are disjoint — checked against the handover's data,
+   no path is in two of them — so a page's node can be chosen by its path alone. */
+const CATEGORY = new Map(categories.map((c) => [c.path, c]));
+const AREA_SERVICE = new Map(areaServices.map((a) => [a.path, a]));
+const AREA = new Map(areas.map((a) => [a.slug, a]));
+
+/**
+ * An area as a `Place`, or an `AdministrativeArea` where it is one, with the
+ * area that contains it named.
+ *
+ * The six directional slugs — `north-london`, `central-london` and the rest —
+ * have no boundary in any gazetteer, so they get a name and nothing else. Do
+ * not reach for `GeoShape`.
+ */
+function areaNode(slug: string): Json | null {
+  const a = AREA.get(slug);
+  if (!a) return null;
+  const node: Json = { "@type": a.type, "@id": id.area(slug), name: a.name };
+  const parent = a.parent ? AREA.get(a.parent) : undefined;
+  if (parent) {
+    node.containedInPlace = {
+      "@type": parent.type,
+      "@id": id.area(parent.slug),
+      name: parent.name,
+    };
+  }
+  return node;
+}
+
+/**
+ * The node a page gets for being the kind of page it is, where the handover's
+ * data already says what that is and no gate stands in the way.
+ *
+ * A hand-built page that passes its own `service` wins; this only fills the
+ * pages nothing else speaks for.
+ *
+ * **Two things it deliberately does not emit**, both gated on page work rather
+ * than on anything here:
+ *
+ * - `hasOfferCatalog` on a category. `/mobile-car-wash` links 8 of its 9
+ *   packages, so the catalogue would name a page the body never mentions.
+ * - `ItemList` on a location hub. Not one of the 19 links a single service
+ *   page for its own area.
+ *
+ * Turn either on only once the links exist.
+ */
+function derivedNode(slug: string): Json | null {
+  const path = pathOf(slug);
+
+  const category = CATEGORY.get(path);
+  if (category) {
+    return {
+      "@type": "Service",
+      "@id": id.categoryService(category.slug),
+      name: category.name,
+      serviceType: category.serviceType,
+      url: id.webpage(path),
+      providerMobility: "dynamic",
+      provider: { "@id": id.business() },
+    };
+  }
+
+  const areaService = AREA_SERVICE.get(path);
+  if (areaService) {
+    const where = areaNode(areaService.area);
+    const parent = CATEGORY.get(`/${areaService.category}`);
+    if (!where || !parent) return null;
+    return {
+      "@type": "Service",
+      "@id": id.areaService(areaService.category, areaService.area),
+      /* the page's own H1, which is where this name was read from */
+      name: areaService.name,
+      serviceType: parent.serviceType,
+      url: id.webpage(path),
+      providerMobility: "dynamic",
+      /* the area in THIS page's URL, nothing wider */
+      areaServed: where,
+      /* isRelatedTo, never isPartOf: isPartOf is CreativeWork in domain and range */
+      isRelatedTo: {
+        "@type": "Service",
+        "@id": id.categoryService(parent.slug),
+        name: parent.name,
+        url: id.webpage(parent.path),
+      },
+      provider: { "@id": id.business() },
+    };
+  }
+
+  const hub = path.startsWith("/our-locations/") && path.slice("/our-locations/".length);
+  if (hub && !hub.includes("/")) return areaNode(hub);
+
+  return null;
+}
+
 export type ServiceInput = {
   slug: string;
   name: string;
@@ -217,7 +314,10 @@ function serviceNode(service: ServiceInput): Json {
     description: service.description,
     url,
     providerMobility: "dynamic",
-    provider: businessRef(),
+    /* A bare pointer, not a written-out copy: `pageSchema` puts the business
+       in every page's graph, so this resolves on the page it sits on. Writing
+       it out is only required ACROSS pages. */
+    provider: { "@id": id.business() },
     ...(service.image ? { image: abs(service.image) } : {}),
     ...(offers ? { offers } : {}),
   };
@@ -236,7 +336,15 @@ export function pageSchema(
 ): Json {
   const isHome = !page.slug;
   const pageId = id.webpage(pathOf(page.slug));
-  const service = extra.service ? serviceNode(extra.service) : null;
+  /* What this page is about, as a node. A hand-built page that passes its own
+     Service wins; otherwise the handover's data says what the page is, where
+     it says anything at all — a Service for a category or a service-in-a-place,
+     a Place for a location hub, nothing for the rest. */
+  const subject = extra.service
+    ? serviceNode(extra.service)
+    : isHome
+      ? null
+      : derivedNode(page.slug);
 
   const webPage: Json = {
     "@type": "WebPage",
@@ -244,12 +352,11 @@ export function pageSchema(
     url: pageId,
     name: page.title,
     isPartOf: { "@id": id.website() },
-    /* What the page is about: the business on the homepage, the service it
-       sells where it sells one. */
+    /* The business on the homepage, otherwise whatever the page is about. */
     ...(isHome
       ? { about: { "@id": id.business() } }
-      : service
-        ? { about: { "@id": service["@id"] } }
+      : subject
+        ? { about: { "@id": subject["@id"] } }
         : {}),
     description: page.description,
     /* The homepage is the root of every trail, so a list of its own would be
@@ -271,7 +378,7 @@ export function pageSchema(
       logo(),
       /* Defined in full on the homepage, written out thinner everywhere else. */
       isHome ? businessFull() : businessRef(),
-      ...(service ? [service] : []),
+      ...(subject ? [subject] : []),
       ...(extra.faq?.length ? [faqPage(page.slug, extra.faq)] : []),
     ],
   };
