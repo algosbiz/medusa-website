@@ -14,7 +14,7 @@ import Testimonials from "@/components/sections/Testimonials";
 import WhyChoose from "@/components/sections/WhyChoose";
 import { VehicleClassProvider } from "@/components/VehicleClass";
 import { getPage } from "@/lib/blocks";
-import { localBusinessSchema, pageSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 
 /* The provider spans the whole page so every price answers to one vehicle-class
    choice. Valeting, detailing and the wash tiers used to be three full-height
@@ -24,8 +24,9 @@ export default function Home() {
 
   return (
     <>
+      {/* The business is DEFINED here, in full, inside this page's one graph —
+          it used to be a second script block, where nothing could reference it. */}
       {page && <JsonLd data={pageSchema(page)} />}
-      <JsonLd data={localBusinessSchema} />
       <Header />
       <VehicleClassProvider>
         <main className="flex-1">

@@ -151,8 +151,7 @@ export default function AircraftCleaningPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
-      {faq && <JsonLd data={faqSchema(faq.items)} />}
+      <JsonLd data={pageSchema(page, { faq: faq?.items })} />
       <Header />
       <main className="flex-1">
         <Hero image={heroImageFor(page)} />
@@ -168,18 +167,6 @@ export default function AircraftCleaningPage() {
       <Footer />
     </>
   );
-}
-
-function faqSchema(items: { q: string; a: string[] }[]) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: items.map((item) => ({
-      "@type": "Question",
-      name: item.q,
-      acceptedAnswer: { "@type": "Answer", text: item.a.join(" ") },
-    })),
-  };
 }
 
 /* ── Header ───────────────────────────────────────────────────────────────

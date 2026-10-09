@@ -15,7 +15,7 @@ import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { getPage } from "@/lib/blocks";
 import { LINKS, PATH, PHOTOS, SLUG, TRACK, VALETS, WAX } from "@/lib/car-wax";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 
 /**
  * Car wax service — rebuilt from the client's brief.
@@ -82,22 +82,22 @@ export default function CarWaxServicePage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       {/* "STRUCTURED DATA — Service schema … Service name: Mobile Car Wax
           Service. Area served: London. Do not add unsupported ratings/reviews
           to structured data." */}
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: "Mobile Car Wax Service",
-          serviceType: "Car waxing",
-          description: WAX.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
-          offer: { price: "40", currency: "GBP", description: WAX.hero.card.note },
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: "Mobile Car Wax Service",
+            serviceType: "Car waxing",
+            description: WAX.seo.description,
+            image: PHOTOS.hero.src,
+            offer: { price: "40", currency: "GBP", description: WAX.hero.card.note },
+          },
+          faq: WAX.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(WAX.faq.items)} />
       <TrackClicks />
 
       <Header />

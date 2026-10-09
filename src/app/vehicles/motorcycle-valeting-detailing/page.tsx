@@ -13,7 +13,7 @@ import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { getPage } from "@/lib/blocks";
 import { MOTORCYCLE, type Package, PATH, PHOTOS, SLUG, tiersWith } from "@/lib/motorcycle";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 import { EVENTS } from "@/lib/track";
 
 /**
@@ -70,27 +70,27 @@ export default function MotorcyclePage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
-      <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: "Motorcycle Valeting & Detailing",
-          serviceType: "Mobile motorcycle valeting",
-          description: MOTORCYCLE.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
-          offers: PACKAGES.map((p) => ({
-            name: p.name,
-            price: p.price.replace(/[^\d.]/g, ""),
-            currency: "GBP",
-            description: p.body,
-          })),
-        })}
-      />
       {/* "Add FAQ schema only where compliant with current Google
           structured-data requirements": the questions are the page's own and
           every one of them is on the page, in the accordion. */}
-      <JsonLd data={faqPageSchema(MOTORCYCLE.faq.items)} />
+      <JsonLd
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: "Motorcycle Valeting & Detailing",
+            serviceType: "Mobile motorcycle valeting",
+            description: MOTORCYCLE.seo.description,
+            image: PHOTOS.hero.src,
+            offers: PACKAGES.map((p) => ({
+              name: p.name,
+              price: p.price.replace(/[^\d.]/g, ""),
+              currency: "GBP",
+              description: p.body,
+            })),
+          },
+          faq: MOTORCYCLE.faq.items,
+        })}
+      />
       <TrackClicks />
 
       <Header />

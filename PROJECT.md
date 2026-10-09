@@ -1997,3 +1997,109 @@ See `.env.example`. All optional in development.
 | `CLOUDFLARE_ZONE_ID` | `lib/cloudflare.ts` | The Cloudflare half of a flush is skipped, and says so. |
 | `CLOUDFLARE_API_TOKEN` | `lib/cloudflare.ts` | Same. Needs one permission: Zone · Cache Purge · Purge. |
 | `BASE` | `scripts/verify.mjs`, `scripts/purge.mjs` | `http://localhost:3000` for verify; the live origin for purge. |
+
+---
+
+## 13. Structured data
+
+`medusa-schema/` is the client's schema handover, delivered 2026-10-09 and
+measured against the live site on 8–9 October: 353 URLs, every one fetched. It
+is the authority for every `@id` and every node shape this site emits. Four
+files matter — `CLAUDE.md` (the rules), `DO-NOT-EMIT.md` (21 refusals),
+`ids.ts` (the only place an `@id` is constructed) and `validate.mjs`.
+`build.ts` and `data/` are reference: `src/lib/schema.ts` is what renders.
+
+### The one rule everything rests on
+
+A node is **DEFINED once**, on the page that page is about, and **REFERENCED**
+from every other page **written out in full**. A bare `{ "@id": … }` resolves
+only inside the same page's `@graph`; nothing fetches another page to follow a
+pointer. So `businessRef()` is not padding — `#business` is defined in full on
+`/` and written out thinner on the other 352. A thinner copy is fine; a
+**contradicting** copy splits the entity and is the actual defect.
+
+### What changed on 2026-10-09
+
+`src/lib/schema.ts` mirrored Yoast and carried five defects, all of which the
+handover names and all of which were present:
+
+| Was | Now |
+| --- | --- |
+| `#organization` and `#business` as two entities | `#organization` **retired**, collapsed into `#business`; every `publisher`, the 21 `Article.publisher` among them, points at `id.business()` |
+| the business in a **second `<script>` block** | inside the page `@graph`, where it can be referenced |
+| its `@id` the bare site root | `/#business` |
+| `openingHours`, one string holding two ranges, so not parsing | `openingHoursSpecification`, two entries |
+| `areaServed: ["GB"]` on the contact point | the eight counties on `#business` |
+
+And three properties stopped being emitted, each for a reason in
+`DO-NOT-EMIT.md`: **`brand`** (on a `Service` it claims an affiliation with
+WHEELUV™ or Autoglym that nobody has confirmed), **`areaServed` on service
+pages** (inherited through `provider` → `#business`; restating it 41 times is
+fan-out and nothing else) and the separate FAQ/Service script blocks — **one
+block, one `@graph`, per page**, so `pageSchema(page, { service, faq })` is
+now the single entry point and the 15 pages that carried three blocks carry one.
+
+`providerMobility` sits on `Service` and never on the business: its
+`domainIncludes` is `Service` alone, which is exactly why it ends up on the
+`LocalBusiness`.
+
+### Verifying it
+
+```bash
+node medusa-schema/validate.mjs <file.jsonld>
+```
+
+Fourteen checks, envelope first. It needs `medusa-schema/schemaorg.jsonld` for
+the property check and says so when it is missing; that file is gitignored and
+fetched on demand:
+
+```bash
+curl -sL https://schema.org/version/latest/schemaorg-current-https.jsonld -o medusa-schema/schemaorg.jsonld
+```
+
+Run it against **rendered** pages, not against a builder's return value. All
+353 pass, 14 checks each, and every page serves exactly one block.
+
+One fix went into the validator itself: `offers` is an array wherever a page
+sells the service at several levels — three motorcycle valets, four
+vomit-cleaning sizes, three ozone tiers — and an array has no `.price`, so the
+price check failed the three priced pages it existed to pass. The handover's
+own README records the same class of error ("one caught an error in the checker
+rather than the data").
+
+### What this repo changed in the handover's data, and why
+
+Three rows named URLs that moved on 2026-10-06, after the measurement. Each
+row keeps its measured URL under `movedFrom`; the names were already identical
+to this repo's own h1s, so only paths, slugs and categories changed.
+
+| Measured | Now |
+| --- | --- |
+| `/mobile-car-wash/alloy-wheel-cleaning` | `/car-detailing/alloy-wheel-protection` |
+| `/mobile-car-wash/premium-interior-wash` | `/car-interior-cleaning/premium-interior-wash` |
+| `/repairs/paint-overspray-removal` | `/repairs/car-interior-paint-spill-removal` |
+
+`linkedFromBody` on the four affected categories is `null` with a `TODO`: the
+measured figure counted a package list this repo has since changed, and
+`hasOfferCatalog` must not be turned on from a stale count.
+
+### Open, and the client's to answer
+
+- **The reservations telephone.** The handover read `+44-2033556435` off the
+  live site; `site.ts` has carried `+44-7434649960`. `businessFull()` keeps the
+  repo's value and overrides that one field. A telephone number is a fact about
+  the business, not a layout decision.
+- **FAQPage, on 15 pages.** `DO-NOT-EMIT.md` says it earns no rich result
+  outside government and health sites and is not to be rolled out further; the
+  live site carries two and this repo carries fifteen, all built from client
+  briefs that asked for it by name. Keeping them is harmless for entity
+  understanding, so they stay. **Do not add a sixteenth without asking.**
+- **`DO-NOT-EMIT.md` ships with its first three headings as literal
+  `undefined`** — a failed export from `Medusa-framework-vocabulary.xlsx`. The
+  21 real entries are intact; the file needs re-exporting.
+- The richer modelling the handover supplies and this pass did **not** turn on:
+  `hasOfferCatalog` on category pages, `ItemList` on the location hubs, and the
+  area `Place` graph. Both are gated on page work the handover names — no
+  location hub links its own area pages, and `/mobile-car-wash` links 8 of its
+  9 packages — and an `ItemList` naming pages the body never mentions is a page
+  problem dressed up as markup.

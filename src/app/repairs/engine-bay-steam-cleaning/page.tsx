@@ -15,7 +15,7 @@ import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { getPage } from "@/lib/blocks";
 import { ENGINE, LINKS, PATH, PHOTOS, SLUG, type Step, TRACK } from "@/lib/engine-bay";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 
 /**
  * Engine Bay Top Section Detail — rebuilt from the client's brief.
@@ -80,25 +80,25 @@ export default function EngineBayPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       {/* "STRUCTURED DATA — Add appropriate: Service schema, FAQPage schema.
           Do not use unsupported review/rating markup." */}
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: ENGINE.hero.card.title,
-          serviceType: "Engine bay cleaning",
-          description: ENGINE.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
-          offer: {
-            price: ENGINE.price.replace(/[^\d.]/g, ""),
-            currency: "GBP",
-            description: `${ENGINE.hero.card.title}: ${ENGINE.pricing.includes.join(", ")}.`,
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: ENGINE.hero.card.title,
+            serviceType: "Engine bay cleaning",
+            description: ENGINE.seo.description,
+            image: PHOTOS.hero.src,
+            offer: {
+              price: ENGINE.price.replace(/[^\d.]/g, ""),
+              currency: "GBP",
+              description: `${ENGINE.hero.card.title}: ${ENGINE.pricing.includes.join(", ")}.`,
+            },
           },
+          faq: ENGINE.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(ENGINE.faq.items)} />
       <TrackClicks />
 
       <Header />

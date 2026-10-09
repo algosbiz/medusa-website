@@ -13,7 +13,7 @@ import StickyBookBar from "@/components/StickyBookBar";
 import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { getPage } from "@/lib/blocks";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 import {
   type InfoItem,
   ODOUR_PATH,
@@ -94,20 +94,20 @@ export default function SteamCleaningPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       {/* "Add appropriate: Service schema · FAQPage schema". No offer: the
           brief quotes no price, because steam cleaning is not sold alone. */}
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: STEAM.hero.h1,
-          serviceType: "Car interior steam cleaning",
-          description: STEAM.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: STEAM.hero.h1,
+            serviceType: "Car interior steam cleaning",
+            description: STEAM.seo.description,
+            image: PHOTOS.hero.src,
+          },
+          faq: STEAM.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(STEAM.faq.items)} />
       <TrackClicks />
 
       <Header />

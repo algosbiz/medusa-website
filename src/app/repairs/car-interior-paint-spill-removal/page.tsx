@@ -14,7 +14,7 @@ import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { getPage } from "@/lib/blocks";
 import { FORM_ANCHOR, type Item, PAINT, PATH, PHOTOS, type Photo, QUOTE, SLUG, type Step, TRACK } from "@/lib/paint-spill";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 import { CONTACT } from "@/lib/site";
 
 /**
@@ -82,21 +82,21 @@ export default function PaintSpillRemovalPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       {/* "Service schema · FAQPage schema · Use London/service-area
           information accurately. Do not add unsupported ratings." — no
           offer, since nothing is priced, and no rating. */}
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: "Car Interior Paint Spill Removal",
-          serviceType: "Car interior paint spill removal",
-          description: PAINT.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: "Car Interior Paint Spill Removal",
+            serviceType: "Car interior paint spill removal",
+            description: PAINT.seo.description,
+            image: PHOTOS.hero.src,
+          },
+          faq: PAINT.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(PAINT.faq.items)} />
       <TrackClicks />
 
       <Header />

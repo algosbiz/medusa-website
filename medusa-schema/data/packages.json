@@ -1,0 +1,519 @@
+[
+  {
+    "slug": "ceramic-coating",
+    "path": "/car-detailing/ceramic-coating",
+    "category": "car-detailing",
+    "name": "Car Ceramic Coating",
+    "nameConfirmed": true,
+    "liveH1": "Car Ceramic Coating in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£25 to £600 (10 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "enhancement-detail",
+    "path": "/car-detailing/enhancement-detail",
+    "category": "car-detailing",
+    "name": "Enhancement",
+    "nameConfirmed": false,
+    "liveH1": "ENHANCEMENT",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£60 to £600 (9 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "machine-polish",
+    "path": "/car-detailing/machine-polish",
+    "category": "car-detailing",
+    "name": "Mobile Car Machine Polishing",
+    "nameConfirmed": true,
+    "liveH1": "Mobile Car Machine Polishing in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£399 to £549 (4 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "mini-detail",
+    "path": "/car-detailing/mini-detail",
+    "category": "car-detailing",
+    "name": "Mini Car Detail",
+    "nameConfirmed": true,
+    "liveH1": "Mini Car Detail in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£99 to £500 (5 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "new-car-protection",
+    "path": "/car-detailing/new-car-protection",
+    "category": "car-detailing",
+    "name": "New Car Protection",
+    "nameConfirmed": false,
+    "liveH1": "NEW CAR / PROTECTION",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£50 to £499 (11 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "paint-correction",
+    "path": "/car-detailing/paint-correction",
+    "category": "car-detailing",
+    "name": "Car Paint Correction",
+    "nameConfirmed": true,
+    "liveH1": "Car Paint Correction in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£60 to £750 (9 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "perfection-detail",
+    "path": "/car-detailing/perfection-detail",
+    "category": "car-detailing",
+    "name": "Perfection",
+    "nameConfirmed": false,
+    "liveH1": "PERFECTION",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£50 to £1600 (8 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "windscreen-protection",
+    "path": "/car-detailing/windscreen-protection",
+    "category": "car-detailing",
+    "name": "Windscreen Water Repellent Application",
+    "nameConfirmed": true,
+    "liveH1": "Windscreen Water Repellent Application London",
+    "offer": {
+      "type": "Offer",
+      "priceStatedOnPage": "£35",
+      "TODO": "read the figures off the page table"
+    }
+  },
+  {
+    "slug": "flooded-car-cleaning",
+    "path": "/car-interior-cleaning/flooded-car-cleaning",
+    "category": "car-interior-cleaning",
+    "name": "Car Flooding and Water Damage Detailing",
+    "nameConfirmed": true,
+    "liveH1": "Car Flooding and Water Damage Detailing in London",
+    "offer": null
+  },
+  {
+    "slug": "interior-valet",
+    "path": "/car-interior-cleaning/interior-valet",
+    "category": "car-interior-cleaning",
+    "name": "Triton – Premium Interior Valet",
+    "nameConfirmed": true,
+    "liveH1": "Triton – Premium Interior Valet in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£5 to £145 (11 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "leather-cleaning",
+    "path": "/car-interior-cleaning/leather-cleaning",
+    "category": "car-interior-cleaning",
+    "name": "Car Leather Seat Cleaning & Protection",
+    "nameConfirmed": true,
+    "liveH1": "Car Leather Seat Cleaning & Protection in London",
+    "offer": null
+  },
+  {
+    "slug": "mould-removal",
+    "path": "/car-interior-cleaning/mould-removal",
+    "category": "car-interior-cleaning",
+    "name": "Car Mould Sanitisation and Sterilisation",
+    "nameConfirmed": true,
+    "liveH1": "Car Mould Sanitisation and Sterilisation in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £230 (8 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "odour-removal",
+    "path": "/car-interior-cleaning/odour-removal",
+    "category": "car-interior-cleaning",
+    "name": "OZONE Odour Removal & Disinfection",
+    "nameConfirmed": true,
+    "liveH1": "OZONE Odour Removal & Disinfection",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£60 to £100 (3 figures)",
+      "TODO": "read the figures off the page table"
+    }
+  },
+  {
+    "slug": "pet-hair-removal",
+    "path": "/car-interior-cleaning/pet-hair-removal",
+    "category": "car-interior-cleaning",
+    "name": "Professional Pet Hair Removal",
+    "nameConfirmed": true,
+    "liveH1": "Professional Pet Hair Removal in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£90",
+      "TODO": "read the figures off the page table"
+    }
+  },
+  {
+    "slug": "steam-cleaning",
+    "path": "/car-interior-cleaning/steam-cleaning",
+    "category": "car-interior-cleaning",
+    "name": "Mobile Car Steam Cleaning",
+    "nameConfirmed": true,
+    "liveH1": "Mobile Car Steam Cleaning in London",
+    "offer": null
+  },
+  {
+    "slug": "vomit-cleaning",
+    "path": "/car-interior-cleaning/vomit-cleaning",
+    "category": "car-interior-cleaning",
+    "name": "Car Vomit Cleaning Service",
+    "nameConfirmed": true,
+    "liveH1": "Car Vomit Cleaning Service In London",
+    "offer": null
+  },
+  {
+    "slug": "convertible-roof-cleaning",
+    "path": "/car-valeting/convertible-roof-cleaning",
+    "category": "car-valeting",
+    "name": "Soft Top Cleaning and Reproofing",
+    "nameConfirmed": true,
+    "liveH1": "Soft Top Cleaning and Reproofing in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £300 (5 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "deep-clean-full-valet",
+    "path": "/car-valeting/deep-clean-full-valet",
+    "category": "car-valeting",
+    "name": "Car Deep Cleaning",
+    "nameConfirmed": true,
+    "liveH1": "Car Deep Cleaning in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£5 to £205 (12 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "mini-valet",
+    "path": "/car-valeting/mini-valet",
+    "category": "car-valeting",
+    "name": "Mobile Mini Valet",
+    "nameConfirmed": false,
+    "liveH1": "MOBILE MINI VALET IN LONDON",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£5 to £115 (13 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "pre-sale-valet",
+    "path": "/car-valeting/pre-sale-valet",
+    "category": "car-valeting",
+    "name": "The Ultimate Pre-Sale Valet",
+    "nameConfirmed": true,
+    "liveH1": "The Ultimate Pre-Sale Valet in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £295 (8 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "premium-full-valet",
+    "path": "/car-valeting/premium-full-valet",
+    "category": "car-valeting",
+    "name": "Zeus – Full Car Valet",
+    "nameConfirmed": true,
+    "liveH1": "Zeus – Full Car Valet in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£5 to £160 (13 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "summer-glow-valet",
+    "path": "/car-valeting/summer-glow-valet",
+    "category": "car-valeting",
+    "name": "Summer Car Care Glow Valet",
+    "nameConfirmed": false,
+    "liveH1": "SUMMER CAR CARE GLOW VALET",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £200 (7 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "winter-protection",
+    "path": "/car-valeting/winter-protection",
+    "category": "car-valeting",
+    "name": "Car Winter Protection",
+    "nameConfirmed": false,
+    "liveH1": "CAR WINTER PROTECTION",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £200 (7 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "aircraft-cleaning",
+    "path": "/commercial-valeting/aircraft-cleaning",
+    "category": "commercial-valeting",
+    "name": "Aircraft Cleaning",
+    "nameConfirmed": true,
+    "liveH1": "",
+    "offer": null
+  },
+  {
+    "slug": "car-van-stickers-removal",
+    "path": "/commercial-valeting/car-van-stickers-removal",
+    "category": "commercial-valeting",
+    "name": "Car & Van Sticker Removal",
+    "nameConfirmed": true,
+    "liveH1": "Car & Van Sticker Removal in London",
+    "offer": null
+  },
+  {
+    "slug": "mobile-truck-cleaning",
+    "path": "/commercial-valeting/mobile-truck-cleaning",
+    "category": "commercial-valeting",
+    "name": "Mobile HGV & Lorry Valeting",
+    "nameConfirmed": true,
+    "liveH1": "Mobile HGV & Lorry Valeting in London",
+    "offer": null
+  },
+  {
+    "slug": "alloy-wheel-protection",
+    "path": "/car-detailing/alloy-wheel-protection",
+    "category": "car-detailing",
+    "name": "Wheeluv™ Alloy Wheel Protection",
+    "nameConfirmed": true,
+    "liveH1": "Wheeluv™ Alloy Wheel Protection",
+    "offer": {
+      "type": "Offer",
+      "priceStatedOnPage": "£159",
+      "TODO": "read the figures off the page table"
+    },
+    "movedFrom": "/mobile-car-wash/alloy-wheel-cleaning"
+  },
+  {
+    "slug": "bronze-wash",
+    "path": "/mobile-car-wash/bronze-wash",
+    "category": "mobile-car-wash",
+    "name": "Bronze Wash",
+    "nameConfirmed": false,
+    "liveH1": "BRONZE WASH",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £75 (10 figures)",
+      "TODO": "read the figures off the page table"
+    }
+  },
+  {
+    "slug": "car-wax-service",
+    "path": "/mobile-car-wash/car-wax-service",
+    "category": "mobile-car-wash",
+    "name": "Autoglym HD Wax",
+    "nameConfirmed": true,
+    "liveH1": "Autoglym HD Wax",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£40",
+      "TODO": "read the figures off the page table"
+    }
+  },
+  {
+    "slug": "exterior-plus-wash",
+    "path": "/mobile-car-wash/exterior-plus-wash",
+    "category": "mobile-car-wash",
+    "name": "Exterior Plus Wash",
+    "nameConfirmed": false,
+    "liveH1": "EXTERIOR PLUS WASH",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £75 (11 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "exterior-wash",
+    "path": "/mobile-car-wash/exterior-wash",
+    "category": "mobile-car-wash",
+    "name": "Exterior Wash",
+    "nameConfirmed": false,
+    "liveH1": "EXTERIOR WASH",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £75 (9 figures)",
+      "TODO": "read the figures off the page table"
+    }
+  },
+  {
+    "slug": "gold-wash",
+    "path": "/mobile-car-wash/gold-wash",
+    "category": "mobile-car-wash",
+    "name": "Gold Wash",
+    "nameConfirmed": false,
+    "liveH1": "GOLD WASH",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £140 (12 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "platinum-wash",
+    "path": "/mobile-car-wash/platinum-wash",
+    "category": "mobile-car-wash",
+    "name": "Platinum Wash",
+    "nameConfirmed": false,
+    "liveH1": "PLATINUM WASH",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £225 (12 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "premium-interior-wash",
+    "path": "/car-interior-cleaning/premium-interior-wash",
+    "category": "car-interior-cleaning",
+    "name": "Premium Interior Wash",
+    "nameConfirmed": false,
+    "liveH1": "PREMIUM INTERIOR WASH",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £145 (12 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true,
+    "movedFrom": "/mobile-car-wash/premium-interior-wash"
+  },
+  {
+    "slug": "silver-wash",
+    "path": "/mobile-car-wash/silver-wash",
+    "category": "mobile-car-wash",
+    "name": "Silver Wash",
+    "nameConfirmed": false,
+    "liveH1": "SILVER WASH",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£15 to £75 (12 figures)",
+      "TODO": "read the figures off the page table"
+    },
+    "pricedByVehicleSize": true
+  },
+  {
+    "slug": "car-graffiti-removal",
+    "path": "/repairs/car-graffiti-removal",
+    "category": "repairs",
+    "name": "Car Graffiti Removal",
+    "nameConfirmed": true,
+    "liveH1": "Car Graffiti Removal in London",
+    "offer": null
+  },
+  {
+    "slug": "engine-bay-steam-cleaning",
+    "path": "/repairs/engine-bay-steam-cleaning",
+    "category": "repairs",
+    "name": "Engine bay steam cleaning",
+    "nameConfirmed": true,
+    "liveH1": "Engine bay steam cleaning",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£60 to £100 (3 figures)",
+      "TODO": "read the figures off the page table"
+    }
+  },
+  {
+    "slug": "headlight-restoration",
+    "path": "/repairs/headlight-restoration",
+    "category": "repairs",
+    "name": "Mobile Headlight Restoration",
+    "nameConfirmed": true,
+    "liveH1": "Mobile Headlight Restoration in London",
+    "offer": {
+      "type": "Offer",
+      "priceStatedOnPage": "£100",
+      "TODO": "read the figures off the page table"
+    }
+  },
+  {
+    "slug": "car-interior-paint-spill-removal",
+    "path": "/repairs/car-interior-paint-spill-removal",
+    "category": "repairs",
+    "name": "Remove Paint from Car Interior",
+    "nameConfirmed": true,
+    "liveH1": "Remove Paint from Car Interior in London",
+    "offer": null,
+    "movedFrom": "/repairs/paint-overspray-removal"
+  },
+  {
+    "slug": "caravan-cleaning",
+    "path": "/vehicles/caravan-cleaning",
+    "category": "vehicles",
+    "name": "Caravan & Motorhome Valeting",
+    "nameConfirmed": true,
+    "liveH1": "Caravan & Motorhome Valeting",
+    "offer": null
+  },
+  {
+    "slug": "motorcycle-valeting-detailing",
+    "path": "/vehicles/motorcycle-valeting-detailing",
+    "category": "vehicles",
+    "name": "Premium Motorcycle Valeting & Detailing Services",
+    "nameConfirmed": true,
+    "liveH1": "Premium Motorcycle Valeting & Detailing Services in London",
+    "offer": {
+      "type": "AggregateOffer",
+      "priceStatedOnPage": "£10 to £550 (14 figures)",
+      "TODO": "read the figures off the page table"
+    }
+  }
+]

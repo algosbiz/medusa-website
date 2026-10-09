@@ -1,86 +1,109 @@
 /**
- * JSON-LD graphs mirroring what Yoast emits on the live site: an Organization
- * and WebSite that every page points at by @id, a per-page WebPage +
- * BreadcrumbList, an Article for blog posts, and the AutoWash (LocalBusiness)
- * block that only the homepage carries.
+ * JSON-LD for every page, built to the rules in `medusa-schema/CLAUDE.md`.
+ *
+ * **One block, one `@graph`, per page.** A node is DEFINED once, on the page
+ * that page is about, and REFERENCED from every other page **written out in
+ * full** — a bare `{ "@id": … }` resolves only against the same page's graph,
+ * and nothing fetches another page to follow a pointer. That is why
+ * `businessRef()` exists and is not padding.
+ *
+ * Every `@id` comes from `medusa-schema/ids.ts`. Never build one by template
+ * here: the area ids are not uniform, so a template that looks right on one
+ * page is wrong on another.
+ *
+ * Replaced the Yoast-shaped graph on 2026-10-09. Five defects went with it:
+ * `#organization` (collapsed into `#business`), the business node sitting in a
+ * second script block where nothing could reference it, its bare-root `@id`,
+ * an `openingHours` string holding two ranges and so not parsing, and
+ * `areaServed: ["GB"]` on the contact point.
  */
+import business from "@schema/data/business.json";
+import { id } from "@schema/ids";
+
 import type { Page } from "@/lib/blocks";
 import { breadcrumbTrail } from "@/lib/breadcrumbs";
-import { BUSINESS, CONTACT, SITE } from "@/lib/site";
+import { BUSINESS, SITE } from "@/lib/site";
 
-const ORG_ID = `${SITE}/#organization`;
-const SITE_ID = `${SITE}/#website`;
-const LOGO_ID = `${SITE}/#/schema/logo/image/`;
+type Json = Record<string, unknown>;
 
 const abs = (path: string) => (path.startsWith("http") ? path : SITE + path);
 
-/** "" -> "https://…/", "car-valeting/mini-valet" -> "https://…/car-valeting/mini-valet" */
-const url = (slug: string) => `${SITE}/${slug}`;
+/** "" -> "/", "car-valeting/mini-valet" -> "/car-valeting/mini-valet" */
+const pathOf = (slug: string) => (slug ? `/${slug}` : "/");
 
-const organization = {
-  "@type": "Organization",
-  "@id": ORG_ID,
-  name: BUSINESS.name,
-  url: `${SITE}/`,
-  logo: {
-    "@type": "ImageObject",
-    inLanguage: "en-GB",
-    "@id": LOGO_ID,
-    url: abs(BUSINESS.logo),
-    contentUrl: abs(BUSINESS.logo),
-    caption: BUSINESS.name,
-  },
-  image: { "@id": LOGO_ID },
-  sameAs: [CONTACT.facebook, CONTACT.instagram],
-};
+/**
+ * A page's Service `@id`, routed through `ids.ts` by shape: one segment is a
+ * category hub, two is a package beneath it. Anything else has no category to
+ * name, so it falls back to the page's own URL.
+ */
+function serviceId(slug: string) {
+  const parts = slug.split("/").filter(Boolean);
+  if (parts.length === 1) return id.categoryService(parts[0]);
+  if (parts.length === 2) return id.packageService(parts[0], parts[1]);
+  return `${id.webpage(pathOf(slug))}#service`;
+}
 
-const website = {
+const logo = (): Json => ({
+  "@type": "ImageObject",
+  "@id": id.logo(),
+  inLanguage: "en-GB",
+  url: abs(BUSINESS.logo),
+  contentUrl: abs(BUSINESS.logo),
+  caption: BUSINESS.name,
+});
+
+const website = (): Json => ({
   "@type": "WebSite",
-  "@id": SITE_ID,
+  "@id": id.website(),
   url: `${SITE}/`,
   name: BUSINESS.name,
   description: BUSINESS.tagline,
-  publisher: { "@id": ORG_ID },
+  publisher: { "@id": id.business() },
   inLanguage: "en-GB",
-};
+});
 
-/** The AutoWash block, homepage only — same as the live site. */
-export const localBusinessSchema = {
-  "@context": "https://schema.org",
-  "@type": "AutoWash",
-  "@id": SITE,
-  name: BUSINESS.name,
-  url: SITE,
-  image: abs(BUSINESS.image),
-  logo: abs(BUSINESS.logo),
-  description: BUSINESS.description,
-  priceRange: BUSINESS.priceRange,
-  telephone: BUSINESS.telephone,
-  openingHours: BUSINESS.openingHours,
-  additionalType:
-    "http://www.productontology.org/doc/Auto_detailing http://www.productontology.org/doc/Car_wash",
-  geo: { "@type": "GeoCoordinates", ...BUSINESS.geo },
-  address: { "@type": "PostalAddress", ...BUSINESS.address },
-  sameAs: [CONTACT.instagram, CONTACT.facebook],
+/**
+ * The full business node, from `medusa-schema/data/business.json`. Homepage only.
+ *
+ * One field is this repo's rather than the mirror's: the reservations number.
+ * The measurement read `+44-2033556435` off the live site, which is the main
+ * switchboard again; `site.ts` has carried `+44-7434649960` since the contact
+ * page was built. A telephone number is a fact about the business, so the
+ * repo's own value stands until the client says which is right.
+ */
+export const businessFull = (): Json => ({
+  ...(business as Json),
   contactPoint: {
-    "@type": "ContactPoint",
+    ...((business as Json).contactPoint as Json),
     telephone: BUSINESS.reservationsPhone,
-    contactType: "reservations",
-    email: CONTACT.email,
-    areaServed: ["GB"],
-    availableLanguage: ["English"],
   },
-};
+});
+
+/**
+ * The business as a REFERENCE, for the other 382 pages. Thinner than the full
+ * node, never contradicting it. Written out, because a bare pointer to
+ * `#business` resolves to nothing off the homepage.
+ */
+export const businessRef = (): Json => ({
+  "@type": "AutoWash",
+  "@id": id.business(),
+  name: BUSINESS.name,
+  url: `${SITE}/`,
+  telephone: BUSINESS.telephone,
+  logo: { "@id": id.logo() },
+  image: { "@id": id.logo() },
+  sameAs: (business as Json).sameAs,
+});
 
 /**
  * Home > … > the page, from `lib/breadcrumbs.ts`. Every rung carries its
  * absolute URL, the page's own included — Google allows the last `item` to be
  * left off, but naming it costs nothing and cannot be misread.
  */
-function breadcrumbList(page: Page) {
+function breadcrumbList(page: Page): Json {
   return {
     "@type": "BreadcrumbList",
-    "@id": `${url(page.slug)}#breadcrumb`,
+    "@id": id.breadcrumb(pathOf(page.slug)),
     itemListElement: breadcrumbTrail(page).map((c, i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -91,22 +114,23 @@ function breadcrumbList(page: Page) {
 }
 
 /** Blog posts get an Article node on top of the WebPage, as on the source. */
-function article(page: Page) {
-  const id = url(page.slug);
+function article(page: Page): Json {
+  const pageId = id.webpage(pathOf(page.slug));
   const meta = page.article;
   const image = page.post?.hero ?? page.ogImage;
   return {
     "@type": "Article",
-    "@id": `${id}#article`,
-    isPartOf: { "@id": id },
+    "@id": id.article(pathOf(page.slug)),
+    isPartOf: { "@id": pageId },
     headline: meta?.headline || page.h1,
     description: page.description,
     ...(page.published ? { datePublished: page.published } : {}),
     ...(page.modified ?? page.published
       ? { dateModified: page.modified ?? page.published }
       : {}),
-    mainEntityOfPage: { "@id": id },
-    publisher: { "@id": ORG_ID },
+    mainEntityOfPage: { "@id": pageId },
+    /* #organization is retired; every publisher points at the business. */
+    publisher: { "@id": id.business() },
     ...(meta?.author ? { author: { "@type": "Person", name: meta.author } } : {}),
     ...(meta?.section?.length ? { articleSection: meta.section } : {}),
     ...(image ? { image: abs(image) } : {}),
@@ -115,13 +139,21 @@ function article(page: Page) {
 }
 
 /**
- * A FAQPage for a page's own questions. Answers are joined as plain text —
- * the ones that carry markup have it stripped, since `text` is not HTML.
+ * A page's own questions.
+ *
+ * `DO-NOT-EMIT.md` says FAQPage earns no rich result outside government and
+ * health sites and is not to be rolled out further. These thirteen pages were
+ * built with one before that guidance arrived; keeping them is harmless for
+ * entity understanding, so they stay, inside the page's one graph rather than
+ * in an island of their own. Do not add a fourteenth without asking.
+ *
+ * Answers are joined as plain text — the ones that carry markup have it
+ * stripped, since `text` is not HTML.
  */
-export function faqPageSchema(items: { q: string; a: string[] }[]) {
+function faqPage(slug: string, items: { q: string; a: string[] }[]): Json {
   return {
-    "@context": "https://schema.org",
     "@type": "FAQPage",
+    "@id": `${id.webpage(pathOf(slug))}#faq`,
     mainEntity: items.map((item) => ({
       "@type": "Question",
       name: item.q,
@@ -133,89 +165,106 @@ export function faqPageSchema(items: { q: string; a: string[] }[]) {
   };
 }
 
-/**
- * A Service node, for a page that sells one thing at one price.
- *
- * `/car-detailing/alloy-wheel-protection` is the first: its brief asks for
- * "Service schema … Service name: Alloy Wheel Protection. Brand/product can
- * reference: WHEELUV™. Area served: London. Only include genuine product/offer
- * information." So the offer is the page's own price and inclusions and
- * nothing else — no rating, no availability, no validity date that nobody
- * has stated.
- */
-export function serviceSchema(service: {
+export type ServiceInput = {
   slug: string;
   name: string;
   serviceType: string;
   description: string;
-  brand?: string;
-  areaServed: string;
   image?: string;
+  /** One price, where the page states one. */
   offer?: { price: string; currency: string; description: string };
-  /**
-   * One Offer per package, for a page that sells the same service at more
-   * than one level — `/vehicles/motorcycle-valeting-detailing`'s three valets.
-   * Each is the package's own name, starting price and description.
-   */
+  /** One Offer per package, where the page sells the service at several levels. */
   offers?: { name: string; price: string; currency: string; description: string }[];
-}) {
-  const id = url(service.slug);
+};
+
+/**
+ * A Service node for a page that sells one thing.
+ *
+ * Three properties a schema pass reaches for and this one does not emit:
+ *
+ * - **`brand`**, to name WHEELUV™ or Autoglym. On a Service it means "the
+ *   brand the service is associated with", so it would claim an affiliation
+ *   nobody has confirmed. The product name stays copy.
+ * - **`areaServed`**. It is inherited through `provider` -> `#business`,
+ *   which carries the eight counties. Restating it on 41 service pages passes
+ *   every consistency check and adds nothing but fan-out.
+ * - **`isPartOf`**, upward to the category. `isPartOf` is CreativeWork only,
+ *   in domain and range. The hierarchy runs downward via `hasOfferCatalog`.
+ *
+ * `providerMobility` goes HERE and never on the business: its `domainIncludes`
+ * is `Service` alone, which is exactly why it ends up on the LocalBusiness.
+ */
+function serviceNode(service: ServiceInput): Json {
+  const url = id.webpage(pathOf(service.slug));
+  const offers = service.offer
+    ? {
+        "@type": "Offer",
+        price: service.offer.price,
+        priceCurrency: service.offer.currency,
+        description: service.offer.description,
+        url,
+      }
+    : service.offers?.length
+      ? service.offers.map((o) => ({
+          "@type": "Offer",
+          name: o.name,
+          price: o.price,
+          priceCurrency: o.currency,
+          description: o.description,
+          url,
+        }))
+      : null;
+
   return {
-    "@context": "https://schema.org",
     "@type": "Service",
-    "@id": `${id}#service`,
+    "@id": serviceId(service.slug),
     name: service.name,
     serviceType: service.serviceType,
     description: service.description,
-    url: id,
-    provider: { "@type": "Organization", "@id": ORG_ID, name: BUSINESS.name, url: `${SITE}/` },
-    areaServed: { "@type": "City", name: service.areaServed },
-    ...(service.brand ? { brand: { "@type": "Brand", name: service.brand } } : {}),
+    url,
+    providerMobility: "dynamic",
+    provider: businessRef(),
     ...(service.image ? { image: abs(service.image) } : {}),
-    ...(service.offer
-      ? {
-          offers: {
-            "@type": "Offer",
-            price: service.offer.price,
-            priceCurrency: service.offer.currency,
-            description: service.offer.description,
-            url: id,
-          },
-        }
-      : {}),
-    ...(service.offers?.length
-      ? {
-          offers: service.offers.map((o) => ({
-            "@type": "Offer",
-            name: o.name,
-            price: o.price,
-            priceCurrency: o.currency,
-            description: o.description,
-            url: id,
-          })),
-        }
-      : {}),
+    ...(offers ? { offers } : {}),
   };
 }
 
-/** The @graph every page emits. */
-export function pageSchema(page: Page) {
-  const id = url(page.slug);
-  const webPage = {
+/**
+ * The one graph a page emits.
+ *
+ * `service` and `faq` are folded in here rather than rendered as their own
+ * `<script>` blocks: a node outside the page graph is an island nothing can
+ * reference, which is how the business node came to be unreachable.
+ */
+export function pageSchema(
+  page: Page,
+  extra: { service?: ServiceInput; faq?: { q: string; a: string[] }[] } = {},
+): Json {
+  const isHome = !page.slug;
+  const pageId = id.webpage(pathOf(page.slug));
+  const service = extra.service ? serviceNode(extra.service) : null;
+
+  const webPage: Json = {
     "@type": "WebPage",
-    "@id": id,
-    url: id,
+    "@id": pageId,
+    url: pageId,
     name: page.title,
-    isPartOf: { "@id": SITE_ID },
-    ...(page.slug ? {} : { about: { "@id": ORG_ID } }),
+    isPartOf: { "@id": id.website() },
+    /* What the page is about: the business on the homepage, the service it
+       sells where it sells one. */
+    ...(isHome
+      ? { about: { "@id": id.business() } }
+      : service
+        ? { about: { "@id": service["@id"] } }
+        : {}),
     description: page.description,
     /* The homepage is the root of every trail, so a list of its own would be
        one item long and say nothing. Yoast emits one; Google ignores it. */
-    ...(page.slug ? { breadcrumb: { "@id": `${id}#breadcrumb` } } : {}),
+    ...(isHome ? {} : { breadcrumb: { "@id": id.breadcrumb(pathOf(page.slug)) } }),
     ...(page.published ? { datePublished: page.published } : {}),
     ...(page.modified ? { dateModified: page.modified } : {}),
     inLanguage: "en-GB",
-    potentialAction: [{ "@type": "ReadAction", target: [id] }],
+    potentialAction: [{ "@type": "ReadAction", target: [pageId] }],
   };
 
   return {
@@ -223,9 +272,13 @@ export function pageSchema(page: Page) {
     "@graph": [
       webPage,
       ...(page.article ? [article(page)] : []),
-      ...(page.slug ? [breadcrumbList(page)] : []),
-      website,
-      organization,
+      ...(isHome ? [] : [breadcrumbList(page)]),
+      website(),
+      logo(),
+      /* Defined in full on the homepage, written out thinner everywhere else. */
+      isHome ? businessFull() : businessRef(),
+      ...(service ? [service] : []),
+      ...(extra.faq?.length ? [faqPage(page.slug, extra.faq)] : []),
     ],
   };
 }

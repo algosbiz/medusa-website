@@ -14,7 +14,7 @@ import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { getPage } from "@/lib/blocks";
 import { ODOUR, PATH, PHOTOS, SLUG, type Step, type Tier, VALETS } from "@/lib/odour-removal";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 import { EVENTS } from "@/lib/track";
 
 /**
@@ -76,24 +76,24 @@ export default function OdourRemovalPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: "Odour & Ozone Treatment",
-          serviceType: "Car odour and ozone treatment",
-          description: ODOUR.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
-          offers: ODOUR.tiers.items.map((t) => ({
-            name: `${t.name} — ${t.duration}`,
-            price: t.price.replace(/[^\d.]/g, ""),
-            currency: "GBP",
-            description: `${t.lead} ${ODOUR.tiers.mustAdd}`,
-          })),
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: "Odour & Ozone Treatment",
+            serviceType: "Car odour and ozone treatment",
+            description: ODOUR.seo.description,
+            image: PHOTOS.hero.src,
+            offers: ODOUR.tiers.items.map((t) => ({
+              name: `${t.name} — ${t.duration}`,
+              price: t.price.replace(/[^\d.]/g, ""),
+              currency: "GBP",
+              description: `${t.lead} ${ODOUR.tiers.mustAdd}`,
+            })),
+          },
+          faq: ODOUR.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(ODOUR.faq.items)} />
       <TrackClicks />
 
       <Header />

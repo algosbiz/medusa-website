@@ -1,0 +1,60 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://medusaautodetailing.co.uk/<path>",
+      "url": "https://medusaautodetailing.co.uk/<path>",
+      "name": "<page name>",
+      "isPartOf": {
+        "@id": "https://medusaautodetailing.co.uk/#website"
+      },
+      "breadcrumb": {
+        "@id": "https://medusaautodetailing.co.uk/<path>#breadcrumb"
+      },
+      "inLanguage": "en-GB",
+      "dateModified": "<as live>"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://medusaautodetailing.co.uk/<path>#breadcrumb",
+      "itemListElement": "<as live>"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://medusaautodetailing.co.uk/#website",
+      "url": "https://medusaautodetailing.co.uk/",
+      "name": "Medusa Auto Detailing",
+      "description": "Mobile Car Wash, Valeting, & Detailing in London",
+      "publisher": {
+        "@id": "https://medusaautodetailing.co.uk/#business"
+      },
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "ImageObject",
+      "inLanguage": "en-GB",
+      "@id": "https://medusaautodetailing.co.uk/#/schema/logo/image/",
+      "url": "https://medusaautodetailing.co.uk/assets/2021/12/4-e1639638656209.webp",
+      "contentUrl": "https://medusaautodetailing.co.uk/assets/2021/12/4-e1639638656209.webp",
+      "caption": "Medusa Auto Detailing"
+    },
+    {
+      "@type": "AutoWash",
+      "@id": "https://medusaautodetailing.co.uk/#business",
+      "name": "Medusa Auto Detailing",
+      "url": "https://medusaautodetailing.co.uk/",
+      "logo": {
+        "@id": "https://medusaautodetailing.co.uk/#/schema/logo/image/"
+      },
+      "image": {
+        "@id": "https://medusaautodetailing.co.uk/#/schema/logo/image/"
+      },
+      "telephone": "+442033556435",
+      "sameAs": [
+        "https://www.instagram.com/medusadetailing/",
+        "https://www.facebook.com/medusadetailing/"
+      ]
+    }
+  ]
+}

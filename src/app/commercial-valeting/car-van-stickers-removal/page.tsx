@@ -13,7 +13,7 @@ import StickyBookBar from "@/components/StickyBookBar";
 import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { getPage } from "@/lib/blocks";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 import { FORM_ANCHOR, PATH, PHOTOS, QUOTE, SIGNAGE, SLUG, type Step } from "@/lib/signage-removal";
 import { CONTACT } from "@/lib/site";
 
@@ -74,18 +74,18 @@ export default function SignageRemovalPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: "Vehicle Signage & Sticker Removal",
-          serviceType: "Vehicle signage removal",
-          description: SIGNAGE.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: "Vehicle Signage & Sticker Removal",
+            serviceType: "Vehicle signage removal",
+            description: SIGNAGE.seo.description,
+            image: PHOTOS.hero.src,
+          },
+          faq: SIGNAGE.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(SIGNAGE.faq.items)} />
       <TrackClicks />
 
       <Header />

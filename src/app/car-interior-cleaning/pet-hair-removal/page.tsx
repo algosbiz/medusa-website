@@ -14,7 +14,7 @@ import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { getPage } from "@/lib/blocks";
 import { PATH, PET_HAIR, PHOTOS, SLUG, type Step, TRITON_PATH } from "@/lib/pet-hair-removal";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 import { EVENTS } from "@/lib/track";
 
 /**
@@ -81,19 +81,19 @@ export default function PetHairRemovalPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: PET_HAIR.finalCta.card.title,
-          serviceType: "Car pet hair removal",
-          description: PET_HAIR.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
-          offer: { price: "20", currency: "GBP", description: PET_HAIR.hero.addOn.note },
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: PET_HAIR.finalCta.card.title,
+            serviceType: "Car pet hair removal",
+            description: PET_HAIR.seo.description,
+            image: PHOTOS.hero.src,
+            offer: { price: "20", currency: "GBP", description: PET_HAIR.hero.addOn.note },
+          },
+          faq: PET_HAIR.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(PET_HAIR.faq.items)} />
       <TrackClicks />
 
       <Header />

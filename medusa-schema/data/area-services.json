@@ -1,0 +1,1520 @@
+[
+  {
+    "path": "/mobile-car-wash/barnet",
+    "category": "mobile-car-wash",
+    "area": "barnet",
+    "name": "Mobile Car Wash in Barnet"
+  },
+  {
+    "path": "/car-valeting/barnet",
+    "category": "car-valeting",
+    "area": "barnet",
+    "name": "Mobile Car Valeting in Barnet"
+  },
+  {
+    "path": "/car-detailing/barnet",
+    "category": "car-detailing",
+    "area": "barnet",
+    "name": "Mobile Car Detailing in Barnet"
+  },
+  {
+    "path": "/mobile-car-wash/basildon",
+    "category": "mobile-car-wash",
+    "area": "basildon",
+    "name": "Mobile Car Wash in Basildon"
+  },
+  {
+    "path": "/car-valeting/basildon",
+    "category": "car-valeting",
+    "area": "basildon",
+    "name": "Car Valeting in Basildon"
+  },
+  {
+    "path": "/car-detailing/basildon",
+    "category": "car-detailing",
+    "area": "basildon",
+    "name": "Mobile Car Detailing in Basildon"
+  },
+  {
+    "path": "/mobile-car-wash/bedfordshire",
+    "category": "mobile-car-wash",
+    "area": "bedfordshire",
+    "name": "Mobile Car Wash in Bedfordshire"
+  },
+  {
+    "path": "/car-valeting/bedfordshire",
+    "category": "car-valeting",
+    "area": "bedfordshire",
+    "name": "Car Valeting in Bedfordshire"
+  },
+  {
+    "path": "/car-detailing/bedfordshire",
+    "category": "car-detailing",
+    "area": "bedfordshire",
+    "name": "Mobile Car Detailing in Bedfordshire"
+  },
+  {
+    "path": "/mobile-car-wash/belgravia",
+    "category": "mobile-car-wash",
+    "area": "belgravia",
+    "name": "Mobile Car Wash in Belgravia"
+  },
+  {
+    "path": "/car-valeting/belgravia",
+    "category": "car-valeting",
+    "area": "belgravia",
+    "name": "Mobile Car Valeting in Belgravia"
+  },
+  {
+    "path": "/mobile-car-wash/berkshire",
+    "category": "mobile-car-wash",
+    "area": "berkshire",
+    "name": "Mobile Car Wash in Berkshire"
+  },
+  {
+    "path": "/car-valeting/berkshire",
+    "category": "car-valeting",
+    "area": "berkshire",
+    "name": "Car Valeting in Berkshire"
+  },
+  {
+    "path": "/car-detailing/berkshire",
+    "category": "car-detailing",
+    "area": "berkshire",
+    "name": "Mobile Car Detailing in Berkshire"
+  },
+  {
+    "path": "/mobile-car-wash/borehamwood",
+    "category": "mobile-car-wash",
+    "area": "borehamwood",
+    "name": "Mobile Car Wash in Borehamwood"
+  },
+  {
+    "path": "/car-valeting/borehamwood",
+    "category": "car-valeting",
+    "area": "borehamwood",
+    "name": "Mobile Car Valeting in Borehamwood"
+  },
+  {
+    "path": "/car-detailing/borehamwood",
+    "category": "car-detailing",
+    "area": "borehamwood",
+    "name": "Mobile Car Detailing in Borehamwood"
+  },
+  {
+    "path": "/mobile-car-wash/brent",
+    "category": "mobile-car-wash",
+    "area": "brent",
+    "name": "Mobile Car Wash in Brent"
+  },
+  {
+    "path": "/car-valeting/brent",
+    "category": "car-valeting",
+    "area": "brent",
+    "name": "Mobile Car Valeting in Brent"
+  },
+  {
+    "path": "/car-detailing/brent",
+    "category": "car-detailing",
+    "area": "brent",
+    "name": "Mobile Car Detailing in Brent"
+  },
+  {
+    "path": "/mobile-car-wash/brentwood",
+    "category": "mobile-car-wash",
+    "area": "brentwood",
+    "name": "Mobile Car Wash in Brentwood"
+  },
+  {
+    "path": "/car-valeting/brentwood",
+    "category": "car-valeting",
+    "area": "brentwood",
+    "name": "Car Valeting in Brentwood"
+  },
+  {
+    "path": "/car-detailing/brentwood",
+    "category": "car-detailing",
+    "area": "brentwood",
+    "name": "Mobile Car Detailing in Brentwood"
+  },
+  {
+    "path": "/mobile-car-wash/bromley",
+    "category": "mobile-car-wash",
+    "area": "bromley",
+    "name": "Mobile Car Wash in Bromley"
+  },
+  {
+    "path": "/car-valeting/bromley",
+    "category": "car-valeting",
+    "area": "bromley",
+    "name": "Car Valeting in Bromley"
+  },
+  {
+    "path": "/car-detailing/bromley",
+    "category": "car-detailing",
+    "area": "bromley",
+    "name": "Mobile Car Detailing in Bromley"
+  },
+  {
+    "path": "/mobile-car-wash/central-london",
+    "category": "mobile-car-wash",
+    "area": "central-london",
+    "name": "Mobile Car Wash in Central London"
+  },
+  {
+    "path": "/car-valeting/central-london",
+    "category": "car-valeting",
+    "area": "central-london",
+    "name": "Mobile Car Valeting in Central London"
+  },
+  {
+    "path": "/car-detailing/central-london",
+    "category": "car-detailing",
+    "area": "central-london",
+    "name": "Mobile Car Detailing in Central London"
+  },
+  {
+    "path": "/mobile-car-wash/chelmsford",
+    "category": "mobile-car-wash",
+    "area": "chelmsford",
+    "name": "Mobile Car Wash in Chelmsford"
+  },
+  {
+    "path": "/car-valeting/chelmsford",
+    "category": "car-valeting",
+    "area": "chelmsford",
+    "name": "Car Valeting in Chelmsford"
+  },
+  {
+    "path": "/car-detailing/chelmsford",
+    "category": "car-detailing",
+    "area": "chelmsford",
+    "name": "Mobile Car Detailing in Chelmsford"
+  },
+  {
+    "path": "/mobile-car-wash/chelsea",
+    "category": "mobile-car-wash",
+    "area": "chelsea",
+    "name": "Mobile Car Wash in Chelsea"
+  },
+  {
+    "path": "/car-valeting/chelsea",
+    "category": "car-valeting",
+    "area": "chelsea",
+    "name": "Mobile Car Valeting in Chelsea"
+  },
+  {
+    "path": "/car-detailing/chelsea",
+    "category": "car-detailing",
+    "area": "chelsea",
+    "name": "Mobile Car Detailing in Chelsea"
+  },
+  {
+    "path": "/mobile-car-wash/cheshunt",
+    "category": "mobile-car-wash",
+    "area": "cheshunt",
+    "name": "Mobile Car Wash in Cheshunt"
+  },
+  {
+    "path": "/car-valeting/cheshunt",
+    "category": "car-valeting",
+    "area": "cheshunt",
+    "name": "Car Valeting in Cheshunt"
+  },
+  {
+    "path": "/car-detailing/cheshunt",
+    "category": "car-detailing",
+    "area": "cheshunt",
+    "name": "Mobile Car Detailing in Cheshunt"
+  },
+  {
+    "path": "/mobile-car-wash/chingford",
+    "category": "mobile-car-wash",
+    "area": "chingford",
+    "name": "Mobile Car Wash in Chingford"
+  },
+  {
+    "path": "/car-valeting/chingford",
+    "category": "car-valeting",
+    "area": "chingford",
+    "name": "Mobile Car Valeting in Chingford"
+  },
+  {
+    "path": "/car-detailing/chingford",
+    "category": "car-detailing",
+    "area": "chingford",
+    "name": "Mobile Car Detailing in Chingford"
+  },
+  {
+    "path": "/mobile-car-wash/chiswick",
+    "category": "mobile-car-wash",
+    "area": "chiswick",
+    "name": "Mobile Car Wash in Chiswick"
+  },
+  {
+    "path": "/car-valeting/chiswick",
+    "category": "car-valeting",
+    "area": "chiswick",
+    "name": "Mobile Car Valeting in Chiswick"
+  },
+  {
+    "path": "/car-detailing/chiswick",
+    "category": "car-detailing",
+    "area": "chiswick",
+    "name": "Mobile Car Detailing in Chiswick"
+  },
+  {
+    "path": "/mobile-car-wash/clapham",
+    "category": "mobile-car-wash",
+    "area": "clapham",
+    "name": "Mobile Car Wash in Clapham"
+  },
+  {
+    "path": "/car-valeting/clapham",
+    "category": "car-valeting",
+    "area": "clapham",
+    "name": "Car Valeting in Clapham"
+  },
+  {
+    "path": "/car-detailing/clapham",
+    "category": "car-detailing",
+    "area": "clapham",
+    "name": "Mobile Car Detailing in Clapham"
+  },
+  {
+    "path": "/mobile-car-wash/colindale",
+    "category": "mobile-car-wash",
+    "area": "colindale",
+    "name": "Mobile Car Wash in Colindale"
+  },
+  {
+    "path": "/car-valeting/colindale",
+    "category": "car-valeting",
+    "area": "colindale",
+    "name": "Mobile Car Valeting in Colindale"
+  },
+  {
+    "path": "/car-detailing/colindale",
+    "category": "car-detailing",
+    "area": "colindale",
+    "name": "Mobile Car Detailing in Colindale"
+  },
+  {
+    "path": "/mobile-car-wash/croydon",
+    "category": "mobile-car-wash",
+    "area": "croydon",
+    "name": "Mobile Car Wash in Croydon"
+  },
+  {
+    "path": "/car-valeting/croydon",
+    "category": "car-valeting",
+    "area": "croydon",
+    "name": "Mobile Car Valeting in Croydon"
+  },
+  {
+    "path": "/car-detailing/croydon",
+    "category": "car-detailing",
+    "area": "croydon",
+    "name": "Mobile Car Detailing in Croydon"
+  },
+  {
+    "path": "/mobile-car-wash/ealing",
+    "category": "mobile-car-wash",
+    "area": "ealing",
+    "name": "Mobile Car Wash in Ealing"
+  },
+  {
+    "path": "/car-valeting/ealing",
+    "category": "car-valeting",
+    "area": "ealing",
+    "name": "Mobile Car Valeting in Ealing"
+  },
+  {
+    "path": "/car-detailing/ealing",
+    "category": "car-detailing",
+    "area": "ealing",
+    "name": "Mobile Car Detailing in Ealing"
+  },
+  {
+    "path": "/mobile-car-wash/earls-court",
+    "category": "mobile-car-wash",
+    "area": "earls-court",
+    "name": "Mobile Car Wash in Earl’s Court"
+  },
+  {
+    "path": "/car-valeting/earls-court",
+    "category": "car-valeting",
+    "area": "earls-court",
+    "name": "Mobile Car Valeting in Earls Court"
+  },
+  {
+    "path": "/mobile-car-wash/east-london",
+    "category": "mobile-car-wash",
+    "area": "east-london",
+    "name": "Mobile Car Wash in East London"
+  },
+  {
+    "path": "/car-valeting/east-london",
+    "category": "car-valeting",
+    "area": "east-london",
+    "name": "Car Valeting in East London"
+  },
+  {
+    "path": "/car-detailing/east-london",
+    "category": "car-detailing",
+    "area": "east-london",
+    "name": "Mobile Car Detailing in East London"
+  },
+  {
+    "path": "/mobile-car-wash/eastcote",
+    "category": "mobile-car-wash",
+    "area": "eastcote",
+    "name": "Mobile Car Wash in Eastcote"
+  },
+  {
+    "path": "/car-valeting/eastcote",
+    "category": "car-valeting",
+    "area": "eastcote",
+    "name": "Mobile Car Valeting in Eastcote"
+  },
+  {
+    "path": "/mobile-car-wash/edgware",
+    "category": "mobile-car-wash",
+    "area": "edgware",
+    "name": "Mobile Car Wash in Edgware"
+  },
+  {
+    "path": "/car-valeting/edgware",
+    "category": "car-valeting",
+    "area": "edgware",
+    "name": "Mobile Car Valeting in Edgware"
+  },
+  {
+    "path": "/car-detailing/edgware",
+    "category": "car-detailing",
+    "area": "edgware",
+    "name": "Mobile Car Detailing in Edgware"
+  },
+  {
+    "path": "/mobile-car-wash/enfield",
+    "category": "mobile-car-wash",
+    "area": "enfield",
+    "name": "Mobile Car Wash in Enfield"
+  },
+  {
+    "path": "/car-valeting/enfield",
+    "category": "car-valeting",
+    "area": "enfield",
+    "name": "Mobile Car Valeting in Enfield"
+  },
+  {
+    "path": "/car-detailing/enfield",
+    "category": "car-detailing",
+    "area": "enfield",
+    "name": "Mobile Car Detailing in Enfield"
+  },
+  {
+    "path": "/mobile-car-wash/essex",
+    "category": "mobile-car-wash",
+    "area": "essex",
+    "name": "Mobile Car Wash in Essex"
+  },
+  {
+    "path": "/car-valeting/essex",
+    "category": "car-valeting",
+    "area": "essex",
+    "name": "Car Valeting in Essex"
+  },
+  {
+    "path": "/car-detailing/essex",
+    "category": "car-detailing",
+    "area": "essex",
+    "name": "Mobile Car Detailing in Essex"
+  },
+  {
+    "path": "/mobile-car-wash/finchley",
+    "category": "mobile-car-wash",
+    "area": "finchley",
+    "name": "Mobile Car Wash in Finchley"
+  },
+  {
+    "path": "/car-valeting/finchley",
+    "category": "car-valeting",
+    "area": "finchley",
+    "name": "Mobile Car Valeting in Finchley"
+  },
+  {
+    "path": "/car-detailing/finchley",
+    "category": "car-detailing",
+    "area": "finchley",
+    "name": "Mobile Car Detailing in Finchley"
+  },
+  {
+    "path": "/mobile-car-wash/friern-barnet",
+    "category": "mobile-car-wash",
+    "area": "friern-barnet",
+    "name": "Mobile Car Wash in Friern Barnet"
+  },
+  {
+    "path": "/car-valeting/friern-barnet",
+    "category": "car-valeting",
+    "area": "friern-barnet",
+    "name": "Mobile Car Valeting in Friern Barnet"
+  },
+  {
+    "path": "/mobile-car-wash/fulham",
+    "category": "mobile-car-wash",
+    "area": "fulham",
+    "name": "Mobile Car Wash in Fulham"
+  },
+  {
+    "path": "/car-valeting/fulham",
+    "category": "car-valeting",
+    "area": "fulham",
+    "name": "Mobile Car Valeting in Fulham"
+  },
+  {
+    "path": "/car-detailing/fulham",
+    "category": "car-detailing",
+    "area": "fulham",
+    "name": "Mobile Car Detailing in Fulham"
+  },
+  {
+    "path": "/mobile-car-wash/golders-green",
+    "category": "mobile-car-wash",
+    "area": "golders-green",
+    "name": "Mobile Car Wash in Golders Green"
+  },
+  {
+    "path": "/car-valeting/golders-green",
+    "category": "car-valeting",
+    "area": "golders-green",
+    "name": "Mobile Car Valeting in Golders Green"
+  },
+  {
+    "path": "/car-detailing/golders-green",
+    "category": "car-detailing",
+    "area": "golders-green",
+    "name": "Mobile Car Detailing in Golders Green"
+  },
+  {
+    "path": "/mobile-car-wash/gravesend",
+    "category": "mobile-car-wash",
+    "area": "gravesend",
+    "name": "Mobile Car Wash in Gravesend"
+  },
+  {
+    "path": "/car-valeting/gravesend",
+    "category": "car-valeting",
+    "area": "gravesend",
+    "name": "Car Valeting in Gravesend"
+  },
+  {
+    "path": "/car-detailing/gravesend",
+    "category": "car-detailing",
+    "area": "gravesend",
+    "name": "Mobile Car Detailing in Gravesend"
+  },
+  {
+    "path": "/mobile-car-wash/greater-london",
+    "category": "mobile-car-wash",
+    "area": "greater-london",
+    "name": "Mobile Car Wash in Greater London"
+  },
+  {
+    "path": "/car-valeting/greater-london",
+    "category": "car-valeting",
+    "area": "greater-london",
+    "name": "Mobile Car Valeting in Greater London"
+  },
+  {
+    "path": "/mobile-car-wash/guildford",
+    "category": "mobile-car-wash",
+    "area": "guildford",
+    "name": "Mobile Car Wash in Guildford"
+  },
+  {
+    "path": "/car-valeting/guildford",
+    "category": "car-valeting",
+    "area": "guildford",
+    "name": "Car Valeting in Guildford"
+  },
+  {
+    "path": "/car-detailing/guildford",
+    "category": "car-detailing",
+    "area": "guildford",
+    "name": "Mobile Car Detailing in Guildford"
+  },
+  {
+    "path": "/mobile-car-wash/hammersmith",
+    "category": "mobile-car-wash",
+    "area": "hammersmith",
+    "name": "Mobile Car Wash in Hammersmith"
+  },
+  {
+    "path": "/car-valeting/hammersmith",
+    "category": "car-valeting",
+    "area": "hammersmith",
+    "name": "Mobile Car Valeting in Hammersmith"
+  },
+  {
+    "path": "/car-detailing/hammersmith",
+    "category": "car-detailing",
+    "area": "hammersmith",
+    "name": "Mobile Car Detailing in Hammersmith"
+  },
+  {
+    "path": "/mobile-car-wash/harlow",
+    "category": "mobile-car-wash",
+    "area": "harlow",
+    "name": "Mobile Car Wash in Harlow"
+  },
+  {
+    "path": "/car-valeting/harlow",
+    "category": "car-valeting",
+    "area": "harlow",
+    "name": "Car Valeting in Harlow"
+  },
+  {
+    "path": "/car-detailing/harlow",
+    "category": "car-detailing",
+    "area": "harlow",
+    "name": "Mobile Car Detailing in Harlow"
+  },
+  {
+    "path": "/mobile-car-wash/harrow",
+    "category": "mobile-car-wash",
+    "area": "harrow",
+    "name": "Mobile Car Wash in Harrow"
+  },
+  {
+    "path": "/car-valeting/harrow",
+    "category": "car-valeting",
+    "area": "harrow",
+    "name": "Mobile Car Valeting in Harrow"
+  },
+  {
+    "path": "/car-detailing/harrow",
+    "category": "car-detailing",
+    "area": "harrow",
+    "name": "Mobile Car Detailing in Harrow"
+  },
+  {
+    "path": "/mobile-car-wash/hayes",
+    "category": "mobile-car-wash",
+    "area": "hayes",
+    "name": "Mobile Car Wash in Hayes"
+  },
+  {
+    "path": "/car-valeting/hayes",
+    "category": "car-valeting",
+    "area": "hayes",
+    "name": "Mobile Car Valeting in Hayes"
+  },
+  {
+    "path": "/car-detailing/hayes",
+    "category": "car-detailing",
+    "area": "hayes",
+    "name": "Mobile Car Detailing in Hayes"
+  },
+  {
+    "path": "/mobile-car-wash/hemel-hempstead",
+    "category": "mobile-car-wash",
+    "area": "hemel-hempstead",
+    "name": "Mobile Car Wash in Hemel Hempstead"
+  },
+  {
+    "path": "/car-valeting/hemel-hempstead",
+    "category": "car-valeting",
+    "area": "hemel-hempstead",
+    "name": "Car Valeting in Hemel Hempstead"
+  },
+  {
+    "path": "/car-detailing/hemel-hempstead",
+    "category": "car-detailing",
+    "area": "hemel-hempstead",
+    "name": "Mobile Car Detailing in Hemel Hempstead"
+  },
+  {
+    "path": "/mobile-car-wash/hendon",
+    "category": "mobile-car-wash",
+    "area": "hendon",
+    "name": "Mobile Car Wash in Hendon"
+  },
+  {
+    "path": "/car-valeting/hendon",
+    "category": "car-valeting",
+    "area": "hendon",
+    "name": "Mobile Car Valeting in Hendon"
+  },
+  {
+    "path": "/car-detailing/hendon",
+    "category": "car-detailing",
+    "area": "hendon",
+    "name": "Mobile Car Detailing in Hendon"
+  },
+  {
+    "path": "/mobile-car-wash/hertfordshire",
+    "category": "mobile-car-wash",
+    "area": "hertfordshire",
+    "name": "Mobile Car Wash in Hertfordshire"
+  },
+  {
+    "path": "/car-valeting/hertfordshire",
+    "category": "car-valeting",
+    "area": "hertfordshire",
+    "name": "Mobile Car Valeting in Hertfordshire"
+  },
+  {
+    "path": "/car-detailing/hertfordshire",
+    "category": "car-detailing",
+    "area": "hertfordshire",
+    "name": "Mobile Car Detailing in Hertfordshire"
+  },
+  {
+    "path": "/mobile-car-wash/high-wycombe",
+    "category": "mobile-car-wash",
+    "area": "high-wycombe",
+    "name": "Mobile Car Wash in High Wycombe"
+  },
+  {
+    "path": "/car-valeting/high-wycombe",
+    "category": "car-valeting",
+    "area": "high-wycombe",
+    "name": "Car Valeting in High Wycombe"
+  },
+  {
+    "path": "/car-detailing/high-wycombe",
+    "category": "car-detailing",
+    "area": "high-wycombe",
+    "name": "Mobile Car Detailing in High Wycombe"
+  },
+  {
+    "path": "/mobile-car-wash/hillingdon",
+    "category": "mobile-car-wash",
+    "area": "hillingdon",
+    "name": "Mobile Car Wash in Hillingdon"
+  },
+  {
+    "path": "/car-valeting/hillingdon",
+    "category": "car-valeting",
+    "area": "hillingdon",
+    "name": "Mobile Car Valeting in Hillingdon"
+  },
+  {
+    "path": "/mobile-car-wash/hornchurch",
+    "category": "mobile-car-wash",
+    "area": "hornchurch",
+    "name": "Mobile Car Wash in Hornchurch"
+  },
+  {
+    "path": "/car-valeting/hornchurch",
+    "category": "car-valeting",
+    "area": "hornchurch",
+    "name": "Car Valeting in Hornchurch"
+  },
+  {
+    "path": "/car-detailing/hornchurch",
+    "category": "car-detailing",
+    "area": "hornchurch",
+    "name": "Mobile Car Detailing in Hornchurch"
+  },
+  {
+    "path": "/mobile-car-wash/hounslow",
+    "category": "mobile-car-wash",
+    "area": "hounslow",
+    "name": "Mobile Car Wash in Hounslow"
+  },
+  {
+    "path": "/car-valeting/hounslow",
+    "category": "car-valeting",
+    "area": "hounslow",
+    "name": "Mobile Car Valeting in Hounslow"
+  },
+  {
+    "path": "/car-detailing/hounslow",
+    "category": "car-detailing",
+    "area": "hounslow",
+    "name": "Mobile Car Detailing in Hounslow"
+  },
+  {
+    "path": "/mobile-car-wash/ilford",
+    "category": "mobile-car-wash",
+    "area": "ilford",
+    "name": "Mobile Car Wash in Ilford"
+  },
+  {
+    "path": "/car-valeting/ilford",
+    "category": "car-valeting",
+    "area": "ilford",
+    "name": "Mobile Car Valeting in Ilford"
+  },
+  {
+    "path": "/car-detailing/ilford",
+    "category": "car-detailing",
+    "area": "ilford",
+    "name": "Mobile Car Detailing in Ilford"
+  },
+  {
+    "path": "/mobile-car-wash/islington",
+    "category": "mobile-car-wash",
+    "area": "islington",
+    "name": "Mobile Car Wash in Islington"
+  },
+  {
+    "path": "/car-valeting/islington",
+    "category": "car-valeting",
+    "area": "islington",
+    "name": "Mobile Car Valeting in Islington"
+  },
+  {
+    "path": "/car-detailing/islington",
+    "category": "car-detailing",
+    "area": "islington",
+    "name": "Mobile Car Detailing in Islington"
+  },
+  {
+    "path": "/mobile-car-wash/kensington",
+    "category": "mobile-car-wash",
+    "area": "kensington",
+    "name": "Mobile Car Wash in Kensington"
+  },
+  {
+    "path": "/car-valeting/kensington",
+    "category": "car-valeting",
+    "area": "kensington",
+    "name": "Mobile Car Valeting in Kensington"
+  },
+  {
+    "path": "/car-detailing/kensington",
+    "category": "car-detailing",
+    "area": "kensington",
+    "name": "Mobile Car Detailing in Kensington"
+  },
+  {
+    "path": "/mobile-car-wash/kent",
+    "category": "mobile-car-wash",
+    "area": "kent",
+    "name": "Mobile Car Wash in Kent"
+  },
+  {
+    "path": "/car-valeting/kent",
+    "category": "car-valeting",
+    "area": "kent",
+    "name": "Car Valeting in Kent"
+  },
+  {
+    "path": "/car-detailing/kent",
+    "category": "car-detailing",
+    "area": "kent",
+    "name": "Mobile Car Detailing in Kent"
+  },
+  {
+    "path": "/mobile-car-wash/kingston",
+    "category": "mobile-car-wash",
+    "area": "kingston",
+    "name": "Mobile Car Wash in Kingston"
+  },
+  {
+    "path": "/car-valeting/kingston",
+    "category": "car-valeting",
+    "area": "kingston",
+    "name": "Mobile Car Valeting in Kingston"
+  },
+  {
+    "path": "/car-detailing/kingston",
+    "category": "car-detailing",
+    "area": "kingston",
+    "name": "Mobile Car Detailing in Kingston"
+  },
+  {
+    "path": "/mobile-car-wash/knightsbridge",
+    "category": "mobile-car-wash",
+    "area": "knightsbridge",
+    "name": "Mobile Car Wash in Knightsbridge"
+  },
+  {
+    "path": "/car-valeting/knightsbridge",
+    "category": "car-valeting",
+    "area": "knightsbridge",
+    "name": "Mobile Car Valeting in Knightsbridge"
+  },
+  {
+    "path": "/car-detailing/knightsbridge",
+    "category": "car-detailing",
+    "area": "knightsbridge",
+    "name": "Mobile Car Detailing in Knightsbridge"
+  },
+  {
+    "path": "/mobile-car-wash/luton",
+    "category": "mobile-car-wash",
+    "area": "luton",
+    "name": "Mobile Car Wash in Luton"
+  },
+  {
+    "path": "/car-valeting/luton",
+    "category": "car-valeting",
+    "area": "luton",
+    "name": "Car Valeting in Luton"
+  },
+  {
+    "path": "/car-detailing/luton",
+    "category": "car-detailing",
+    "area": "luton",
+    "name": "Mobile Car Detailing in Luton"
+  },
+  {
+    "path": "/mobile-car-wash/mill-hill",
+    "category": "mobile-car-wash",
+    "area": "mill-hill",
+    "name": "Mobile Car Wash in Mill Hill"
+  },
+  {
+    "path": "/car-valeting/mill-hill",
+    "category": "car-valeting",
+    "area": "mill-hill",
+    "name": "Mobile Car Valeting in Mill Hill"
+  },
+  {
+    "path": "/car-detailing/mill-hill",
+    "category": "car-detailing",
+    "area": "mill-hill",
+    "name": "Mobile Car Detailing in Mill Hill"
+  },
+  {
+    "path": "/mobile-car-wash/milton-keynes",
+    "category": "mobile-car-wash",
+    "area": "milton-keynes",
+    "name": "Mobile Car Wash in Milton Keynes"
+  },
+  {
+    "path": "/car-valeting/milton-keynes",
+    "category": "car-valeting",
+    "area": "milton-keynes",
+    "name": "Car Valeting in Milton Keynes"
+  },
+  {
+    "path": "/car-detailing/milton-keynes",
+    "category": "car-detailing",
+    "area": "milton-keynes",
+    "name": "Mobile Car Detailing in Milton Keynes"
+  },
+  {
+    "path": "/mobile-car-wash/north-london",
+    "category": "mobile-car-wash",
+    "area": "north-london",
+    "name": "Mobile Car Wash in North London"
+  },
+  {
+    "path": "/car-valeting/north-london",
+    "category": "car-valeting",
+    "area": "north-london",
+    "name": "Mobile Car Valeting in North London"
+  },
+  {
+    "path": "/car-detailing/north-london",
+    "category": "car-detailing",
+    "area": "north-london",
+    "name": "Mobile Car Detailing in North London"
+  },
+  {
+    "path": "/mobile-car-wash/north-west-london",
+    "category": "mobile-car-wash",
+    "area": "north-west-london",
+    "name": "Mobile Car Wash in North West London"
+  },
+  {
+    "path": "/car-valeting/north-west-london",
+    "category": "car-valeting",
+    "area": "north-west-london",
+    "name": "Mobile Car Valeting in North West London"
+  },
+  {
+    "path": "/car-detailing/north-west-london",
+    "category": "car-detailing",
+    "area": "north-west-london",
+    "name": "Mobile Car Detailing in North West London"
+  },
+  {
+    "path": "/mobile-car-wash/northwood",
+    "category": "mobile-car-wash",
+    "area": "northwood",
+    "name": "Mobile Car Wash in Northwood"
+  },
+  {
+    "path": "/car-valeting/northwood",
+    "category": "car-valeting",
+    "area": "northwood",
+    "name": "Mobile Car Valeting in Northwood"
+  },
+  {
+    "path": "/car-detailing/northwood",
+    "category": "car-detailing",
+    "area": "northwood",
+    "name": "Mobile Car Detailing in Northwood"
+  },
+  {
+    "path": "/mobile-car-wash/notting-hill",
+    "category": "mobile-car-wash",
+    "area": "notting-hill",
+    "name": "Mobile Car Wash in Notting Hill"
+  },
+  {
+    "path": "/car-valeting/notting-hill",
+    "category": "car-valeting",
+    "area": "notting-hill",
+    "name": "Mobile Car Valeting in Notting Hill"
+  },
+  {
+    "path": "/car-detailing/notting-hill",
+    "category": "car-detailing",
+    "area": "notting-hill",
+    "name": "Mobile Car Detailing in Notting Hill"
+  },
+  {
+    "path": "/mobile-car-wash/park-royal",
+    "category": "mobile-car-wash",
+    "area": "park-royal",
+    "name": "Mobile Car Wash in Park Royal"
+  },
+  {
+    "path": "/car-valeting/park-royal",
+    "category": "car-valeting",
+    "area": "park-royal",
+    "name": "Mobile Car Valeting in Park Royal"
+  },
+  {
+    "path": "/car-detailing/park-royal",
+    "category": "car-detailing",
+    "area": "park-royal",
+    "name": "Mobile Car Detailing in Park Royal"
+  },
+  {
+    "path": "/mobile-car-wash/pinner",
+    "category": "mobile-car-wash",
+    "area": "pinner",
+    "name": "Mobile Car Wash Services in Pinner"
+  },
+  {
+    "path": "/car-valeting/pinner",
+    "category": "car-valeting",
+    "area": "pinner",
+    "name": "Mobile Car Valeting in Pinner"
+  },
+  {
+    "path": "/car-detailing/pinner",
+    "category": "car-detailing",
+    "area": "pinner",
+    "name": "Mobile Car Detailing in Pinner"
+  },
+  {
+    "path": "/mobile-car-wash/preston",
+    "category": "mobile-car-wash",
+    "area": "preston",
+    "name": "Mobile Car Wash in Preston"
+  },
+  {
+    "path": "/car-valeting/preston",
+    "category": "car-valeting",
+    "area": "preston",
+    "name": "Mobile Car Valeting in Preston"
+  },
+  {
+    "path": "/car-detailing/preston",
+    "category": "car-detailing",
+    "area": "preston",
+    "name": "Mobile Car Detailing in Preston"
+  },
+  {
+    "path": "/mobile-car-wash/putney",
+    "category": "mobile-car-wash",
+    "area": "putney",
+    "name": "Mobile Car Wash in Putney"
+  },
+  {
+    "path": "/car-valeting/putney",
+    "category": "car-valeting",
+    "area": "putney",
+    "name": "Mobile Car Valeting in Putney"
+  },
+  {
+    "path": "/car-detailing/putney",
+    "category": "car-detailing",
+    "area": "putney",
+    "name": "Mobile Car Detailing in Putney"
+  },
+  {
+    "path": "/mobile-car-wash/reading",
+    "category": "mobile-car-wash",
+    "area": "reading",
+    "name": "Mobile Car Wash in Reading"
+  },
+  {
+    "path": "/car-valeting/reading",
+    "category": "car-valeting",
+    "area": "reading",
+    "name": "Car Valeting in Reading"
+  },
+  {
+    "path": "/car-detailing/reading",
+    "category": "car-detailing",
+    "area": "reading",
+    "name": "Mobile Car Detailing in Reading"
+  },
+  {
+    "path": "/mobile-car-wash/richmond-upon-thames",
+    "category": "mobile-car-wash",
+    "area": "richmond-upon-thames",
+    "name": "Mobile Car Wash in Richmond upon Thames"
+  },
+  {
+    "path": "/car-valeting/richmond-upon-thames",
+    "category": "car-valeting",
+    "area": "richmond-upon-thames",
+    "name": "Mobile Car Valeting in Richmond upon Thames"
+  },
+  {
+    "path": "/car-detailing/richmond-upon-thames",
+    "category": "car-detailing",
+    "area": "richmond-upon-thames",
+    "name": "Mobile Car Detailing in Richmond upon Thames"
+  },
+  {
+    "path": "/mobile-car-wash/rickmansworth",
+    "category": "mobile-car-wash",
+    "area": "rickmansworth",
+    "name": "Mobile Car Wash in Rickmansworth"
+  },
+  {
+    "path": "/car-valeting/rickmansworth",
+    "category": "car-valeting",
+    "area": "rickmansworth",
+    "name": "Car Valeting in Rickmansworth"
+  },
+  {
+    "path": "/car-detailing/rickmansworth",
+    "category": "car-detailing",
+    "area": "rickmansworth",
+    "name": "Mobile Car Detailing in Rickmansworth"
+  },
+  {
+    "path": "/mobile-car-wash/romford",
+    "category": "mobile-car-wash",
+    "area": "romford",
+    "name": "Mobile Car Wash in Romford"
+  },
+  {
+    "path": "/car-valeting/romford",
+    "category": "car-valeting",
+    "area": "romford",
+    "name": "Car Valeting in Romford"
+  },
+  {
+    "path": "/car-detailing/romford",
+    "category": "car-detailing",
+    "area": "romford",
+    "name": "Mobile Car Detailing in Romford"
+  },
+  {
+    "path": "/mobile-car-wash/ruislip",
+    "category": "mobile-car-wash",
+    "area": "ruislip",
+    "name": "Mobile Car Wash in Ruislip"
+  },
+  {
+    "path": "/car-valeting/ruislip",
+    "category": "car-valeting",
+    "area": "ruislip",
+    "name": "Mobile Car Valeting in Ruislip"
+  },
+  {
+    "path": "/car-detailing/ruislip",
+    "category": "car-detailing",
+    "area": "ruislip",
+    "name": "Mobile Car Detailing in Ruislip"
+  },
+  {
+    "path": "/mobile-car-wash/sidcup",
+    "category": "mobile-car-wash",
+    "area": "sidcup",
+    "name": "Mobile Car Wash in Sidcup"
+  },
+  {
+    "path": "/car-valeting/sidcup",
+    "category": "car-valeting",
+    "area": "sidcup",
+    "name": "Car Valeting in Sidcup"
+  },
+  {
+    "path": "/car-detailing/sidcup",
+    "category": "car-detailing",
+    "area": "sidcup",
+    "name": "Mobile Car Detailing in Sidcup"
+  },
+  {
+    "path": "/mobile-car-wash/slough",
+    "category": "mobile-car-wash",
+    "area": "slough",
+    "name": "Mobile Car Wash in Slough"
+  },
+  {
+    "path": "/car-valeting/slough",
+    "category": "car-valeting",
+    "area": "slough",
+    "name": "Mobile Car Valeting in Slough"
+  },
+  {
+    "path": "/car-detailing/slough",
+    "category": "car-detailing",
+    "area": "slough",
+    "name": "Mobile Car Detailing in Slough"
+  },
+  {
+    "path": "/mobile-car-wash/south-london",
+    "category": "mobile-car-wash",
+    "area": "south-london",
+    "name": "Mobile Car Wash in South London"
+  },
+  {
+    "path": "/car-valeting/south-london",
+    "category": "car-valeting",
+    "area": "south-london",
+    "name": "Car Valeting in South London"
+  },
+  {
+    "path": "/car-detailing/south-london",
+    "category": "car-detailing",
+    "area": "south-london",
+    "name": "Mobile Car Detailing in South London"
+  },
+  {
+    "path": "/mobile-car-wash/st-albans",
+    "category": "mobile-car-wash",
+    "area": "st-albans",
+    "name": "Mobile Car Wash in St Albans"
+  },
+  {
+    "path": "/car-valeting/st-albans",
+    "category": "car-valeting",
+    "area": "st-albans",
+    "name": "Mobile Car Valeting in St Albans"
+  },
+  {
+    "path": "/car-detailing/st-albans",
+    "category": "car-detailing",
+    "area": "st-albans",
+    "name": "Mobile Car Detailing in St Albans"
+  },
+  {
+    "path": "/mobile-car-wash/stanmore",
+    "category": "mobile-car-wash",
+    "area": "stanmore",
+    "name": "Mobile Car Wash in Stanmore"
+  },
+  {
+    "path": "/car-valeting/stanmore",
+    "category": "car-valeting",
+    "area": "stanmore",
+    "name": "Mobile Car Valeting in Stanmore"
+  },
+  {
+    "path": "/car-detailing/stanmore",
+    "category": "car-detailing",
+    "area": "stanmore",
+    "name": "Mobile Car Detailing in Stanmore"
+  },
+  {
+    "path": "/mobile-car-wash/stratford",
+    "category": "mobile-car-wash",
+    "area": "stratford",
+    "name": "Mobile Car Wash in Stratford"
+  },
+  {
+    "path": "/car-valeting/stratford",
+    "category": "car-valeting",
+    "area": "stratford",
+    "name": "Mobile Car Valeting in Stratford"
+  },
+  {
+    "path": "/mobile-car-wash/streatham",
+    "category": "mobile-car-wash",
+    "area": "streatham",
+    "name": "Reliable Mobile Car Wash in Streatham"
+  },
+  {
+    "path": "/car-valeting/streatham",
+    "category": "car-valeting",
+    "area": "streatham",
+    "name": "Mobile Car Valeting in Streatham"
+  },
+  {
+    "path": "/car-detailing/streatham",
+    "category": "car-detailing",
+    "area": "streatham",
+    "name": "Mobile Car Detailing in Streatham"
+  },
+  {
+    "path": "/mobile-car-wash/sudbury",
+    "category": "mobile-car-wash",
+    "area": "sudbury",
+    "name": "Mobile Car Wash in Sudbury"
+  },
+  {
+    "path": "/car-valeting/sudbury",
+    "category": "car-valeting",
+    "area": "sudbury",
+    "name": "Mobile Car Valeting in Sudbury"
+  },
+  {
+    "path": "/car-detailing/sudbury",
+    "category": "car-detailing",
+    "area": "sudbury",
+    "name": "Mobile Car Detailing in Sudbury"
+  },
+  {
+    "path": "/mobile-car-wash/surrey",
+    "category": "mobile-car-wash",
+    "area": "surrey",
+    "name": "Mobile Car Wash in Surrey"
+  },
+  {
+    "path": "/car-valeting/surrey",
+    "category": "car-valeting",
+    "area": "surrey",
+    "name": "Car Valeting in Surrey"
+  },
+  {
+    "path": "/car-detailing/surrey",
+    "category": "car-detailing",
+    "area": "surrey",
+    "name": "Mobile Car Detailing in Surrey"
+  },
+  {
+    "path": "/mobile-car-wash/sutton",
+    "category": "mobile-car-wash",
+    "area": "sutton",
+    "name": "Mobile Car Wash in Sutton"
+  },
+  {
+    "path": "/car-valeting/sutton",
+    "category": "car-valeting",
+    "area": "sutton",
+    "name": "Car Valeting in Sutton"
+  },
+  {
+    "path": "/car-detailing/sutton",
+    "category": "car-detailing",
+    "area": "sutton",
+    "name": "Mobile Car Detailing in Sutton"
+  },
+  {
+    "path": "/mobile-car-wash/twickenham",
+    "category": "mobile-car-wash",
+    "area": "twickenham",
+    "name": "Mobile Car Wash in Twickenham"
+  },
+  {
+    "path": "/car-valeting/twickenham",
+    "category": "car-valeting",
+    "area": "twickenham",
+    "name": "Mobile Car Valeting in Twickenham"
+  },
+  {
+    "path": "/car-detailing/twickenham",
+    "category": "car-detailing",
+    "area": "twickenham",
+    "name": "Mobile Car Detailing in Twickenham"
+  },
+  {
+    "path": "/mobile-car-wash/uxbridge",
+    "category": "mobile-car-wash",
+    "area": "uxbridge",
+    "name": "Mobile Car Wash in Uxbridge"
+  },
+  {
+    "path": "/car-valeting/uxbridge",
+    "category": "car-valeting",
+    "area": "uxbridge",
+    "name": "Mobile Car Valeting in Uxbridge"
+  },
+  {
+    "path": "/car-detailing/uxbridge",
+    "category": "car-detailing",
+    "area": "uxbridge",
+    "name": "Mobile Car Detailing in Uxbridge"
+  },
+  {
+    "path": "/mobile-car-wash/walthamstow",
+    "category": "mobile-car-wash",
+    "area": "walthamstow",
+    "name": "Mobile Car Wash in Walthamstow"
+  },
+  {
+    "path": "/car-valeting/walthamstow",
+    "category": "car-valeting",
+    "area": "walthamstow",
+    "name": "Mobile Car Valeting in Walthamstow"
+  },
+  {
+    "path": "/car-detailing/walthamstow",
+    "category": "car-detailing",
+    "area": "walthamstow",
+    "name": "Mobile Car Detailing in Walthamstow"
+  },
+  {
+    "path": "/mobile-car-wash/wandsworth",
+    "category": "mobile-car-wash",
+    "area": "wandsworth",
+    "name": "Mobile Car Wash in Wandsworth"
+  },
+  {
+    "path": "/car-valeting/wandsworth",
+    "category": "car-valeting",
+    "area": "wandsworth",
+    "name": "Mobile Car Valeting in Wandsworth"
+  },
+  {
+    "path": "/car-detailing/wandsworth",
+    "category": "car-detailing",
+    "area": "wandsworth",
+    "name": "Mobile Car Detailing in Wandsworth"
+  },
+  {
+    "path": "/mobile-car-wash/watford",
+    "category": "mobile-car-wash",
+    "area": "watford",
+    "name": "Mobile Car Wash in Watford"
+  },
+  {
+    "path": "/car-valeting/watford",
+    "category": "car-valeting",
+    "area": "watford",
+    "name": "Mobile Car Valeting in Watford"
+  },
+  {
+    "path": "/car-detailing/watford",
+    "category": "car-detailing",
+    "area": "watford",
+    "name": "Mobile Car Detailing in Watford"
+  },
+  {
+    "path": "/mobile-car-wash/welwyn-garden-city",
+    "category": "mobile-car-wash",
+    "area": "welwyn-garden-city",
+    "name": "Mobile Car Wash in Welwyn Garden City"
+  },
+  {
+    "path": "/car-valeting/welwyn-garden-city",
+    "category": "car-valeting",
+    "area": "welwyn-garden-city",
+    "name": "Car Valeting in Welwyn Garden City"
+  },
+  {
+    "path": "/car-detailing/welwyn-garden-city",
+    "category": "car-detailing",
+    "area": "welwyn-garden-city",
+    "name": "Mobile Car Detailing in Welwyn Garden City"
+  },
+  {
+    "path": "/mobile-car-wash/wembley",
+    "category": "mobile-car-wash",
+    "area": "wembley",
+    "name": "Mobile Car Wash in Wembley"
+  },
+  {
+    "path": "/car-valeting/wembley",
+    "category": "car-valeting",
+    "area": "wembley",
+    "name": "Professional Mobile Car Valeting in Wembley"
+  },
+  {
+    "path": "/car-detailing/wembley",
+    "category": "car-detailing",
+    "area": "wembley",
+    "name": "Mobile Car Detailing in Wembley"
+  },
+  {
+    "path": "/mobile-car-wash/west-brompton",
+    "category": "mobile-car-wash",
+    "area": "west-brompton",
+    "name": "Mobile Car Wash in West Brompton"
+  },
+  {
+    "path": "/car-valeting/west-brompton",
+    "category": "car-valeting",
+    "area": "west-brompton",
+    "name": "Mobile Car Valeting in West Brompton"
+  },
+  {
+    "path": "/mobile-car-wash/west-london",
+    "category": "mobile-car-wash",
+    "area": "west-london",
+    "name": "Mobile Car Wash in West London"
+  },
+  {
+    "path": "/car-valeting/west-london",
+    "category": "car-valeting",
+    "area": "west-london",
+    "name": "Mobile Car Valeting in West London"
+  },
+  {
+    "path": "/car-detailing/west-london",
+    "category": "car-detailing",
+    "area": "west-london",
+    "name": "Mobile Car Detailing in West London"
+  },
+  {
+    "path": "/mobile-car-wash/westminster",
+    "category": "mobile-car-wash",
+    "area": "westminster",
+    "name": "Mobile Car Wash in Westminster"
+  },
+  {
+    "path": "/car-valeting/westminster",
+    "category": "car-valeting",
+    "area": "westminster",
+    "name": "Mobile Car Valeting in Westminster"
+  },
+  {
+    "path": "/car-detailing/westminster",
+    "category": "car-detailing",
+    "area": "westminster",
+    "name": "Mobile Car Detailing in Westminster"
+  },
+  {
+    "path": "/mobile-car-wash/wimbledon",
+    "category": "mobile-car-wash",
+    "area": "wimbledon",
+    "name": "Mobile Car Wash in Wimbledon"
+  },
+  {
+    "path": "/car-valeting/wimbledon",
+    "category": "car-valeting",
+    "area": "wimbledon",
+    "name": "Mobile Car Valeting in Wimbledon"
+  },
+  {
+    "path": "/car-detailing/wimbledon",
+    "category": "car-detailing",
+    "area": "wimbledon",
+    "name": "Mobile Car Detailing in Wimbledon"
+  },
+  {
+    "path": "/mobile-car-wash/windsor",
+    "category": "mobile-car-wash",
+    "area": "windsor",
+    "name": "Mobile Car Wash in Windsor"
+  },
+  {
+    "path": "/car-valeting/windsor",
+    "category": "car-valeting",
+    "area": "windsor",
+    "name": "Mobile Car Valeting in Windsor"
+  },
+  {
+    "path": "/car-detailing/windsor",
+    "category": "car-detailing",
+    "area": "windsor",
+    "name": "Mobile Car Detailing in Windsor"
+  }
+]

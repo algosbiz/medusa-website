@@ -12,7 +12,7 @@ import StickyBookBar from "@/components/StickyBookBar";
 import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { type Block, getPage, type Section } from "@/lib/blocks";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 import { EVENTS } from "@/lib/track";
 import { GUIDE, PATH, PHOTOS, SLUG, type Step, VOMIT } from "@/lib/vomit-cleaning";
 
@@ -76,24 +76,24 @@ export default function VomitCleaningPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: VOMIT.finalCta.listTitle,
-          serviceType: "Mobile car vomit cleaning",
-          description: VOMIT.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
-          offers: SIZES.map((s) => ({
-            name: `${VOMIT.finalCta.listTitle} — ${s.name}`,
-            price: s.price.replace(/[^\d.]/g, ""),
-            currency: "GBP",
-            description: `${VOMIT.pricing.examplesLabel} ${s.examples}`,
-          })),
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: VOMIT.finalCta.listTitle,
+            serviceType: "Mobile car vomit cleaning",
+            description: VOMIT.seo.description,
+            image: PHOTOS.hero.src,
+            offers: SIZES.map((s) => ({
+              name: `${VOMIT.finalCta.listTitle} — ${s.name}`,
+              price: s.price.replace(/[^\d.]/g, ""),
+              currency: "GBP",
+              description: `${VOMIT.pricing.examplesLabel} ${s.examples}`,
+            })),
+          },
+          faq: VOMIT.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(VOMIT.faq.items)} />
       <TrackClicks />
 
       <Header />

@@ -1,0 +1,155 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://medusaautodetailing.co.uk/",
+      "url": "https://medusaautodetailing.co.uk/",
+      "name": "Mobile Car Wash, Mobile Valeting & Detailing London – Medusa Auto Detailing",
+      "isPartOf": {
+        "@id": "https://medusaautodetailing.co.uk/#website"
+      },
+      "about": {
+        "@id": "https://medusaautodetailing.co.uk/#business"
+      },
+      "description": "Medusa Auto Detailing are London's Premium Mobile Car Detailing & Valeting service. We come to you, whether you're at home or work. Book Now!",
+      "datePublished": "2024-02-26",
+      "dateModified": "2025-09-25",
+      "inLanguage": "en-GB",
+      "potentialAction": [
+        {
+          "@type": "ReadAction",
+          "target": [
+            "https://medusaautodetailing.co.uk/"
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://medusaautodetailing.co.uk/#website",
+      "url": "https://medusaautodetailing.co.uk/",
+      "name": "Medusa Auto Detailing",
+      "description": "Mobile Car Wash, Valeting, & Detailing in London",
+      "publisher": {
+        "@id": "https://medusaautodetailing.co.uk/#business"
+      },
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "ImageObject",
+      "inLanguage": "en-GB",
+      "@id": "https://medusaautodetailing.co.uk/#/schema/logo/image/",
+      "url": "https://medusaautodetailing.co.uk/assets/2021/12/4-e1639638656209.webp",
+      "contentUrl": "https://medusaautodetailing.co.uk/assets/2021/12/4-e1639638656209.webp",
+      "caption": "Medusa Auto Detailing"
+    },
+    {
+      "@type": "AutoWash",
+      "@id": "https://medusaautodetailing.co.uk/#business",
+      "name": "Medusa Auto Detailing",
+      "url": "https://medusaautodetailing.co.uk/",
+      "description": "Looking for a high-quality mobile car wash, valeting, or detailing service in London or Hertfordshire? Medusa Auto Detailing brings top-rated, 5-star car care right to your location! Offering a range of flexible packages to suit every need, Medusa ensures that your vehicle receives professional attention—anywhere you are.",
+      "priceRange": "££",
+      "telephone": "+442033556435",
+      "additionalType": "http://www.productontology.org/doc/Auto_detailing http://www.productontology.org/doc/Car_wash",
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "51.592690",
+        "longitude": "-0.315270"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Alveston Ave",
+        "addressLocality": "Harrow",
+        "addressRegion": "London",
+        "postalCode": "HA3 8TG",
+        "addressCountry": "GB"
+      },
+      "sameAs": [
+        "https://www.instagram.com/medusadetailing/",
+        "https://www.facebook.com/medusadetailing/"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+44-2033556435",
+        "contactType": "reservations",
+        "email": "info@medusaautodetailing.co.uk",
+        "availableLanguage": [
+          "English"
+        ]
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "https://schema.org/Monday",
+            "https://schema.org/Tuesday",
+            "https://schema.org/Wednesday",
+            "https://schema.org/Thursday",
+            "https://schema.org/Friday"
+          ],
+          "opens": "07:00",
+          "closes": "18:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "https://schema.org/Saturday",
+            "https://schema.org/Sunday"
+          ],
+          "opens": "09:00",
+          "closes": "17:00"
+        }
+      ],
+      "areaServed": [
+        {
+          "@type": "AdministrativeArea",
+          "@id": "https://medusaautodetailing.co.uk/our-locations/greater-london#area",
+          "name": "Greater London"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "@id": "https://medusaautodetailing.co.uk/our-locations/hertfordshire#area",
+          "name": "Hertfordshire"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "@id": "https://medusaautodetailing.co.uk/our-locations/essex#area",
+          "name": "Essex"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "@id": "https://medusaautodetailing.co.uk/our-locations/kent#area",
+          "name": "Kent"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "@id": "https://medusaautodetailing.co.uk/our-locations/surrey#area",
+          "name": "Surrey"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "@id": "https://medusaautodetailing.co.uk/our-locations/berkshire#area",
+          "name": "Berkshire"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "@id": "https://medusaautodetailing.co.uk/our-locations/bedfordshire#area",
+          "name": "Bedfordshire"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "@id": "https://medusaautodetailing.co.uk/our-locations/buckinghamshire#area",
+          "name": "Buckinghamshire"
+        }
+      ],
+      "logo": {
+        "@id": "https://medusaautodetailing.co.uk/#/schema/logo/image/"
+      },
+      "image": {
+        "@id": "https://medusaautodetailing.co.uk/#/schema/logo/image/"
+      }
+    }
+  ]
+}

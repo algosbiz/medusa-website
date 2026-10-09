@@ -15,7 +15,7 @@ import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { getPage } from "@/lib/blocks";
 import { CARAVAN, FORM_ANCHOR, LINKS, PATH, PHOTOS, type Photo, QUOTE, SLUG, TRACK } from "@/lib/caravan-cleaning";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 import { CONTACT } from "@/lib/site";
 
 /**
@@ -91,21 +91,21 @@ export default function CaravanCleaningPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       {/* "Add appropriate: Service schema, FAQPage schema. Do not add fake
           review ratings or unsupported aggregate ratings." No offer either:
           nothing on the page is priced. */}
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: "Caravan & Motorhome Valeting",
-          serviceType: "Mobile caravan and motorhome valeting",
-          description: CARAVAN.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: "Caravan & Motorhome Valeting",
+            serviceType: "Mobile caravan and motorhome valeting",
+            description: CARAVAN.seo.description,
+            image: PHOTOS.hero.src,
+          },
+          faq: CARAVAN.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(CARAVAN.faq.items)} />
       <TrackClicks />
 
       <Header />

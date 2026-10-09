@@ -53,3 +53,5 @@ next-env.d.ts
 # No excel data
 *.xlsx
 ~$*.xlsx
+# the schema.org vocabulary, fetched on demand for medusa-schema/validate.mjs
+medusa-schema/schemaorg.jsonld

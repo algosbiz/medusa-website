@@ -1,0 +1,1107 @@
+[
+  {
+    "slug": "barnet",
+    "name": "Barnet",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": true,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "basildon",
+    "name": "Basildon",
+    "type": "Place",
+    "parent": "essex",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "bedfordshire",
+    "name": "Bedfordshire",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "belgravia",
+    "name": "Belgravia",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "berkshire",
+    "name": "Berkshire",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "borehamwood",
+    "name": "Borehamwood",
+    "type": "Place",
+    "parent": "hertfordshire",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "brent",
+    "name": "Brent",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": true,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "brentwood",
+    "name": "Brentwood",
+    "type": "Place",
+    "parent": "essex",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "bromley",
+    "name": "Bromley",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "central-london",
+    "name": "Central London",
+    "type": "Place",
+    "noGeometry": true,
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "chelmsford",
+    "name": "Chelmsford",
+    "type": "Place",
+    "parent": "essex",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "chelsea",
+    "name": "Chelsea",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "cheshunt",
+    "name": "Cheshunt",
+    "type": "Place",
+    "parent": "hertfordshire",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "chingford",
+    "name": "Chingford",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "chiswick",
+    "name": "Chiswick",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "clapham",
+    "name": "Clapham",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "colindale",
+    "name": "Colindale",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "croydon",
+    "name": "Croydon",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "ealing",
+    "name": "Ealing",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": true,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "earls-court",
+    "name": "Earls Court",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "east-london",
+    "name": "East London",
+    "type": "Place",
+    "noGeometry": true,
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "eastcote",
+    "name": "Eastcote",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "edgware",
+    "name": "Edgware",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "enfield",
+    "name": "Enfield",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": true,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "essex",
+    "name": "Essex",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "finchley",
+    "name": "Finchley",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "friern-barnet",
+    "name": "Friern Barnet",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "fulham",
+    "name": "Fulham",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "golders-green",
+    "name": "Golders Green",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "gravesend",
+    "name": "Gravesend",
+    "type": "Place",
+    "parent": "kent",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "greater-london",
+    "name": "Greater London",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": false,
+    "services": [
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "guildford",
+    "name": "Guildford",
+    "type": "Place",
+    "parent": "surrey",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "hammersmith",
+    "name": "Hammersmith",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "harlow",
+    "name": "Harlow",
+    "type": "Place",
+    "parent": "essex",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "harrow",
+    "name": "Harrow",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": true,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "hayes",
+    "name": "Hayes",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "hemel-hempstead",
+    "name": "Hemel Hempstead",
+    "type": "Place",
+    "parent": "hertfordshire",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "hendon",
+    "name": "Hendon",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "hertfordshire",
+    "name": "Hertfordshire",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": true,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "high-wycombe",
+    "name": "High Wycombe",
+    "type": "Place",
+    "parent": "buckinghamshire",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "hillingdon",
+    "name": "Hillingdon",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": true,
+    "services": [
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "hornchurch",
+    "name": "Hornchurch",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "hounslow",
+    "name": "Hounslow",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": true,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "ilford",
+    "name": "Ilford",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "islington",
+    "name": "Islington",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": true,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "kensington",
+    "name": "Kensington",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "kent",
+    "name": "Kent",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "kingston",
+    "name": "Kingston",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "knightsbridge",
+    "name": "Knightsbridge",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "luton",
+    "name": "Luton",
+    "type": "Place",
+    "parent": "bedfordshire",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "mill-hill",
+    "name": "Mill Hill",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "milton-keynes",
+    "name": "Milton Keynes",
+    "type": "Place",
+    "parent": "buckinghamshire",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "north-london",
+    "name": "North London",
+    "type": "Place",
+    "noGeometry": true,
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "north-west-london",
+    "name": "North West London",
+    "type": "Place",
+    "noGeometry": true,
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "northwood",
+    "name": "Northwood",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "notting-hill",
+    "name": "Notting Hill",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "park-royal",
+    "name": "Park Royal",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "pinner",
+    "name": "Pinner",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "preston",
+    "name": "Preston",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "putney",
+    "name": "Putney",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "reading",
+    "name": "Reading",
+    "type": "Place",
+    "parent": "berkshire",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "richmond-upon-thames",
+    "name": "Richmond upon Thames",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": true,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "rickmansworth",
+    "name": "Rickmansworth",
+    "type": "Place",
+    "parent": "hertfordshire",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "romford",
+    "name": "Romford",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "ruislip",
+    "name": "Ruislip",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "sidcup",
+    "name": "Sidcup",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "slough",
+    "name": "Slough",
+    "type": "Place",
+    "parent": "berkshire",
+    "hasOwnPage": true,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "south-london",
+    "name": "South London",
+    "type": "Place",
+    "noGeometry": true,
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "st-albans",
+    "name": "St Albans",
+    "type": "Place",
+    "parent": "hertfordshire",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "stanmore",
+    "name": "Stanmore",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "stratford",
+    "name": "Stratford",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "streatham",
+    "name": "Streatham",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "sudbury",
+    "name": "Sudbury",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "surrey",
+    "name": "Surrey",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "sutton",
+    "name": "Sutton",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "twickenham",
+    "name": "Twickenham",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "uxbridge",
+    "name": "Uxbridge",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "walthamstow",
+    "name": "Walthamstow",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "wandsworth",
+    "name": "Wandsworth",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "watford",
+    "name": "Watford",
+    "type": "Place",
+    "parent": "hertfordshire",
+    "hasOwnPage": true,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "welwyn-garden-city",
+    "name": "Welwyn Garden City",
+    "type": "Place",
+    "parent": "hertfordshire",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "wembley",
+    "name": "Wembley",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "west-brompton",
+    "name": "West Brompton",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "west-london",
+    "name": "West London",
+    "type": "Place",
+    "noGeometry": true,
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "westminster",
+    "name": "Westminster",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "wimbledon",
+    "name": "Wimbledon",
+    "type": "Place",
+    "parent": "greater-london",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "windsor",
+    "name": "Windsor",
+    "type": "Place",
+    "parent": "berkshire",
+    "hasOwnPage": false,
+    "services": [
+      "car-detailing",
+      "car-valeting",
+      "mobile-car-wash"
+    ]
+  },
+  {
+    "slug": "buckinghamshire",
+    "name": "Buckinghamshire",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": true,
+    "services": [],
+    "parentOnly": true
+  },
+  {
+    "slug": "camden",
+    "name": "Camden",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": true,
+    "services": [],
+    "parentOnly": true
+  },
+  {
+    "slug": "city-of-london",
+    "name": "City of London",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": true,
+    "services": [],
+    "parentOnly": true
+  },
+  {
+    "slug": "city-of-westminster",
+    "name": "City of Westminster",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": true,
+    "services": [],
+    "parentOnly": true
+  },
+  {
+    "slug": "hammersmith-and-fulham",
+    "name": "Hammersmith and Fulham",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": true,
+    "services": [],
+    "parentOnly": true
+  },
+  {
+    "slug": "haringey",
+    "name": "Haringey",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": true,
+    "services": [],
+    "parentOnly": true
+  },
+  {
+    "slug": "kensington-and-chelsea",
+    "name": "Kensington and Chelsea",
+    "type": "AdministrativeArea",
+    "parent": null,
+    "hasOwnPage": true,
+    "services": [],
+    "parentOnly": true
+  }
+]

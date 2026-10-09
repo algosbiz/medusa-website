@@ -16,7 +16,7 @@ import Testimonials from "@/components/sections/Testimonials";
 import { AWP, COLOURS, FORM_ANCHOR, PATH, PHOTOS, SLUG } from "@/lib/alloy-wheel-protection";
 import { type Block, getPage } from "@/lib/blocks";
 import type { HubCard } from "@/lib/hub";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 import { cardsForSlugs } from "@/lib/service-cards";
 import { EVENTS } from "@/lib/track";
 
@@ -75,20 +75,19 @@ export default function AlloyWheelProtectionPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: "Alloy Wheel Protection",
-          serviceType: "Alloy wheel protector installation",
-          description: AWP.seo.description,
-          brand: "WHEELUV",
-          areaServed: "London",
-          image: PHOTOS.hero.src,
-          offer: { price: "159", currency: "GBP", description: AWP.price.inclusions },
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: "Alloy Wheel Protection",
+            serviceType: "Alloy wheel protector installation",
+            description: AWP.seo.description,
+            image: PHOTOS.hero.src,
+            offer: { price: "159", currency: "GBP", description: AWP.price.inclusions },
+          },
+          faq: AWP.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(AWP.faq.items)} />
       <TrackClicks />
 
       <Header />

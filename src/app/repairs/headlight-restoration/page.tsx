@@ -14,7 +14,7 @@ import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { getPage } from "@/lib/blocks";
 import { HEADLIGHT, PATH, PHOTOS, SLUG, type Stage, TRACK } from "@/lib/headlight";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 
 /**
  * Headlight restoration — rebuilt from the client's brief.
@@ -79,25 +79,25 @@ export default function HeadlightRestorationPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       {/* "STRUCTURED DATA — Service schema, FAQPage schema. Do not add
           unsupported ratings or fabricated review markup." */}
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: "Headlight Restoration",
-          serviceType: "Mobile headlight restoration",
-          description: HEADLIGHT.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
-          offer: {
-            price: HEADLIGHT.pricing.amount.replace(/[^\d.]/g, ""),
-            currency: "GBP",
-            description: HEADLIGHT.faq.items[0].a.map((p) => p.replace(/<[^>]+>/g, "")).join(" "),
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: "Headlight Restoration",
+            serviceType: "Mobile headlight restoration",
+            description: HEADLIGHT.seo.description,
+            image: PHOTOS.hero.src,
+            offer: {
+              price: HEADLIGHT.pricing.amount.replace(/[^\d.]/g, ""),
+              currency: "GBP",
+              description: HEADLIGHT.faq.items[0].a.map((p) => p.replace(/<[^>]+>/g, "")).join(" "),
+            },
           },
+          faq: HEADLIGHT.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(HEADLIGHT.faq.items)} />
       <TrackClicks />
 
       <Header />

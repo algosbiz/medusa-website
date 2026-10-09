@@ -1,0 +1,117 @@
+[
+  {
+    "slug": "mobile-car-wash",
+    "path": "/mobile-car-wash",
+    "name": "Mobile Car Wash",
+    "serviceType": "Mobile car wash",
+    "packages": [
+      "bronze-wash",
+      "car-wax-service",
+      "exterior-plus-wash",
+      "exterior-wash",
+      "gold-wash",
+      "platinum-wash",
+      "silver-wash"
+    ],
+    "linkedFromBody": null,
+    "totalPackages": 7,
+    "TODO": "linkedFromBody: re-measure against the Next.js build before turning hasOfferCatalog on"
+  },
+  {
+    "slug": "car-valeting",
+    "path": "/car-valeting",
+    "name": "Car Valeting",
+    "serviceType": "Car valeting",
+    "packages": [
+      "convertible-roof-cleaning",
+      "deep-clean-full-valet",
+      "mini-valet",
+      "pre-sale-valet",
+      "premium-full-valet",
+      "summer-glow-valet",
+      "winter-protection"
+    ],
+    "linkedFromBody": 7,
+    "totalPackages": 7
+  },
+  {
+    "slug": "car-detailing",
+    "path": "/car-detailing",
+    "name": "Car Detailing",
+    "serviceType": "Car detailing",
+    "packages": [
+      "alloy-wheel-protection",
+      "ceramic-coating",
+      "enhancement-detail",
+      "machine-polish",
+      "mini-detail",
+      "new-car-protection",
+      "paint-correction",
+      "perfection-detail",
+      "windscreen-protection"
+    ],
+    "linkedFromBody": null,
+    "totalPackages": 9,
+    "TODO": "linkedFromBody: re-measure against the Next.js build before turning hasOfferCatalog on"
+  },
+  {
+    "slug": "car-interior-cleaning",
+    "path": "/car-interior-cleaning",
+    "name": "Car Interior Cleaning",
+    "serviceType": "Car interior cleaning",
+    "packages": [
+      "flooded-car-cleaning",
+      "interior-valet",
+      "leather-cleaning",
+      "mould-removal",
+      "odour-removal",
+      "pet-hair-removal",
+      "premium-interior-wash",
+      "steam-cleaning",
+      "vomit-cleaning"
+    ],
+    "linkedFromBody": null,
+    "totalPackages": 9,
+    "TODO": "linkedFromBody: re-measure against the Next.js build before turning hasOfferCatalog on"
+  },
+  {
+    "slug": "repairs",
+    "path": "/repairs",
+    "name": "Repairs & Restoration",
+    "serviceType": "Cosmetic repair and restoration",
+    "packages": [
+      "car-graffiti-removal",
+      "car-interior-paint-spill-removal",
+      "engine-bay-steam-cleaning",
+      "headlight-restoration"
+    ],
+    "linkedFromBody": null,
+    "totalPackages": 4,
+    "TODO": "linkedFromBody: re-measure against the Next.js build before turning hasOfferCatalog on"
+  },
+  {
+    "slug": "commercial-valeting",
+    "path": "/commercial-valeting",
+    "name": "Commercial & Fleet Valeting",
+    "serviceType": "Commercial and fleet vehicle valeting",
+    "packages": [
+      "aircraft-cleaning",
+      "car-van-stickers-removal",
+      "mobile-truck-cleaning"
+    ],
+    "linkedFromBody": 3,
+    "totalPackages": 3
+  },
+  {
+    "slug": "vehicles",
+    "path": "/vehicles",
+    "name": "Other Vehicles",
+    "serviceType": "Valeting for other vehicle types",
+    "packages": [
+      "caravan-cleaning",
+      "motorcycle-valeting-detailing"
+    ],
+    "linkedFromBody": 2,
+    "totalPackages": 2
+  }
+]

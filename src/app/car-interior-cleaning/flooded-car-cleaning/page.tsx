@@ -15,7 +15,7 @@ import TrackClicks from "@/components/TrackClicks";
 import Testimonials from "@/components/sections/Testimonials";
 import { getPage } from "@/lib/blocks";
 import { FLOOD, FORM_ANCHOR, LINKS, PATH, PHOTOS, QUOTE, SLUG, type Step, TRACK } from "@/lib/flooded-car";
-import { faqPageSchema, pageSchema, serviceSchema } from "@/lib/schema";
+import { pageSchema } from "@/lib/schema";
 import { CONTACT } from "@/lib/site";
 
 /**
@@ -86,20 +86,20 @@ export default function FloodedCarCleaningPage() {
 
   return (
     <>
-      <JsonLd data={pageSchema(page)} />
       {/* "STRUCTURED DATA — Service schema, FAQPage schema. Do not add
           unsupported review ratings." No offer: the service is quote-only. */}
       <JsonLd
-        data={serviceSchema({
-          slug: SLUG,
-          name: "Flooded Car Cleaning",
-          serviceType: "Flooded car and water-damaged interior cleaning",
-          description: FLOOD.seo.description,
-          areaServed: "London",
-          image: PHOTOS.hero.src,
+        data={pageSchema(page, {
+          service: {
+            slug: SLUG,
+            name: "Flooded Car Cleaning",
+            serviceType: "Flooded car and water-damaged interior cleaning",
+            description: FLOOD.seo.description,
+            image: PHOTOS.hero.src,
+          },
+          faq: FLOOD.faq.items,
         })}
       />
-      <JsonLd data={faqPageSchema(FLOOD.faq.items)} />
       <TrackClicks />
 
       <Header />
