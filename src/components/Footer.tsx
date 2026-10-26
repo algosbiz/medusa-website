@@ -101,6 +101,9 @@ export default function Footer({ slug, whatsapp }: { slug?: string; whatsapp?: s
                   Phone: {CONTACT.phone}
                 </a>
               </li>
+              <li className="py-1.5 text-[14px] leading-[22px] font-normal text-white/70">
+                Address: {CONTACT.address}
+              </li>
               <li>
                 <a href={`mailto:${CONTACT.email}`} className={`${linkClass} break-all`}>
                   Email: {CONTACT.email}

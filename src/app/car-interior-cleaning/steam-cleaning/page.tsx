@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import FaqAccordion from "@/components/FaqAccordion";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Icon, { type IconName } from "@/components/Icon";
@@ -104,7 +105,7 @@ export default function SteamCleaningPage() {
                so; a Service name carries the service, never the city. */
             name: "Car Interior Steam Cleaning",
             serviceType: "Car interior steam cleaning",
-            description: STEAM.seo.description,
+            description: STEAM.seo.serviceDescription,
             image: PHOTOS.hero.src,
           },
           faq: STEAM.faq.items,
@@ -114,6 +115,7 @@ export default function SteamCleaningPage() {
 
       <Header />
       <main className="flex-1">
+        <Breadcrumbs slug={page.slug} />
         <Hero />
         <HowItWorks />
         <Methods />

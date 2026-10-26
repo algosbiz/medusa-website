@@ -1,5 +1,6 @@
 import Image from "next/image";
 import FaqAccordion from "@/components/FaqAccordion";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
@@ -78,6 +79,7 @@ export default function HubPage({ spec }: { spec: HubSpec }) {
       <JsonLd data={pageSchema(hubMetaPage(spec))} />
       <Header />
       <main className="flex-1">
+        <Breadcrumbs slug={spec.slug} />
         {/*
           The group's own introduction, then its services as chips — the
           client's "links that go to its childs", carrying no words but the

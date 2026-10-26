@@ -5,6 +5,7 @@ import FaqAccordion from "@/components/FaqAccordion";
 import GifLoop from "@/components/GifLoop";
 import Icon from "@/components/Icon";
 import { LocationIndexSection } from "@/components/LocationIndex";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
 import type { Block, Page, Section } from "@/lib/blocks";
@@ -70,6 +71,7 @@ export default function LocationPage({ page }: { page: Page }) {
 
   return (
     <main className="flex-1">
+      <Breadcrumbs slug={page.slug} />
       <Hero page={page} model={model} />
 
       {model.areas.length > 0 && !folded && (

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Icon from "@/components/Icon";
@@ -93,6 +94,7 @@ export default function AboutPage() {
       <JsonLd data={pageSchema(page)} />
       <Header />
       <main className="flex-1">
+        <Breadcrumbs slug={SLUG} />
         <PageHero title={page.h1} introHtml={[OPENING]} />
 
         {/* What we specialise in — the source's second row, on its own photo. */}

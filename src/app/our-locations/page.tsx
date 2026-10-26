@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Sections } from "@/components/Blocks";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Icon from "@/components/Icon";
@@ -213,6 +214,7 @@ export default function LocationsPage() {
       <JsonLd data={pageSchema(page)} />
       <Header />
       <main className="flex-1">
+        <Breadcrumbs slug={SLUG} />
         <section className="cut-bottom relative flex min-h-[620px] w-full items-end overflow-hidden pb-[calc(var(--cut)+3rem)] lg:min-h-[720px]">
           {video?.type === "video" && (
             <video

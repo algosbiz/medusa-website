@@ -58,7 +58,7 @@
   {
     "slug": "car-interior-cleaning",
     "path": "/car-interior-cleaning",
-    "name": "Car Interior Cleaning",
+    "name": "Interior Cleaning",
     "serviceType": "Car interior cleaning",
     "packages": [
       "flooded-car-cleaning",
@@ -91,7 +91,7 @@
   {
     "slug": "commercial-valeting",
     "path": "/commercial-valeting",
-    "name": "Commercial & Fleet Valeting",
+    "name": "Fleet Cleaning & Commercial Vehicle Washing",
     "serviceType": "Commercial and fleet vehicle valeting",
     "packages": [
       "aircraft-cleaning",

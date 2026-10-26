@@ -19,6 +19,7 @@ import { REBUILD as HEADLIGHT_REBUILD } from "@/lib/headlight";
 import { REBUILD as PAINT_REBUILD } from "@/lib/paint-spill";
 import { REBUILD as STEAM_REBUILD } from "@/lib/steam-cleaning";
 import { SIGNAGE, PHOTOS as SIGNAGE_PHOTOS } from "@/lib/signage-removal";
+import { longDate } from "@/lib/dates";
 import { CONTACT } from "@/lib/site";
 import {
   MIRROR_AUDIT,
@@ -857,7 +858,7 @@ const RULES: Record<string, (page: Page) => void> = {
       },
       {
         blocks: [
-          { type: "heading", level: 2, text: "City of Westminster’s Neighborhoods" },
+          { type: "heading", level: 2, text: "City of Westminster’s Neighbourhoods" },
           { type: "paragraph", html: local.areas.join(", ") },
         ],
       },
@@ -1617,6 +1618,126 @@ function useTranscoded(page: Page): boolean {
 const isWheeluvAddon = (b: Block): b is Extract<Block, { type: "heading" }> =>
   b.type === "heading" && /^WHEELUV\s*™\s*[–—-]\s*Alloy Wheel Protectors$/i.test(decodeEntities(b.text).trim());
 
+/* ── The schema content-gap check, 2026-10-23 ─────────────────────────── */
+
+/*
+  Ahrefs validates markup; it does not ask whether the page shows what the
+  markup says. "Medusa schema content gaps.md" compared every JSON-LD claim
+  with the visible text and found the places where they part. Three of its
+  items are content, and they live here because the mirror is the thing they
+  correct. The schema-side ones are in `lib/schema.ts` and the handover's data.
+*/
+
+const BLOG_POST = /^\d{4}\/\d{2}\/\d{2}\//;
+
+/** The site name WordPress appended to 21 post titles, and the template then printed as the h1. */
+const H1_SITE_TAIL = /\s+-\s+Mobile Car Detailing & Valeting$/;
+
+/** Mirrors `PLACEHOLDER` in `lib/schema.ts`: a category WordPress filed every post under by default. */
+const PLACEHOLDER_SECTION = /^uncategori[sz]ed$/i;
+
+/**
+ * A blog post's header, from what the page already knows about itself.
+ *
+ * Six posts (A2) came from an older import and carry an `Article` in their
+ * JSON-LD but no `post` meta, so the template rendered the body straight
+ * after the navigation: no h1, no byline, no date, no picture. Each one's
+ * author, date and image are the same three values its `Article` states, so
+ * the header is built from them rather than from anything written here.
+ *
+ * A post that already has its header gains only what it lacked: "Updated …"
+ * where `dateModified` differs (A5), and loses the "Uncategorized" label the
+ * schema stopped emitting.
+ */
+function tidyPost(page: Page) {
+  page.h1 = decodeEntities(page.h1).replace(H1_SITE_TAIL, "").trim();
+
+  if (!page.post && page.article?.author && page.published) {
+    page.post = {
+      author: page.article.author,
+      date: longDate(page.published),
+      ...(page.ogImage ? { hero: page.ogImage } : {}),
+    };
+    /* The first of the six opens its body on the very picture the header now
+       carries; leaving it would print the same photograph twice in a row. */
+    const first = page.sections[0]?.blocks[0];
+    if (first?.type === "image" && first.src === page.ogImage) page.sections[0].blocks.shift();
+  }
+  if (!page.post) return;
+
+  if (page.post.category && PLACEHOLDER_SECTION.test(page.post.category.trim())) {
+    delete page.post.category;
+  }
+  if (page.modified && page.published && page.modified !== page.published) {
+    page.post.updated = longDate(page.modified);
+  }
+}
+
+/**
+ * The 19 borough hubs' h1s (C1). The mirror ships "Harrow’S FINEST MOBILE CAR
+ * DETAILING…" — a capital after the apostrophe, in a heading with no CSS
+ * uppercase on it, so readers saw exactly that. Same words, normal case; the
+ * hub frame sets the capitals with a class instead (`LocationPage`).
+ *
+ * Written out rather than computed: a title-case helper is how a capital S
+ * after an apostrophe gets made in the first place. Each entry is checked
+ * against the mirror's own heading, so a regeneration that changes a word
+ * throws instead of being overwritten.
+ */
+const HUB_H1: Record<string, string> = {
+  "our-locations": "London’s Finest Mobile Car Wash, Detailing & Valeting Services",
+  "our-locations/barnet": "Barnet’s Finest Detailing & Valeting",
+  "our-locations/brent": "Brent’s Finest Mobile Car Detailing & Valeting",
+  "our-locations/buckinghamshire": "Buckinghamshire’s Finest Detailing & Valeting",
+  "our-locations/camden": "Camden’s Finest Mobile Car Detailing & Valeting",
+  "our-locations/city-of-london": "City of London’s Finest Mobile Car Detailing & Valeting",
+  "our-locations/city-of-westminster": "City of Westminster’s Finest Mobile Car Detailing & Valeting",
+  "our-locations/ealing": "Ealing’s Finest Mobile Car Detailing & Valeting",
+  "our-locations/enfield": "Enfield’s Finest Mobile Car Detailing & Valeting",
+  "our-locations/hammersmith-and-fulham": "Hammersmith & Fulham’s Finest Mobile Car Detailing & Valeting",
+  "our-locations/haringey": "Haringey’s Finest Mobile Car Detailing & Valeting, Brought to Your Doorstep",
+  "our-locations/harrow": "Harrow’s Finest Mobile Car Detailing & Valeting",
+  "our-locations/hertfordshire": "Hertfordshire’s Finest Mobile Car Detailing & Valeting",
+  "our-locations/hillingdon": "Hillingdon’s Finest Mobile Car Detailing & Valeting",
+  "our-locations/hounslow": "Hounslow’s Finest Mobile Car Detailing & Valeting, Brought to Your Doorstep",
+  "our-locations/islington": "Islington’s Finest Mobile Car Detailing & Valeting, Brought to Your Doorstep",
+  "our-locations/kensington-and-chelsea":
+    "Kensington & Chelsea’s Finest Mobile Car Detailing & Valeting, Brought to Your Doorstep",
+  "our-locations/richmond-upon-thames":
+    "Richmond upon Thames’s Finest Mobile Car Detailing & Valeting, Brought to Your Doorstep",
+  "our-locations/slough": "Slough’s Finest Mobile Car Detailing & Valeting, Brought to Your Doorstep",
+  "our-locations/watford": "Watford’s Finest Mobile Car Detailing & Valeting, Brought to Your Doorstep",
+};
+
+/** Same words as far as the letters go; the full stop a heading does not take is ignored. */
+const sameWords = (a: string, b: string) =>
+  decodeEntities(a).replace(/\.$/, "").toUpperCase() === decodeEntities(b).replace(/\.$/, "").toUpperCase();
+
+function fixHubH1(page: Page, to: string) {
+  if (!sameWords(page.h1, to)) {
+    throw new Error(`content override: "${page.slug}" h1 is "${page.h1}", expected the words of "${to}"`);
+  }
+  page.h1 = to;
+  for (const b of allBlocks(page)) {
+    if (b.type === "heading" && b.level === 1 && sameWords(b.text, to)) b.text = to;
+  }
+}
+
+/**
+ * "Harrow’S Neighborhoods" (C2, C3): the same capital S, in the districts
+ * heading of all 19 hubs, and the American spelling the site otherwise never
+ * uses ("valeting", "Sterilisation"). The heading is set in capitals by CSS,
+ * so the source text is what a screen reader and a crawler read.
+ */
+function fixNeighbourhoodHeading(b: Extract<Block, { type: "heading" }>): boolean {
+  if (!/Neighborhood/.test(b.text)) return false;
+  b.text = b.text
+    .replace(/^CITY OF LONDON/, "City of London")
+    .replace(/([’'])S\b/g, "$1s")
+    .replace(/Neighborhood/g, "Neighbourhood");
+  return true;
+}
+
 /* ── Application ──────────────────────────────────────────────────────── */
 
 export function applyOverrides(
@@ -1705,6 +1826,33 @@ export function applyOverrides(
     patch(slug, (p) => {
       if (!applyMirrorEdits(p, slug)) throw new Error(`content override: ${slug} took no correction`);
     });
+  }
+
+  /*
+    A6: the Slough hub's schema says Slough is in Berkshire and its page never
+    does. The one sentence that names the place gains the county; nothing else
+    on the page changes. Throws if the mirror's sentence moves.
+  */
+  patch("our-locations/slough", (p) =>
+    swap(p.sections.flatMap((s) => s.blocks), "doorstep in Slough.", "doorstep in Slough, Berkshire."),
+  );
+
+  for (const [slug, to] of Object.entries(HUB_H1)) {
+    if (!out[slug]) throw new Error(`content override: no page "${slug}" for its h1`);
+    patch(slug, (p) => fixHubH1(p, to));
+  }
+
+  let districts = 0;
+  for (const slug of Object.keys(out)) {
+    if (!allBlocks(out[slug]).some((b) => b.type === "heading" && /Neighborhood/.test(b.text))) continue;
+    patch(slug, (p) => {
+      for (const b of allBlocks(p)) if (b.type === "heading" && fixNeighbourhoodHeading(b)) districts++;
+    });
+  }
+  if (!districts) throw new Error("content override: no districts heading left to correct");
+
+  for (const slug of Object.keys(out)) {
+    if (BLOG_POST.test(slug)) patch(slug, tidyPost);
   }
 
   for (const slug of Object.keys(out)) {

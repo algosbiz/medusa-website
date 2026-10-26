@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import FaqAccordion from "@/components/FaqAccordion";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Icon, { type IconName } from "@/components/Icon";
@@ -95,6 +96,7 @@ export default function MotorcyclePage() {
 
       <Header />
       <main className="flex-1">
+        <Breadcrumbs slug={page.slug} />
         <Hero />
         <Packages />
         <Choose />

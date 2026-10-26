@@ -21,7 +21,12 @@
  *     "Commercial & Fleet" name a menu, not a page.
  *
  * `page.breadcrumb` itself is left alone: `nameReadMoreLinks` reads its tail
- * for visible button labels, and the site renders no visible breadcrumb.
+ * for visible button labels.
+ *
+ * **The trail is also rendered** (`components/Breadcrumbs`), from this same
+ * function, since 2026-10-23: the markup described navigation that readers
+ * never saw, which Google's guidelines rule out. Both read `breadcrumbTrail`,
+ * so what the page shows and what the schema says cannot drift apart.
  */
 import { PAGES, type Page } from "@/lib/blocks";
 import { NAV, type NavItem, SITE } from "@/lib/site";
@@ -58,6 +63,9 @@ function parentOf(slug: string): string {
 function nameOf(slug: string, page?: Page): string {
   if (!slug) return "Home";
   const p = page ?? PAGES[slug];
+  /* A post's last crumb is the h1 the reader sees, not the SEO title the
+     mirror's trail ends on ("… | Complete Guide"). */
+  if (BLOG_POST.test(slug) && p?.h1.trim()) return p.h1.trim();
   const tail = p?.breadcrumb?.[p.breadcrumb.length - 1]?.name;
   const name = NAV_NAMES.get(slug) ?? (tail ? decodeEntities(tail) : p?.h1);
   if (!name?.trim()) throw new Error(`breadcrumbs: no name for "${slug}"`);
@@ -66,10 +74,18 @@ function nameOf(slug: string, page?: Page): string {
 
 const urlOf = (slug: string) => `${SITE}/${slug}`;
 
-/** Home first, the page itself last, every rung an absolute URL. */
-export function breadcrumbTrail(page: Page): Trail {
-  const trail: Trail = [{ name: nameOf(page.slug, page), url: urlOf(page.slug) }];
-  for (let slug = page.slug; slug; ) {
+/**
+ * Home first, the page itself last, every rung an absolute URL.
+ *
+ * Takes a slug as well as a page because the three menu-group hubs have no
+ * `Page` — `/repairs` is built out of its children — and still have a trail.
+ */
+export function breadcrumbTrail(page: Page | string): Trail {
+  const first = typeof page === "string" ? page : page.slug;
+  const trail: Trail = [
+    { name: nameOf(first, typeof page === "string" ? undefined : page), url: urlOf(first) },
+  ];
+  for (let slug = first; slug; ) {
     slug = parentOf(slug);
     trail.unshift({ name: nameOf(slug), url: urlOf(slug) });
   }

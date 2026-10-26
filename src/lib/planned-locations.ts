@@ -799,7 +799,7 @@ export function buildPlannedLocations(pages: Record<string, Page>): Record<strin
         */
         {
           blocks: [
-            { type: "heading", level: 2, text: `${place}’s Neighborhoods` },
+            { type: "heading", level: 2, text: `${place}’s Neighbourhoods` },
             { type: "paragraph", html: local.areas.join(", ") },
           ],
         },

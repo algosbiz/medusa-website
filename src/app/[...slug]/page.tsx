@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Sections } from "@/components/Blocks";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
@@ -83,6 +84,7 @@ export default async function CatchAllPage({ params }: PageProps<"/[...slug]">) 
       <JsonLd data={pageSchema(page)} />
       <Header />
       <main className="flex-1">
+        <Breadcrumbs slug={page.slug} />
         {page.post && <PostHeader page={page} />}
         <Sections
           sections={page.sections}
@@ -90,6 +92,10 @@ export default async function CatchAllPage({ params }: PageProps<"/[...slug]">) 
           pageH1={page.h1}
           // The post header has already set this page's one <h1>.
           h1Taken={Boolean(page.post)}
+          // The post header sits above the body, so the body's first row is a
+          // body row: it took the 150px page-header padding, which put ~200px
+          // of nothing between the featured image and the first paragraph.
+          opensPage={!page.post}
           /*
             Black, gold, black — the client asked for the alternation on every
             page, so that every section reads as its own section. A blog post
@@ -107,10 +113,15 @@ export default async function CatchAllPage({ params }: PageProps<"/[...slug]">) 
 
 function PostHeader({ page }: { page: NonNullable<ReturnType<typeof getPage>> }) {
   const { post } = page;
-  const meta = [post?.author && `By ${post.author}`, post?.date].filter(Boolean);
+  const meta = [
+    post?.author && `By ${post.author}`,
+    post?.date,
+    /* Only where it differs from the date; `overrides.ts` sets it that way. */
+    post?.updated && `Updated ${post.updated}`,
+  ].filter(Boolean);
 
   return (
-    <section className="relative w-full pt-[160px] pb-14 lg:pt-[210px]">
+    <section className="relative w-full pt-[160px] pb-0 lg:pt-[210px] lg:pb-14">
       {post?.hero && (
         <>
           <div

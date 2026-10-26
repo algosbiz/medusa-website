@@ -251,12 +251,12 @@ Every item completed in section B multiplied by four.
 Restricting the Vercel app to the real `Host` breaks all three immediately and needs nobody's
 cooperation. It is now the highest-value item on this page.
 
-> **2026-10-19, measured: the `Host` restriction cannot work.** The mirrors are Cloudflare
-> Workers that fetch through our own zone under our own hostname, so a URL first fetched through
-> a mirror is then a cache `HIT` on the real domain, with the same `x-vercel-id`. The repo now
-> sends a `Link: rel="canonical"` header and runs an inline domain guard. What actually blocks
-> them is one WAF rule on our zone, `cf.worker.upstream_zone`, made by hand. The evidence and
-> the steps are in `PROJECT.md` §14.
+> **2026-10-19: blocked, but not by `Host`.** The mirrors are Cloudflare Workers that fetch through
+> our own zone under our own hostname, so the origin cannot tell them apart. A WAF custom rule on
+> our zone, `(ip.src eq 2a06:98c0:3600::103) or (cf.worker.upstream_zone ne "")` → Block, now
+> answers every mirror URL with a `403` from outside Indonesia. The zone's own `ID` → Allow IP
+> access rule exempts Indonesian visitors. The repo also sends a `Link: rel="canonical"` header
+> and runs an inline domain guard. Details in `PROJECT.md` §14.
 
 ### E2. The Google Business Profile title
 

@@ -4,6 +4,7 @@ import FaqAccordion from "@/components/FaqAccordion";
 import Image from "next/image";
 import { LocationIndexSection } from "@/components/LocationIndex";
 import PriceCard from "@/components/PriceCard";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
 import { ServiceCardsSection } from "@/components/ServiceCards";
@@ -91,6 +92,7 @@ export default function ServicePage({ page }: { page: Page }) {
 
   return (
     <main className="flex-1">
+      <Breadcrumbs slug={page.slug} />
       <Hero page={page} model={model} />
 
       {cut && (

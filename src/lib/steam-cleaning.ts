@@ -153,6 +153,11 @@ export const STEAM = {
     title: "Car Interior Steam Cleaning London | Mobile Service | Medusa",
     description:
       "Professional car interior steam cleaning in London, used where appropriate as part of selected Medusa interior valets. Mobile service at your home or workplace.",
+    /* The Service node's description (B6, 2026-10-23): the meta description
+       above without its last sentence, which the page body never says. The
+       brief's meta string is the client's and stays as written. */
+    serviceDescription:
+      "Professional car interior steam cleaning in London, used where appropriate as part of selected Medusa interior valets.",
   },
 
   /* ── Section 1 — Hero ────────────────────────────────────────────────── */

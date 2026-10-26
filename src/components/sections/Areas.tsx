@@ -1,7 +1,9 @@
+import Link from "next/link";
+import { Fragment } from "react";
 import MapEmbed from "@/components/MapEmbed";
 import Reveal from "@/components/Reveal";
 import SectionHead from "@/components/SectionHead";
-import { AREAS, AREAS_INTRO } from "@/lib/site";
+import { AREAS, AREAS_INTRO, COVERAGE } from "@/lib/site";
 
 /**
  * The third gold band — coverage.
@@ -43,6 +45,24 @@ export default function Areas() {
                 </p>
               </Reveal>
             ))}
+            <Reveal delay={4}>
+              <p className="measure mt-5 text-[15px] leading-[25px] font-normal text-ink/80">
+                We cover{" "}
+                {COVERAGE.map((a, i) => (
+                  <Fragment key={a.name}>
+                    {i > 0 && (i === COVERAGE.length - 1 ? " and " : ", ")}
+                    {"href" in a ? (
+                      <Link href={a.href} className="font-semibold text-ink underline underline-offset-2">
+                        {a.name}
+                      </Link>
+                    ) : (
+                      a.name
+                    )}
+                  </Fragment>
+                ))}
+                .
+              </p>
+            </Reveal>
           </div>
 
           <Reveal

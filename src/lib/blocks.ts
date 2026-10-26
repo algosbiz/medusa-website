@@ -48,6 +48,8 @@ export type PostMeta = {
   category?: string;
   author?: string;
   date?: string;
+  /** Shown as "Updated …" beside the date, only where it differs from it. */
+  updated?: string;
   hero?: string;
 };
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import EnquiryForm from "@/components/EnquiryForm";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Icon from "@/components/Icon";
@@ -91,6 +92,7 @@ export default function CommercialPage() {
       <JsonLd data={pageSchema(page)} />
       <Header />
       <main className="flex-1">
+        <Breadcrumbs slug={SLUG} />
         <Hero page={page} />
         <Brief />
         <Contract />

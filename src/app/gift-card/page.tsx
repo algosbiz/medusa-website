@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
@@ -73,6 +74,7 @@ export default function GiftCardPage() {
       <JsonLd data={pageSchema(page)} />
       <Header />
       <main className="flex-1">
+        <Breadcrumbs slug={SLUG} />
         <PageHero title={page.h1} image={heroImageFor(page)} />
 
         <section className="w-full border-b border-white/[0.07] py-16 lg:py-[104px]">

@@ -8,6 +8,10 @@ export const SITE = "https://medusaautodetailing.co.uk";
 
 export const CONTACT = {
   phone: "02033556435",
+  /* Word for word what `BUSINESS`'s PostalAddress says — "Alveston Ave", not
+     "Alveston Avenue", and the postcode with its space — so the footer and the
+     markup agree (content-gap item A4, decided 2026-10-23). */
+  address: "Alveston Ave, Harrow HA3 8TG",
   email: "info@medusaautodetailing.co.uk",
   facebook: "https://www.facebook.com/medusadetailing/",
   instagram: "https://www.instagram.com/medusadetailing/",
@@ -31,7 +35,6 @@ export const BUSINESS = {
      own "+44-" form, because it is the ContactPoint's rather than the
      business's. */
   reservationsPhone: "+44-2033556435",
-  priceRange: "££",
   openingHours: "Mo-Fr 07:00-18:00 Sa-Su 09:00-17:00",
   logo: "/assets/2021/12/4-e1639638656209.webp",
   image: "/assets/2024/10/Untitled-design-2.webp",
@@ -1071,6 +1074,23 @@ export const AREAS_INTRO = {
   ],
   map: "https://www.google.com/maps/d/embed?mid=1rKqYRwrmA9TEVpwaWyLFM5AYZUATtJk&ehbc=2E312F",
 };
+
+/**
+ * The eight areas `areaServed` names on the homepage's business node, which
+ * until 2026-10-23 the page itself named two of (A3). Order is the node's.
+ * Only Hertfordshire and Buckinghamshire have an `/our-locations` page, so
+ * only those two link; a name is never linked to a page that is not there.
+ */
+export const COVERAGE = [
+  { name: "Greater London" },
+  { name: "Hertfordshire", href: "/our-locations/hertfordshire" },
+  { name: "Essex" },
+  { name: "Kent" },
+  { name: "Surrey" },
+  { name: "Berkshire" },
+  { name: "Bedfordshire" },
+  { name: "Buckinghamshire", href: "/our-locations/buckinghamshire" },
+] as const;
 
 export const AREAS = [
   {

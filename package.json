@@ -11,6 +11,7 @@
     "content": "node scripts/extract-content.mjs && node scripts/fetch-assets.mjs && node scripts/probe-images.mjs",
     "content:classify": "node scripts/classify.mjs",
     "verify": "node scripts/verify.mjs",
+    "verify:schema": "node scripts/schema-visible.mjs",
     "purge": "node scripts/purge.mjs"
   },
   "dependencies": {

@@ -3511,7 +3511,7 @@ export function applyMirrorEdits(page: Page, slug: string): number {
 /**
  * The districts row, in the shape `location-frame.ts` already recognises.
  *
- * `<Place>’s Neighborhoods` over a comma-separated line is what the nineteen
+ * `<Place>’s Neighbourhoods` over a comma-separated line is what the nineteen
  * borough hubs write and what the 126 built pages carry, and the frame renders
  * it as the chips under the header. The spelling is the source's own.
  *
@@ -3528,7 +3528,7 @@ export function districtsRow(page: Page, slug: string): boolean {
     Anchored, because eight of these pages head a prose row "At-Home Car Wash
     for Barnet’s Residential Neighbourhoods" — which ends in the word and is
     not a list of anywhere. A row that already names the districts is titled
-    "<Place>’s Neighborhoods", "Areas We Cover/Serve in …" or "Service Areas",
+    "<Place>’s Neighbourhoods", "Areas We Cover/Serve in …" or "Service Areas",
     and nothing else.
   */
   const place = placeOf(slug);
@@ -3545,7 +3545,7 @@ export function districtsRow(page: Page, slug: string): boolean {
 
   const row: Section = {
     blocks: [
-      { type: "heading", level: 2, text: `${placeOf(slug)}’s Neighborhoods` },
+      { type: "heading", level: 2, text: `${placeOf(slug)}’s Neighbourhoods` },
       { type: "paragraph", html: areas.join(", ") },
     ],
   };

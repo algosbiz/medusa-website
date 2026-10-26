@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import EnquiryForm from "@/components/EnquiryForm";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import Icon, { type IconName } from "@/components/Icon";
@@ -89,6 +90,7 @@ export default function ContactPage() {
       <JsonLd data={pageSchema(page)} />
       <Header />
       <main className="flex-1">
+        <Breadcrumbs slug={SLUG} />
         <PageHero
           title={page.h1}
           image={heroImageFor(page)}

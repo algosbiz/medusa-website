@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import FaqAccordion from "@/components/FaqAccordion";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import Footer from "@/components/Footer";
 import GraffitiQuoteForm from "@/components/GraffitiQuoteForm";
 import Header from "@/components/Header";
@@ -100,6 +101,7 @@ export default function GraffitiRemovalPage() {
 
       <Header />
       <main className="flex-1">
+        <Breadcrumbs slug={page.slug} />
         <Hero />
         <Panic />
         <Assess />

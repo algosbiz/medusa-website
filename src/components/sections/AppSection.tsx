@@ -41,13 +41,16 @@ export default function AppSection() {
             <div className="lg:col-span-7">
               <SectionHead title={APP.heading} />
 
-              <ul className="mt-9 flex flex-wrap gap-3">
+              {/* One pill per row on a phone, its title over its note: side by
+                  side, "Skip the car-wash" and "We come to you" each broke onto
+                  a second line and the three pills came out three widths. */}
+              <ul className="mt-9 grid gap-3 sm:flex sm:flex-wrap">
                 {APP.features.map((f, i) => (
                   <Reveal
                     as="li"
                     key={f.title}
                     delay={i}
-                    className="flex items-center gap-3 rounded-full bg-white/[0.05] py-2.5 pr-5 pl-2.5 ring-1 ring-white/10"
+                    className="flex items-center gap-3 rounded-[22px] bg-white/[0.05] py-2.5 pr-5 pl-2.5 ring-1 ring-white/10 sm:rounded-full"
                   >
                     <Image
                       src={f.icon}
@@ -56,8 +59,10 @@ export default function AppSection() {
                       height={80}
                       className="h-[32px] w-[32px] shrink-0 object-contain"
                     />
-                    <span className="text-[14px] font-semibold text-white">{f.title}</span>
-                    <span className="text-[13px] font-normal text-gold">{f.sub}</span>
+                    <span className="flex flex-col sm:flex-row sm:items-center sm:gap-3">
+                      <span className="text-[14px] font-semibold text-white">{f.title}</span>
+                      <span className="text-[13px] font-normal text-gold">{f.sub}</span>
+                    </span>
                   </Reveal>
                 ))}
               </ul>

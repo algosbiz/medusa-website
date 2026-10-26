@@ -72,6 +72,7 @@ endpoint; nothing there is required for `npm run dev`.
 | `npm run dev` | Dev server. Pages re-render every request; ISR is inert here. |
 | `npm run build` / `npm start` | Production build (~40 s cold) and server. |
 | `npm run verify` | Crawls every route on a **running** server and checks it. See §9. |
+| `npm run verify:schema` | Asks of every page whether it **shows** what its JSON-LD says. Needs a running server. See §13. |
 | `npm run purge` | Flushes the live caches - Next's and Cloudflare's. Paths, or everything. See §7. |
 | `npm run content:fetch` | Re-mirrors the live site into `.cache/html/` (~71 MB, slow, hits the network). |
 | `npm run content` | Rebuilds `pages.json` + assets from that mirror. Needs `.cache/html`. |
@@ -176,8 +177,9 @@ Useful exports:
   `nameReadMoreLinks` reads its tail for button labels. The `BreadcrumbList`
   in every page's JSON-LD comes from `lib/breadcrumbs.ts` instead: parent off
   the URL (a blog post's is `/blog`), name off `NAV` where the menu has one,
-  every rung an absolute URL, none on the homepage. The site shows no visible
-  breadcrumb. `npm run verify` checks all of it.
+  every rung an absolute URL, none on the homepage. Since 2026-10-23 the same
+  trail is **rendered** (`components/Breadcrumbs`, §13), from the same function.
+  `npm run verify` checks all of it.
 - `getFaq(slug)` — the FAQ pairs a page carries. Hand-built pages read this
   rather than keeping their own transcribed copy.
 - `heroImageFor(page)` — picks the wider of the opening row's background and
@@ -1703,6 +1705,14 @@ npm run verify
 internal link resolves, every `/assets` image exists on disk, parseable JSON-LD,
 plus the sitemap, robots and 404. It prints `ALL CLEAN` or a list.
 
+```bash
+npm run verify:schema
+```
+
+Then the second question, whether each page **shows** what its JSON-LD says —
+breadcrumbs, headlines, bylines, prices, FAQ, catalogue names, address, areas
+(§13). Same server, same `BASE`.
+
 **Then look at it.** Load the page in the browser pane. For responsive and
 overflow work the reliable technique is a fixed-width `<iframe>` inside the
 pane — container and media queries then react to the iframe's width, and you
@@ -2315,6 +2325,41 @@ The `@id`s reconcile across pages, which is the point of them:
 `/mobile-car-wash/barnet` serves `…/our-locations/barnet#area`, and
 `/our-locations/barnet` defines that same node. One entity, two pages.
 
+### The 23 October content-gap pass
+
+"Medusa schema content gaps.md" came out of an Ahrefs crawl of 368 URLs with
+**zero** validation errors, and asked the question Ahrefs does not: does the
+page show what the markup says? Google's rule is not to mark up what readers
+cannot see. Every item was closed, and `npm run verify:schema`
+(`scripts/schema-visible.mjs`) is the standing check for the whole class —
+it crawls the sitemap, drops `<script>` first (Next repeats the page inside its
+payloads, which would make every claim look supported) and compares.
+
+| Item | What changed |
+| --- | --- |
+| **A1** no visible trail on 351 pages | `components/Breadcrumbs`, one line, laid over the top of `<main>` in the clear band under the navigation (**not** into each header: thirty-odd routes have thirty-odd header paddings). It reads `breadcrumbTrail`, the function the JSON-LD is built from. A post's last crumb is its h1. Checked for collisions at 320, 375, 768 and 1280px across forty templates; one line so a long name cannot wrap onto an h1 that starts at 130px |
+| **A2** six posts with no header | `tidyPost` in `content/overrides.ts` builds `post` from the `Article` the page already emitted. The first of the six opened its body on the picture the header now carries, so that image is dropped from the body |
+| **A3** eight areas, two named | `COVERAGE` in `site.ts`, a line in the homepage's Areas band; only Hertfordshire and Buckinghamshire link, the only two with an `/our-locations` page |
+| **A4** address not shown | `CONTACT.address` in the footer, between phone and email, sitewide |
+| **A5** "updated" date | `post.updated`, shown only where `dateModified` differs from the date |
+| **A6** Slough never says Berkshire | one sentence, `swap` in `applyOverrides`; throws if the mirror's sentence moves |
+| **B1** headline ≠ h1 | `Article.headline` is the decoded h1; the h1 loses the " - Mobile Car Detailing & Valeting" WordPress tail |
+| **B2** catalogue names | `CARD_LABEL` in `schema.ts`, 22 entries (the list's 21 and `interior-valet`, which its check missed) |
+| **B3 / B4 / B5** | catalogue `name` dropped; two category names set to their h1 in `data/categories.json`; `priceRange` dropped from `data/business.json` and `site.ts` |
+| **B6** | `STEAM.seo.serviceDescription`; the meta string is the client's brief and is untouched |
+| **C1–C3** | the 19 hubs' h1s (and `/our-locations`'s) in `HUB_H1`, written out because a title-case helper is how the capital S got made; "Neighbourhoods" in all three templates and the 19 hubs' source text. The capitals on screen are the global `h1 { text-transform: uppercase }`, so nothing looks different |
+
+**The check found what the list did not**: the odour page's FAQ answers carried
+a literal `&amp;` in JSON-LD (`faqPage` now decodes), and `interior-valet` was
+a 22nd catalogue entry. Two things it deliberately does not fail:
+the 14 hand-built Service descriptions are their meta strings, which summarise
+rather than quote (listed as a note, not a failure), and "Greater London" in a
+borough's `containedInPlace` is satisfied by the page saying "London".
+
+**Still open**: `/commercial-valeting/aircraft-cleaning` has no h1 and the check
+exempts it by name, as `verify.mjs` does (rule 8.1). `legalName` and the
+company number could join the business node, since the footer shows both.
+
 ---
 
 ## 14. The mirror domains
@@ -2390,14 +2435,61 @@ in a browser should land on the real domain. If the `Link` header comes back
 naming the mirror, its Worker rewrites headers too. The guard still works in
 that case, but this section is wrong about headers and needs correcting.
 
-### What is left, outside this repo
+### The block, made by hand in Cloudflare
 
-- **One WAF custom rule on our zone kills all three.** Security → WAF → Custom
-  rules: `(not cf.worker.upstream_zone in {"" "medusaautodetailing.co.uk"})` →
-  *Block*. The field is empty for every ordinary visitor and every crawler, and
-  set to the Worker's own zone for a Worker's subrequest. The evidence above
-  says that is how all three mirrors fetch us. It is a zone setting, made by
-  hand like the Cache Rules in §7, and nothing here can make it.
+**A WAF custom rule on our zone, keyed on the source IP, has blocked all three
+since 2026-10-19.** The first version, `(cf.worker.upstream_zone ne "" and
+cf.worker.upstream_zone ne "medusaautodetailing.co.uk")`, went active that day
+and matched **0** requests while the mirrors kept answering 200. So a
+temporary `/api/mirror-probe` (commit `e7258d1`, deleted in the next one)
+reported which headers reach the origin, directly and through each mirror:
+
+| Header | Direct | Through any mirror |
+| --- | --- | --- |
+| `cf-connecting-ip` (the WAF's `ip.src`) | the visitor's IP | `2a06:98c0:3600::103`, every time |
+| `cf-worker` | absent | present |
+| `cdn-loop` | `cloudflare; loops=1` | `cloudflare; loops=1; subreqs=1` |
+| `cf-ew-via` | absent | `15` |
+| `cf-ipcountry` | the visitor's | **still the visitor's** |
+
+They are Workers after all, but the probe could not say what `cf-worker`
+holds. The mirror rewrites `medusaautodetailing.co.uk` in the JSON body as
+well, so its value read as the mirror's own name whether it was the mirror's
+zone or ours. If it was ours, the exclusion in the first rule is exactly why
+it never fired. The IP has no domain in it to rewrite. It is the address
+Cloudflare gives every Worker subrequest that crosses into another zone. The
+rule as it stands, under Security → Security rules → Custom rules, action
+*Block*:
+
+```
+(ip.src eq 2a06:98c0:3600::103) or (cf.worker.upstream_zone ne "")
+```
+
+No visitor or crawler has that source IP. What it also blocks is any other
+site's Worker fetching ours, which is the point.
+
+**Verified from 14 servers in 12 countries**, through check-host.net,
+because a test from here proves nothing (below). Every mirror URL answered
+`403` from the UK, US, Canada, the Netherlands, Sweden, Austria, Italy,
+Bulgaria, Turkey, Serbia, Romania and Iran. The real site answered `200` from
+all six places it was checked from, Australia, Germany and Ukraine among them.
+
+**Indonesia is the one hole, and it is the zone's own setting.** Security →
+IP access rules carries an `ID` (country) → *Allow* for all websites in the
+account, and an IP access *Allow* exempts a request from the custom rule. The
+mirror's subrequest carries its visitor's country, so anyone browsing a mirror
+from Indonesia still gets the copy. Check-host's Indonesian node got a `200`,
+and so does every test run from this office. **Test a block from outside
+Indonesia**, or it will look broken when it is not. It costs little: the
+customers are in London, Googlebot crawls from the US, and the domain guard
+still sends an Indonesian visitor to the real site. Whether to narrow that
+rule is the client's call, since it exempts the whole country from every
+security rule on every site in the account.
+
+### What is left
+
 - **The filings**, all from the takedown pack: Google's copyright removal form,
   one Cloudflare abuse report per zone, and one report to Dynadot covering all
-  three. The client files them, or someone with their written authority.
+  three. The client files them, or someone with their written authority. The
+  rule's Security Events, which name each blocked request, are evidence worth
+  attaching.

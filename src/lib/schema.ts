@@ -24,6 +24,7 @@ import categories from "@schema/data/categories.json";
 import packages from "@schema/data/packages.json";
 import { id } from "@schema/ids";
 
+import { decodeEntities } from "@/content/overrides";
 import type { Page } from "@/lib/blocks";
 import { breadcrumbTrail } from "@/lib/breadcrumbs";
 import { BUSINESS, SITE } from "@/lib/site";
@@ -137,7 +138,10 @@ function article(page: Page): Json {
     "@type": "Article",
     "@id": id.article(pathOf(page.slug)),
     isPartOf: { "@id": pageId },
-    headline: meta?.headline || page.h1,
+    /* B1: the h1 the page prints, character for character. `meta.headline` is
+       the SEO title ("… | Complete Guide") and carried entities Yoast never
+       decoded; both are what the reader does not see. */
+    headline: decodeEntities(page.h1),
     description: page.description,
     ...(page.published ? { datePublished: page.published } : {}),
     ...(page.modified ?? page.published
@@ -176,7 +180,9 @@ function faqPage(slug: string, items: { q: string; a: string[] }[]): Json {
       name: item.q,
       acceptedAnswer: {
         "@type": "Answer",
-        text: item.a.map((p) => p.replace(/<[^>]+>/g, "")).join(" "),
+        /* Entities decoded as well as tags stripped: `text` is not HTML, so a
+           literal "&amp;" would reach a parser as those five characters. */
+        text: item.a.map((p) => decodeEntities(p.replace(/<[^>]+>/g, ""))).join(" "),
       },
     })),
   };
@@ -195,6 +201,47 @@ const PACKAGE = new Map(packages.map((p) => [`${p.category}/${p.slug}`, p]));
  * never mentions. Drop this once that link exists.
  */
 const NO_CATALOGUE = new Set(["mobile-car-wash"]);
+
+/**
+ * What a category page's card calls each package (B2, 2026-10-23).
+ *
+ * `packages.json` recorded each package's h1 on 8 October. Twenty-one of them
+ * have been renamed since, or were never what the card says, so the catalogue
+ * named services the page does not display. A catalogue entry is a claim about
+ * what the category page offers, so it takes the label the reader sees there.
+ * The package's own page keeps its fuller name.
+ *
+ * Only the entries that differ are listed; the rest fall through to the
+ * handover's name. `scripts/schema-visible.mjs` fails when a name here, or one
+ * that falls through, is not in the page's visible text, so the next rename
+ * cannot reopen the gap without a failing check.
+ */
+const CARD_LABEL: Record<string, string> = {
+  "car-detailing/alloy-wheel-protection": "Alloy Wheel Protection",
+  "car-detailing/machine-polish": "Machine Polish",
+  "car-detailing/paint-correction": "Paint Correction",
+  "car-detailing/windscreen-protection": "Windscreen Protection",
+  "car-valeting/convertible-roof-cleaning": "Soft Top Reproofing",
+  "car-valeting/deep-clean-full-valet": "Deep Clean / Full Valet",
+  "car-valeting/pre-sale-valet": "Ultimate Pre-Sale Valet",
+  "car-valeting/premium-full-valet": "Zeus – Full Valet",
+  "car-valeting/summer-glow-valet": "Summer Glow Valet",
+  "car-valeting/winter-protection": "Winter Protection",
+  /* Not on the content-gap list's table; the check found it. The handover
+     names it "Triton – Premium Interior Valet", the card says this. */
+  "car-interior-cleaning/interior-valet": "Interior Valet",
+  "car-interior-cleaning/flooded-car-cleaning": "Flood & Water Damage",
+  "car-interior-cleaning/leather-cleaning": "Leather Cleaning",
+  "car-interior-cleaning/mould-removal": "Mould Removal & Sterilisation",
+  "car-interior-cleaning/odour-removal": "Odour Removal",
+  "car-interior-cleaning/pet-hair-removal": "Pet Hair Removal",
+  "car-interior-cleaning/steam-cleaning": "Car Steam Cleaning",
+  "car-interior-cleaning/vomit-cleaning": "Sickness & Biohazard Cleaning",
+  "repairs/car-interior-paint-spill-removal": "Interior Paint Spill Removal",
+  "repairs/engine-bay-steam-cleaning": "Engine Bay Top Section Detail",
+  "commercial-valeting/car-van-stickers-removal": "Vehicle Signage & Vinyl Removal",
+  "vehicles/motorcycle-valeting-detailing": "Motorcycle Valeting & Detailing",
+};
 
 /**
  * A category's `Service`, written out enough to stand alone wherever it is
@@ -259,7 +306,9 @@ function derivedNode(slug: string): Json | null {
       : {
           "@type": "OfferCatalog",
           "@id": id.categoryCatalogue(category.slug),
-          name: `${category.name} packages`,
+          /* B3: no `name`. It was "<Category> packages", a heading five of the
+             seven category pages never print; `name` is optional on an
+             OfferCatalog and the Service above already names the category. */
           itemListElement: category.packages.map((slug) => {
             const p = PACKAGE.get(`${category.slug}/${slug}`);
             if (!p) throw new Error(`catalogue: no package row for ${category.slug}/${slug}`);
@@ -268,7 +317,7 @@ function derivedNode(slug: string): Json | null {
               itemOffered: {
                 "@type": "Service",
                 "@id": id.packageService(category.slug, slug),
-                name: p.name,
+                name: CARD_LABEL[`${category.slug}/${slug}`] ?? p.name,
               },
             };
           }),
