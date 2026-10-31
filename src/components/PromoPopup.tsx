@@ -77,7 +77,9 @@ export default function PromoPopup() {
     );
   }
 
-  if (phase === "off") return null;
+  /* A customer who has just booked is not offered money off a first valet
+     they have already paid for. */
+  if (phase === "off" || pathname === "/booking-confirmed") return null;
 
   return (
     <div
